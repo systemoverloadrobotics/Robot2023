@@ -1,4 +1,4 @@
-# SOR Robot Template
+# Robot Code 2023
 
 This repository is used as a template for robot projects on the team. This 
 allows us to implement libraries with core functionality to reuse year-to-year.
