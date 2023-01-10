@@ -6,8 +6,7 @@ package frc.robot.subsystems;
 
 import java.util.logging.Logger;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -15,11 +14,12 @@ import frc.sorutil.SorMath;
 import frc.sorutil.motor.MotorConfiguration;
 import frc.sorutil.motor.SensorConfiguration;
 import frc.sorutil.motor.SuController;
-import frc.sorutil.motor.SuSparkMax;
+import frc.sorutil.motor.SuTalonFx;
 
 public class ArmSubsystem extends SubsystemBase {
   private final Logger logger;
-  SuSparkMax joint;
+  SuTalonFx jointA;
+  SuTalonFx jointB;
 
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
@@ -27,11 +27,13 @@ public class ArmSubsystem extends SubsystemBase {
     MotorConfiguration jointMotorConfig = new MotorConfiguration();
     jointMotorConfig.setCurrentLimit(Constants.Motor.ARM_JOINT_CURRENT_LIMIT);
     SensorConfiguration jointSensorConfiguration = new SensorConfiguration(new SensorConfiguration.IntegratedSensorSource(1));
-    joint = new SuSparkMax(new CANSparkMax(Constants.Motor.ARM_JOINT_INDEX, MotorType.kBrushless), "Joint Motor", jointMotorConfig, jointSensorConfiguration);
+    jointA = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_INDEX), "Joint Motor A", jointMotorConfig, jointSensorConfiguration);
+    jointB = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_FOLLOWER_INDEX), "Joint Motor B", jointMotorConfig, jointSensorConfiguration);
+    jointB.follow(jointA);
   }
 
   public void setPosition(int position) {
-    joint.set(SuController.ControlMode.POSITION, position);
+    jointA.set(SuController.ControlMode.POSITION, position);
   }
 
   /** 
