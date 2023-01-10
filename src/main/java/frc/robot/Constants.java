@@ -33,7 +33,6 @@ public final class Constants {
     }
 
     public static final class Motor {
-
         // Motor indexes + configs here
         public static final int ARM_JOINT_INDEX = 0;
         public static final int ARM_JOINT_FOLLOWER_INDEX = 1;
