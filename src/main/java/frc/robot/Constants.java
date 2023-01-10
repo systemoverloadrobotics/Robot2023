@@ -33,8 +33,10 @@ public final class Constants {
     }
 
     public static final class Motor {
+
         // Motor indexes + configs here
         public static final int ARM_JOINT_INDEX = 0;
         public static final double ARM_JOINT_CURRENT_LIMIT = 20;
+        public static final int ARM_JOINT_ENCODER_RESOLUTION = 42;
     }
 }

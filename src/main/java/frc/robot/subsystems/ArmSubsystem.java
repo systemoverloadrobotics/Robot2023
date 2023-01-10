@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.sorutil.SorMath;
 import frc.sorutil.motor.MotorConfiguration;
 import frc.sorutil.motor.SensorConfiguration;
 import frc.sorutil.motor.SuController;
@@ -31,6 +32,15 @@ public class ArmSubsystem extends SubsystemBase {
 
   public void setPosition(int position) {
     joint.set(SuController.ControlMode.POSITION, position);
+  }
+
+  /** 
+   * Sets the ArmSubsystem's angle
+   * The zero is the angle where the arm is at its highest, with clockwise movement increasing the angle
+   * @param angle angle that the arm needs to be set to in degrees
+   */
+  public void setAngle(int angle) {
+    setPosition((int) Math.round(SorMath.degreesToTicks(angle, Constants.Motor.ARM_JOINT_ENCODER_RESOLUTION)));
   }
 
   @Override
