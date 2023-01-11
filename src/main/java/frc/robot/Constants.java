@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -15,8 +16,13 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static final String PROJECT_NAME = "Robot2023";
+
     // Periodic timing of the robot, WPILib default is 0.02 (20ms)
     public static final Double ROBOT_PERIOD = 0.02; // 20 ms
+
+    // Configure the power module used on the robot
+    public static final ModuleType POWER_MODULE_TYPE = ModuleType.kRev;
 
     public static final class RobotDimensions {
         // TODO: replace these with actual dimensions
