@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  @SuppressWarnings("unused")
   private final Logger logger;
 
   // The robot's subsystems and commands are defined here...
