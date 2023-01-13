@@ -73,6 +73,12 @@ dependencies {
 
     // Autolog annotation processing
     annotationProcessor 'org.littletonrobotics.akit.junction:junction-autolog:2.0.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+	
+	testCompileOnly 'org.projectlombok:lombok:1.18.24'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
 test {
@@ -107,6 +113,7 @@ tasks.withType(JavaCompile) {
 // AdvantageKit configuration
 
 repositories {
+    mavenCentral()
     maven {
         url = uri("https://maven.pkg.github.com/Mechanical-Advantage/AdvantageKit")
         credentials {
