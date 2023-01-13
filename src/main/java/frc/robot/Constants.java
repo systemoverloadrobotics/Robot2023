@@ -36,7 +36,11 @@ public final class Constants {
         // Motor indexes + configs here
         public static final int ARM_JOINT_INDEX = 0;
         public static final int ARM_JOINT_FOLLOWER_INDEX = 1;
+        public static final int ARM_CASCADE_FOLLOWER_INDEX = 2;
         public static final double ARM_JOINT_CURRENT_LIMIT = 20;
-        public static final int ARM_JOINT_ENCODER_RESOLUTION = 42;
+        public static final double ARM_CASCADE_CURRENT_LIMIT = 20;
+        public static final int ARM_JOINT_ENCODER_RESOLUTION = 4096;
+        public static final float ARM_CASCADE_TICKS_PER_FEET = 1200; // PLACEHOLDER
+        public static final float ARM_CASCADE_STARTING_HEIGHT = 2; // PLACEHOLDER
     }
 }
