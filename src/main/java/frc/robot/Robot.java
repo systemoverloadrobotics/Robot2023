@@ -4,14 +4,9 @@
 
 package frc.robot;
 
-import org.littletonrobotics.junction.LogFileUtil;
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-
-import edu.wpi.first.wpilibj.PowerDistribution;
+import java.util.logging.Logger;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.sorutil.Logging;
 
@@ -21,11 +16,10 @@ import frc.sorutil.Logging;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends LoggedRobot {
-  @SuppressWarnings("unused")
+public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
-  private java.util.logging.Logger javaLogger;
+  private Logger logger;
 
   public Robot(double period) {
     super(period);
@@ -39,55 +33,13 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
     Logging.initLogging();
 
-    javaLogger = java.util.logging.Logger.getLogger(Robot.class.getName());
+    logger = Logger.getLogger(Robot.class.getName());
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    javaLogger.info("Robot started");
-  }
-
-
-  @SuppressWarnings("resource")
-  public void configureAdvantageKit() {
-    var advantageLogger = Logger.getInstance();
-
-    // Metadata
-    advantageLogger.recordMetadata("ProjectName", Constants.PROJECT_NAME);
-    advantageLogger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
-    advantageLogger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
-    advantageLogger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
-    advantageLogger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
-
-    // Adds logging for the Rev Power Distribution board
-    new PowerDistribution(1, Constants.POWER_MODULE_TYPE);
-
-    switch (BuildConstants.DIRTY) {
-      case 0:
-        advantageLogger.recordMetadata("GitDirty", "All changes committed");
-        break;
-      case 1:
-        advantageLogger.recordMetadata("GitDirty", "Uncomitted changes");
-        break;
-      default:
-        advantageLogger.recordMetadata("GitDirty", "Unknown");
-        break;
-    }
-
-    if (isReal()) {
-      advantageLogger.addDataReceiver(new WPILOGWriter("/media/sda1")); // Log to USB Flash
-      advantageLogger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-    } else {
-      setUseTiming(false); // Disable time spacing when simulating, run as fast as possible
-      String logPath = LogFileUtil.findReplayLog(); // Pull replay from Scope or prompt user
-      advantageLogger.setReplaySource(new WPILOGReader(logPath));
-
-      // Save output to same file, with a _sim suffix
-      advantageLogger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); 
-    }
-
-    advantageLogger.start();
+    logger.info("Robot started");
   }
 
   /**
@@ -109,7 +61,7 @@ public class Robot extends LoggedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    javaLogger.info("Robot disabled");
+    logger.info("Robot disabled");
   }
 
   @Override
@@ -118,7 +70,7 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    javaLogger.info("Autonomous started");
+    logger.info("Autonomous started");
   }
 
   /** This function is called periodically during autonomous. */
@@ -127,7 +79,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
-    javaLogger.info("Teleop started");
+    logger.info("Teleop started");
   }
 
   /** This function is called periodically during operator control. */
@@ -136,7 +88,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void testInit() {
-    javaLogger.info("Test mode started");
+    logger.info("Test mode started");
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
