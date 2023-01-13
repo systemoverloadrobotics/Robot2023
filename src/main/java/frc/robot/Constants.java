@@ -49,6 +49,18 @@ public final class Constants {
         public static final double MAX_SPEED = 0; // m/s
     }
 
+    public static final class Vision {
+        // Camera position from the center of the robot
+        public static final double CAMERA_POSITION_X = 0;
+        public static final double CAMERA_POSITION_Y = 0.5;
+        public static final double CAMERA_POSITION_Z = 0;
+
+        public static final double CAMERA_ROTATION_ROLL = 0;
+        public static final double CAMERA_ROTATION_PITCH = 0;
+        public static final double CAMERA_ROTATION_YAW = 0;
+
+    }
+
     public static final class Motor {
         public static final int SWERVE_FRONT_LEFT_POWER = 4;
         public static final int SWERVE_FRONT_LEFT_STEER = 15;
