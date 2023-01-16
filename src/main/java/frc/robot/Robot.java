@@ -48,7 +48,7 @@ public class Robot extends LoggedRobot {
     javaLogger.info("Robot started");
   }
 
-
+/*
   @SuppressWarnings("resource")
   public void configureAdvantageKit() {
     var advantageLogger = Logger.getInstance();
@@ -89,6 +89,8 @@ public class Robot extends LoggedRobot {
 
     advantageLogger.start();
   }
+  */
+  
 
   /**
    * This function is called every robot packet, no matter the mode. Use this for items like
