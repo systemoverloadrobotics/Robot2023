@@ -37,7 +37,7 @@ public class Swerve extends SubsystemBase {
 		frontLeft = new SwerveModule("Front Left", Constants.Motor.SWERVE_FRONT_LEFT_POWER,
 				Constants.Motor.SWERVE_FRONT_LEFT_STEER, 2389);
 		frontRight = new SwerveModule("Front Right", Constants.Motor.SWERVE_FRONT_RIGHT_POWER,
-				Constants.Motor.SWERVE_FRONT_RIGHT_POWER, 805 - 2);
+				Constants.Motor.SWERVE_FRONT_RIGHT_STEER, 805 - 2);
 		backLeft = new SwerveModule("Back Left", Constants.Motor.SWERVE_BACK_LEFT_POWER,
 				Constants.Motor.SWERVE_BACK_LEFT_STEER, 478 + 5);
 		backRight = new SwerveModule("Back Right", Constants.Motor.SWERVE_BACK_RIGHT_POWER,
