@@ -17,13 +17,11 @@ public class Swerve extends SubsystemBase {
 	private final SwerveModule frontRight;
 	private final SwerveModule backLeft;
 	private final SwerveModule backRight;
-
-	private AHRS gyro = new AHRS(SerialPort.Port.kUSB);
+	private AHRS gyro;
 
 	private final Timer resetTimer = new Timer();
 	private boolean resetRun;
 
-	// TODO: add the gyro for this season
 	private SwerveDriveOdometry odometry = new SwerveDriveOdometry(
 			Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS, new Rotation2d(0),
 			new SwerveModulePosition[] {
@@ -45,6 +43,7 @@ public class Swerve extends SubsystemBase {
 
 		resetTimer.start();
 
+		gyro = new AHRS(SerialPort.Port.kUSB);
 	}
 
 	public void stopModules() {
@@ -52,6 +51,15 @@ public class Swerve extends SubsystemBase {
 		frontRight.stop();
 		backLeft.stop();
 		backRight.stop();
+	}
+
+	public SwerveModulePosition[] getModulePositions() {
+		return new SwerveModulePosition[] {
+			frontLeft.getPosition(),
+			frontRight.getPosition(),
+			backLeft.getPosition(),
+			backRight.getPosition()
+		};
 	}
 
 	public SwerveModuleState[] getModuleStates() {
@@ -70,7 +78,7 @@ public class Swerve extends SubsystemBase {
 		backRight.setState(desiredStates[3]);
 	}
 
-	public Rotation2d getRotation2d() {
+	public Rotation2d getHeading() {
 		return Rotation2d.fromDegrees(gyro.getYaw());
 	}
 
