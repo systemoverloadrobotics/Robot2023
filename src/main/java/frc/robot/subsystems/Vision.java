@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 import java.util.List;
+import java.io.IOException;
 import java.util.ArrayList; 
 import edu.wpi.first.math.Pair;
 import java.util.logging.Logger;
@@ -14,26 +15,22 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import lombok.SneakyThrows;
 
 
 public class Vision extends SubsystemBase {
   private final Logger logger;
-  private PhotonCamera camera;
+  private final PhotonCamera camera;
   private PhotonPipelineResult results;
-  AprilTagFieldLayout aprilTagFieldLayout; 
-  RobotPoseEstimator robotPoseEstimator;
+  private final AprilTagFieldLayout aprilTagFieldLayout; 
+  private final RobotPoseEstimator robotPoseEstimator;
 
-  @SneakyThrows
-  public Vision() {
-    Transform3d robotCam = new Transform3d(new Translation3d(Constants.Vision.CAMERA_POSITION_X,Constants.Vision.CAMERA_POSITION_Y,Constants.Vision.CAMERA_POSITION_Z), new Rotation3d(Constants.Vision.CAMERA_ROTATION_ROLL,Constants.Vision.CAMERA_ROTATION_PITCH,Constants.Vision.CAMERA_ROTATION_YAW));
-    logger = Logger.getLogger(ExampleSubsystem.class.getName());
+  public Vision() throws IOException {
+    Transform3d robotCam = new Transform3d(Constants.Vision.CAMERA_POSITION, Constants.Vision.CAMERA_ROTATION);
+    logger = Logger.getLogger(Vision.class.getName());
     camera = new PhotonCamera("Camera");
     results = camera.getLatestResult();
     aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource("/edu/wpi/first/apriltag/2023-chargedup.json");
@@ -43,8 +40,8 @@ public class Vision extends SubsystemBase {
   } 
   
   /**
-   * Returns whether the pipeline has targets.
-   * Returns whether the camera is sensing any apriltags
+
+   * @return A boolean that signifies whether or not the camera recognizes any apriltags
    */
   public boolean targetsExist() {
     return camera.getLatestResult().hasTargets();
@@ -68,14 +65,11 @@ public class Vision extends SubsystemBase {
   public Pair<Pose2d, Double> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
     robotPoseEstimator.setReferencePose(prevEstimatedRobotPose);
     double currentTime = Timer.getFPGATimestamp(); 
-    
     var result = robotPoseEstimator.update();
-
-
     if (result.isPresent()) {
-        var pose = result.get().getFirst().toPose2d();
-        var deltaTms = currentTime - result.get().getSecond();
-        return new Pair<Pose2d, Double>(pose, deltaTms);
+      var pose = result.get().getFirst().toPose2d();
+      var deltaTms = currentTime - result.get().getSecond();
+      return new Pair<Pose2d, Double>(pose, deltaTms);
     } 
     return null; 
   }
@@ -83,6 +77,6 @@ public class Vision extends SubsystemBase {
   
   @Override
   public void periodic() {
-      if(camera.isConnected()) results = camera.getLatestResult(); 
+    if(camera.isConnected()) results = camera.getLatestResult(); 
   }
 }

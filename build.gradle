@@ -73,12 +73,6 @@ dependencies {
 
     // Autolog annotation processing
     annotationProcessor 'org.littletonrobotics.akit.junction:junction-autolog:2.0.0'
-
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-	annotationProcessor 'org.projectlombok:lombok:1.18.24'
-	
-	testCompileOnly 'org.projectlombok:lombok:1.18.24'
-	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
 test {

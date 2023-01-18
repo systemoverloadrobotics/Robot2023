@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -42,7 +45,7 @@ public final class Constants {
                 new Translation2d(RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2),
                 new Translation2d(RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2));
     }
-
+    
     public static final class Drive {
         // Drive settings here
         // TODO: replace these with actual constants
@@ -50,15 +53,16 @@ public final class Constants {
     }
 
     public static final class Vision {
-        // Camera position from the center of the robot
-        public static final double CAMERA_POSITION_X = 0;
-        public static final double CAMERA_POSITION_Y = 0.5;
-        public static final double CAMERA_POSITION_Z = 0;
+        // Camera location from the center of the robot
+        public static final double CAMERA_POSITION_X = 0; // Meters
+        public static final double CAMERA_POSITION_Y = 0.5; // Meters
+        public static final double CAMERA_POSITION_Z = 0; // Meters
+        public static final double CAMERA_ROTATION_ROLL = 0; // Radians
+        public static final double CAMERA_ROTATION_PITCH = 0; // Radians
+        public static final double CAMERA_ROTATION_YAW = 0; // Radians
 
-        public static final double CAMERA_ROTATION_ROLL = 0;
-        public static final double CAMERA_ROTATION_PITCH = 0;
-        public static final double CAMERA_ROTATION_YAW = 0;
-
+        public static final Translation3d CAMERA_POSITION = new Translation3d(CAMERA_POSITION_X, CAMERA_POSITION_Y, CAMERA_POSITION_Z);
+        public static final Rotation3d CAMERA_ROTATION = new Rotation3d(CAMERA_ROTATION_ROLL,CAMERA_ROTATION_PITCH,CAMERA_ROTATION_YAW);
     }
 
     public static final class Motor {
