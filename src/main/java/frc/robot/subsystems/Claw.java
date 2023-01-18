@@ -34,7 +34,7 @@ public class Claw extends SubsystemBase {
     MotorConfiguration rollerControllerConfig = new MotorConfiguration();
     
     // TODO: adjust the PID values for roller controller, along with ampage/voltage
-		rollerControllerConfig.setPidProfile(new PidProfile(0.01, 0.0, 0.001));
+	  rollerControllerConfig.setPidProfile(new PidProfile(0.01, 0.0, 0.001));
 		rollerControllerConfig.setCurrentLimit(20.0);
 		rollerControllerConfig.setMaxOutput(0.8);
 
@@ -65,6 +65,24 @@ public class Claw extends SubsystemBase {
   public void stop() {
     rollerMotorLeft.set(ControlMode.VOLTAGE, 0);
     rollerMotorRight.set(ControlMode.VOLTAGE, 0);
+  }
+
+  public void extend() {
+    extendSolenoidLeft.set(true);
+    extendSolenoidRight.set(true);
+  }
+
+  public void retract() {
+    extendSolenoidLeft.set(false);
+    extendSolenoidRight.set(false);
+  }
+
+  public boolean isExtended() {
+    return extendSolenoidLeft.get() == true && extendSolenoidRight.get() == true;
+  }
+
+  public boolean isRetracted() {
+    return extendSolenoidLeft.get() == false && extendSolenoidRight.get() == false;
   }
 
   @Override
