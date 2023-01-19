@@ -31,12 +31,10 @@ public class Claw extends SubsystemBase {
     logger = Logger.getLogger(Claw.class.getName());
 
     MotorConfiguration rollerControllerConfig = new MotorConfiguration();
-    
-    // TODO: adjust the PID values for roller controller, along with ampage/voltage
-	  rollerControllerConfig.setPidProfile(new PidProfile(0.01, 0.0, 0.001));
-		rollerControllerConfig.setCurrentLimit(20.0);
-		rollerControllerConfig.setMaxOutput(0.8);
 
+    rollerControllerConfig.setCurrentLimit(20.0);
+    rollerControllerConfig.setMaxOutput(0.8);
+    
     rollerMotorLeft = new SuSparkMax(new CANSparkMax(Constants.Motor.ROLLER_LEFT, MotorType.kBrushless), "Left Roller Motor", rollerControllerConfig, 
     null);
     rollerMotorRight = new SuSparkMax(new CANSparkMax(Constants.Motor.ROLLER_RIGHT, MotorType.kBrushless), "Right Roller Motor", rollerControllerConfig, 
