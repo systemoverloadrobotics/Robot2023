@@ -21,6 +21,7 @@ import frc.sorutil.motor.SensorConfiguration;
 import frc.sorutil.motor.SuController;
 import frc.sorutil.motor.SuSparkMax;
 import frc.sorutil.motor.SensorConfiguration.CanCoder;
+import frc.sorutil.motor.SensorConfiguration.ConnectedSensorType;
 import frc.sorutil.motor.SuController.ControlMode;
 
 public class SwerveModule extends SubsystemBase {
@@ -53,8 +54,10 @@ public class SwerveModule extends SubsystemBase {
 		steerControllerConfig.setPidProfile(new PidProfile(0.01, 0.0, 0.001));
 		steerControllerConfig.setCurrentLimit(20.0);
 		steerControllerConfig.setMaxOutput(0.8);
+		// SensorConfiguration steerSensorConfig = new SensorConfiguration(
+		// 		new SensorConfiguration.IntegratedSensorSource(1));
 		SensorConfiguration steerSensorConfig = new SensorConfiguration(
-				new SensorConfiguration.IntegratedSensorSource(1));
+				new SensorConfiguration.ConnectedSensorSource(0, 1, ConnectedSensorType.PWM_ENCODER));
 
 		steeringController = new SuSparkMax(new CANSparkMax(steerID, MotorType.kBrushless), name + " steer",
 				steerControllerConfig, steerSensorConfig);
