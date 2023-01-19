@@ -46,9 +46,10 @@ public class Robot extends LoggedRobot {
     m_robotContainer = new RobotContainer();
 
     javaLogger.info("Robot started");
+
+    configureAdvantageKit();
   }
 
-/*
   @SuppressWarnings("resource")
   public void configureAdvantageKit() {
     var advantageLogger = Logger.getInstance();
@@ -89,7 +90,6 @@ public class Robot extends LoggedRobot {
 
     advantageLogger.start();
   }
-  */
   
 
   /**
