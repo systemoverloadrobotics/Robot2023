@@ -14,14 +14,13 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.sorutil.motor.MotorConfiguration;
 import frc.sorutil.motor.PidProfile;
-import frc.sorutil.motor.SensorConfiguration;
 import frc.sorutil.motor.SuSparkMax;
 import frc.sorutil.motor.SuController.ControlMode;
+import frc.robot.Constants;
 
 public class Claw extends SubsystemBase {
 
-  Solenoid extendSolenoidLeft = new Solenoid(PneumaticsModuleType.CTREPCM, 1); // TODO: change solenoid channels
-  Solenoid extendSolenoidRight = new Solenoid(PneumaticsModuleType.CTREPCM, 2); 
+  Solenoid extendSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Pneumatics.CLAW_SOLENOID_CHANNEL); 
 
   private SuSparkMax rollerMotorLeft;
   private SuSparkMax rollerMotorRight;
@@ -38,17 +37,10 @@ public class Claw extends SubsystemBase {
 		rollerControllerConfig.setCurrentLimit(20.0);
 		rollerControllerConfig.setMaxOutput(0.8);
 
-
-    // TODO: implement actual gear ratio
-    SensorConfiguration rollerSensorConfig = new SensorConfiguration(
-      new SensorConfiguration.IntegratedSensorSource(1)
-    );
-
-    // TODO: Update Device IDs
-    rollerMotorLeft = new SuSparkMax(new CANSparkMax(0, MotorType.kBrushless), "Left Roller Motor", rollerControllerConfig, 
-    rollerSensorConfig);
-    rollerMotorRight = new SuSparkMax(new CANSparkMax(1, MotorType.kBrushless), "Right Roller Motor", rollerControllerConfig, 
-    rollerSensorConfig);
+    rollerMotorLeft = new SuSparkMax(new CANSparkMax(Constants.Motor.ROLLER_LEFT, MotorType.kBrushless), "Left Roller Motor", rollerControllerConfig, 
+    null);
+    rollerMotorRight = new SuSparkMax(new CANSparkMax(Constants.Motor.ROLLER_RIGHT, MotorType.kBrushless), "Right Roller Motor", rollerControllerConfig, 
+    null);
   }
 
   public void intake(double volts) {
@@ -61,28 +53,21 @@ public class Claw extends SubsystemBase {
     rollerMotorRight.set(ControlMode.VOLTAGE, volts);
   }
 
-  // TODO: There's probably an in-built "motor-stop" function that looks better
   public void stop() {
-    rollerMotorLeft.set(ControlMode.VOLTAGE, 0);
-    rollerMotorRight.set(ControlMode.VOLTAGE, 0);
+    rollerMotorLeft.stop();
+    rollerMotorRight.stop();
   }
 
   public void extend() {
-    extendSolenoidLeft.set(true);
-    extendSolenoidRight.set(true);
+    extendSolenoid.set(true);
   }
 
   public void retract() {
-    extendSolenoidLeft.set(false);
-    extendSolenoidRight.set(false);
+    extendSolenoid.set(false);
   }
 
   public boolean isExtended() {
-    return extendSolenoidLeft.get() == true && extendSolenoidRight.get() == true;
-  }
-
-  public boolean isRetracted() {
-    return extendSolenoidLeft.get() == false && extendSolenoidRight.get() == false;
+    return extendSolenoid.get() == true;
   }
 
   @Override
