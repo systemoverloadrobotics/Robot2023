@@ -77,5 +77,12 @@ public final class Constants {
 
         public static final int SWERVE_BACK_RIGHT_POWER = 1;
         public static final int SWERVE_BACK_RIGHT_STEER = 12;
+        
+        public static final int ROLLER_LEFT = 5;
+        public static final int ROLLER_RIGHT = 6;
+    }
+    
+    public static final class Pneumatics {
+        public static final int CLAW_SOLENOID_CHANNEL = 1;
     }
 }
