@@ -88,5 +88,7 @@ public class Swerve extends SubsystemBase {
 				frontLeft.getPosition(), frontRight.getPosition(), backLeft.getPosition(),
 				backRight.getPosition()
 		});
+
+		SmartDashboard.putNumber("fl-steer", frontLeft.getState().angle.getDegrees());
 	}
 }
