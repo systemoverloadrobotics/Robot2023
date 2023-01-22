@@ -43,6 +43,7 @@ public class SwerveDrive extends CommandBase {
   @Override
   public void execute() {
     // get joystick inputs and clean/scale them
+    System.out.println(xSupplier.getAsDouble());
     double xSpeed = cleanAndScaleInput(xSupplier.getAsDouble(), xLimiter,
         Constants.Swerve.SWERVE_MAX_SPEED);
     double ySpeed = cleanAndScaleInput(ySupplier.getAsDouble(), yLimiter,

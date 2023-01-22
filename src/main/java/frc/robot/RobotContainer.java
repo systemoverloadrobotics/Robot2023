@@ -29,8 +29,8 @@ public class RobotContainer {
   private Swerve swerve = new Swerve();
   private final ExampleCommand autoCommand = new ExampleCommand(exampleSubsystem);
 
-  private GenericHID rightMaster = new GenericHID(0);
-  private GenericHID leftMaster = new GenericHID(1);
+  private GenericHID leftMaster = new GenericHID(0);
+  private GenericHID rightMaster = new GenericHID(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

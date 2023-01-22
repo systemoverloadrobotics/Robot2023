@@ -41,13 +41,13 @@ public class SwerveModule extends SubsystemBase {
 		MotorConfiguration powerControllerConfig = new MotorConfiguration();
 
 		// TODO: adjust the PID values for power controller
-		powerControllerConfig.setPidProfile(new PidProfile(0.01, 0.0, 0.001));
-		powerControllerConfig.setCurrentLimit(20.0);
-		powerControllerConfig.setMaxOutput(0.6);
+		powerControllerConfig.setPidProfile(new PidProfile(0.005, 0.0,0.00));
+		powerControllerConfig.setCurrentLimit(15.0);
+		powerControllerConfig.setMaxOutput(0.2);
 
 		// TODO: find gear ratio for outputOffset
 		SensorConfiguration powerSensorConfig = new SensorConfiguration(
-				new SensorConfiguration.IntegratedSensorSource(1));
+				new SensorConfiguration.IntegratedSensorSource(6.75));
 		powerController = new SuSparkMax(new CANSparkMax(powerID, MotorType.kBrushless), name + " power",
 				powerControllerConfig, powerSensorConfig);
 
@@ -55,9 +55,10 @@ public class SwerveModule extends SubsystemBase {
 		MotorConfiguration steerControllerConfig = new MotorConfiguration();
 
 		// TODO: adjust the PID values for power controller
-		steerControllerConfig.setPidProfile(new PidProfile(0.01, 0.0, 0.001));
+		steerControllerConfig.setPidProfile(new PidProfile(0.03, 0, 0.1));
 		steerControllerConfig.setCurrentLimit(20.0);
 		steerControllerConfig.setMaxOutput(0.8);
+		
 		SensorConfiguration steerSensorConfig = new SensorConfiguration(
 				new SensorConfiguration.ConnectedSensorSource(4096, 1, ConnectedSensorType.PWM_ENCODER));
 
@@ -74,13 +75,13 @@ public class SwerveModule extends SubsystemBase {
 	}
 
 	public void setState(SwerveModuleState state) {
-		//state = SwerveModuleState.optimize(state, getState().angle);
-		SmartDashboard.putNumber("steer", state.angle.getDegrees());
+		state = SwerveModuleState.optimize(state, getState().angle);
 		powerController.set(ControlMode.VELOCITY,
-				SorMath.speedMetersPerSecondToRevsPerMinute(4, state.speedMetersPerSecond));
+				SorMath.speedMetersPerSecondToRevsPerMinute(4, 0.1));
 		SmartDashboard.putNumber("steer-" + name, state.angle.getDegrees());
-		SmartDashboard.putNumber("steer-encoder-" + name, steeringController.outputPosition());
-		steeringController.set(ControlMode.POSITION, state.angle.getDegrees());
+		SmartDashboard.putNumber("steer-encoder-" + name, powerController.outputPosition());
+		
+		// steeringController.set(ControlMode.POSITION, state.angle.getDegrees());
 	}
 
 	public SwerveModulePosition getPosition() {
