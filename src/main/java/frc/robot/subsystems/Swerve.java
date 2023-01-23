@@ -42,7 +42,7 @@ public class Swerve extends SubsystemBase {
 				Constants.Motor.SWERVE_BACK_LEFT_STEER, 478 + 5);
 		backRight = new SwerveModule("Back Right", Constants.Motor.SWERVE_BACK_RIGHT_POWER,
 				Constants.Motor.SWERVE_BACK_RIGHT_STEER, 1421 + 30);
-
+		gyro.reset();
 		resetTimer.start();
 
 	}
@@ -70,20 +70,21 @@ public class Swerve extends SubsystemBase {
 		backRight.setState(desiredStates[3]);
 	}
 
+	//gyro offset constant
 	public Rotation2d getRotation2d() {
+		
 		return Rotation2d.fromDegrees(gyro.getYaw());
 	}
 
 	@Override
 	public void periodic() {
 		SmartDashboard.putData("Gyro", gyro);
-
 		// Run reset once after a second.
-		if (!resetRun && resetTimer.get() > 1) {
-			gyro.reset();
-			resetRun = true;
-		}
-
+		// if (!resetRun && resetTimer.get() > 1) {
+		// 	gyro.reset();
+		// 	resetRun = true;
+		// }
+		SmartDashboard.putNumber("better-gyro", gyro.getYaw()); 
 		odometry.update(gyro.getRotation2d(), new SwerveModulePosition[] {
 				frontLeft.getPosition(), frontRight.getPosition(), backLeft.getPosition(),
 				backRight.getPosition()

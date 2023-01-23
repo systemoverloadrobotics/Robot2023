@@ -41,9 +41,9 @@ public class SwerveModule extends SubsystemBase {
 		MotorConfiguration powerControllerConfig = new MotorConfiguration();
 
 		// TODO: adjust the PID values for power controller
-		powerControllerConfig.setPidProfile(new PidProfile(0.005, 0.0,0.00));
+		powerControllerConfig.setPidProfile(Constants.Swerve.POWER_PROFILE);
 		powerControllerConfig.setCurrentLimit(15.0);
-		powerControllerConfig.setMaxOutput(0.2);
+		powerControllerConfig.setMaxOutput(0.5);
 
 		// TODO: find gear ratio for outputOffset
 		SensorConfiguration powerSensorConfig = new SensorConfiguration(
@@ -55,9 +55,9 @@ public class SwerveModule extends SubsystemBase {
 		MotorConfiguration steerControllerConfig = new MotorConfiguration();
 
 		// TODO: adjust the PID values for power controller
-		steerControllerConfig.setPidProfile(new PidProfile(0.03, 0, 0.1));
+		steerControllerConfig.setPidProfile(Constants.Swerve.STEER_PROFILE);
 		steerControllerConfig.setCurrentLimit(20.0);
-		steerControllerConfig.setMaxOutput(0.8);
+		steerControllerConfig.setMaxOutput(1);
 		
 		SensorConfiguration steerSensorConfig = new SensorConfiguration(
 				new SensorConfiguration.ConnectedSensorSource(4096, 1, ConnectedSensorType.PWM_ENCODER));
@@ -77,11 +77,10 @@ public class SwerveModule extends SubsystemBase {
 	public void setState(SwerveModuleState state) {
 		state = SwerveModuleState.optimize(state, getState().angle);
 		powerController.set(ControlMode.VELOCITY,
-				SorMath.speedMetersPerSecondToRevsPerMinute(4, 0.1));
-		SmartDashboard.putNumber("steer-" + name, state.angle.getDegrees());
-		SmartDashboard.putNumber("steer-encoder-" + name, powerController.outputPosition());
-		
-		// steeringController.set(ControlMode.POSITION, state.angle.getDegrees());
+				SorMath.speedMetersPerSecondToRevsPerMinute(4, state.speedMetersPerSecond));
+		// SmartDashboard.putNumber("steer-" + name, state.angle.getDegrees());
+		// SmartDashboard.putNumber("steer-encoder-" + name, powerController.outputPosition());
+		steeringController.set(ControlMode.POSITION, state.angle.getDegrees());
 	}
 
 	public SwerveModulePosition getPosition() {

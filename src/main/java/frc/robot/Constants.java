@@ -66,13 +66,13 @@ public final class Constants {
     }
 
     public static final class Swerve {
-        public static final PidProfile STEER_PROFILE = new PidProfile(3.5, 0, 1.5);
-        public static final PidProfile POWER_PROFILE = new PidProfile(0.55, 0, 0.025);
+        public static final PidProfile STEER_PROFILE = new PidProfile(0.03, 0, 0.1);
+        public static final PidProfile POWER_PROFILE = new PidProfile(0.0001, 0.0, 0);
   
         public static final double SWERVE_MAX_SPEED = 5.18; // m/s
         public static final double SWERVE_MAX_ACCELERATION = 3; // m/s^2
         public static final double SWERVE_ROTATION_MAX_SPEED = 3; // rad/s
-        public static final double SWERVE_ROTATION_MAX_ACCELERATION = Math.PI / 4; // rads/s^2
+        public static final double SWERVE_ROTATION_MAX_ACCELERATION = Math.PI; // rads/s^2
   
         public static final double SWERVE_DEADBAND = 0.05;
   
