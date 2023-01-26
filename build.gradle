@@ -107,6 +107,7 @@ tasks.withType(JavaCompile) {
 // AdvantageKit configuration
 
 repositories {
+    mavenCentral()
     maven {
         url = uri("https://maven.pkg.github.com/Mechanical-Advantage/AdvantageKit")
         credentials {
