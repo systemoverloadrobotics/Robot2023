@@ -47,8 +47,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    swerve.setDefaultCommand(new SwerveDrive(swerve, () -> rightMaster.getRawAxis(0),
-    () -> rightMaster.getRawAxis(1), () -> leftMaster.getRawAxis(0)));
+    swerve.setDefaultCommand(new SwerveDrive(swerve, () -> -rightMaster.getRawAxis(0),
+    () -> -rightMaster.getRawAxis(1), () -> leftMaster.getRawAxis(0)));
   }
 
   /**
