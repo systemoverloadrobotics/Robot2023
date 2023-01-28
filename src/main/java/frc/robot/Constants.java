@@ -67,8 +67,23 @@ public final class Constants {
         public static final Rotation3d CAMERA_ROTATION = new Rotation3d(CAMERA_ROTATION_ROLL, CAMERA_ROTATION_PITCH,
                 CAMERA_ROTATION_YAW);
     }
+    
+    public static final class Arm {
+        public static final PidProfile ARM_PID_PROFILE = new PidProfile(0, 0, 0);
+        public static final PidProfile CASCADE_PID_PROFILE = new PidProfile(0, 0, 0);
+        public static final double ARM_JOINT_CURRENT_LIMIT = 20;
+        public static final double ARM_CASCADE_CURRENT_LIMIT = 20;
+        public static final int ARM_JOINT_ENCODER_RESOLUTION = 4096;
+        public static final float ARM_CASCADE_TICKS_PER_FEET = 1200; // PLACEHOLDER
+        public static final float ARM_CASCADE_STARTING_HEIGHT = 1.5f;
+    }
 
     public static final class Motor {
+        // Motor indexes + configs here
+        public static final int ARM_JOINT_INDEX = 0;
+        public static final int ARM_JOINT_FOLLOWER_INDEX = 1;
+        public static final int ARM_CASCADE_INDEX = 2;
+
         public static final int SWERVE_FRONT_LEFT_POWER = 1;
         public static final int SWERVE_FRONT_LEFT_STEER = 2;
 
