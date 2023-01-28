@@ -23,7 +23,7 @@ import frc.sorutil.Logging;
  */
 public class Robot extends LoggedRobot {
   @SuppressWarnings("unused")
-  private RobotContainer m_robotContainer;
+  private RobotContainer robotContainer;
 
   private java.util.logging.Logger javaLogger;
 
@@ -43,7 +43,7 @@ public class Robot extends LoggedRobot {
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    robotContainer = new RobotContainer();
 
     javaLogger.info("Robot started");
 
@@ -52,43 +52,43 @@ public class Robot extends LoggedRobot {
 
   @SuppressWarnings("resource")
   public void configureAdvantageKit() {
-    var advantageLogger = Logger.getInstance();
+    var aLogger = Logger.getInstance();
 
     // Metadata
-    advantageLogger.recordMetadata("ProjectName", Constants.PROJECT_NAME);
-    advantageLogger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
-    advantageLogger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
-    advantageLogger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
-    advantageLogger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    aLogger.recordMetadata("ProjectName", Constants.PROJECT_NAME);
+    aLogger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    aLogger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    aLogger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    aLogger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
 
     // Adds logging for the Rev Power Distribution board
     new PowerDistribution(1, Constants.POWER_MODULE_TYPE);
 
     switch (BuildConstants.DIRTY) {
       case 0:
-        advantageLogger.recordMetadata("GitDirty", "All changes committed");
+        aLogger.recordMetadata("GitDirty", "All changes committed");
         break;
       case 1:
-        advantageLogger.recordMetadata("GitDirty", "Uncomitted changes");
+        aLogger.recordMetadata("GitDirty", "Uncomitted changes");
         break;
       default:
-        advantageLogger.recordMetadata("GitDirty", "Unknown");
+        aLogger.recordMetadata("GitDirty", "Unknown");
         break;
     }
 
     if (isReal()) {
-      advantageLogger.addDataReceiver(new WPILOGWriter("/media/sda1")); // Log to USB Flash
-      advantageLogger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+      aLogger.addDataReceiver(new WPILOGWriter("/media/sda1")); // Log to USB Flash
+      aLogger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
     } else {
       setUseTiming(false); // Disable time spacing when simulating, run as fast as possible
       String logPath = LogFileUtil.findReplayLog(); // Pull replay from Scope or prompt user
-      advantageLogger.setReplaySource(new WPILOGReader(logPath));
+      aLogger.setReplaySource(new WPILOGReader(logPath));
 
       // Save output to same file, with a _sim suffix
-      advantageLogger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); 
+      aLogger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); 
     }
 
-    advantageLogger.start();
+    aLogger.start();
   }
   
 

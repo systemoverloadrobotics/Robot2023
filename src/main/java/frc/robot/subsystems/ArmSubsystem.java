@@ -4,13 +4,18 @@
 
 package frc.robot.subsystems;
 
-import java.util.logging.Logger;
+
+import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.Pair;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.sorutil.SorMath;
@@ -21,16 +26,52 @@ import frc.sorutil.motor.SuTalonFx;
 import frc.sorutil.motor.SuController.ControlMode;
 
 public class ArmSubsystem extends SubsystemBase {
-  private final Logger logger;
+  private final java.util.logging.Logger logger;
+  private final Logger aLogger;
 
   private SuTalonFx jointA;
   private SuTalonFx jointB;
   private SuSparkMax cascade;
   private Pair<Double, Double> intendedPosition;
 
+  private static class ArmModel {
+    private final Mechanism2d mech = new Mechanism2d(3, 3);
+    private final MechanismLigament2d arm;
+    private final MechanismLigament2d elevator;
+
+    public ArmModel(String name) {
+      var root = mech.getRoot(name, 3 - Constants.Arm.ARM_PIVOT_X, Constants.Arm.ARM_PIVOT_Y);
+      arm = root.append(
+          new MechanismLigament2d("arm", Constants.Arm.MIN_ARM_LENGTH, 90, 4, new Color8Bit(Color.kAquamarine)));
+      elevator = arm.append(
+          new MechanismLigament2d("elevator", -Constants.Arm.MIN_ARM_LENGTH, 0, 6, new Color8Bit(Color.kGreen)));
+    }
+
+    /**
+     * update changes the position of the arm model to match the arguments passed.
+     * 
+     * The first argument should be angle of the arm in degrees measured from
+     * straight out as 0, and the second argument should be the length of the arm
+     * from the pivot, accounting for the minimum length of the arm.
+     */
+    public void update(double angle, double length) {
+      arm.setAngle(angle);
+      elevator.setLength(length);
+    }
+
+    public Mechanism2d asMechanism() {
+      return mech;
+    }
+  }
+  
+  // Logging visualization
+  private ArmModel intentMechanism = new ArmModel("ArmIntent");
+  private ArmModel currentMechanism = new ArmModel("ArmCurrent");
+
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
-    logger = Logger.getLogger(ArmSubsystem.class.getName());
+    logger = java.util.logging.Logger.getLogger(ArmSubsystem.class.getName());
+    aLogger = Logger.getInstance();
 
     MotorConfiguration jointMotorConfig = new MotorConfiguration();
 
@@ -81,6 +122,11 @@ public class ArmSubsystem extends SubsystemBase {
     double[] vec = SorMath.cartesianToPolar(intendedPosition.getFirst(), intendedPosition.getSecond());
     jointA.set(ControlMode.POSITION, Math.toDegrees(vec[1]));
     cascade.set(ControlMode.POSITION, vec[0]);
+
+    intentMechanism.update(Math.toDegrees(vec[1]), vec[0]);
+    currentMechanism.update(jointA.outputPosition(), getManipulatorPosition().getFirst());
+    aLogger.recordOutput("Arm/IntendedPosition", intentMechanism.asMechanism());
+    aLogger.recordOutput("Arm/CurrentPosition", currentMechanism.asMechanism());
   }
 
   @Override

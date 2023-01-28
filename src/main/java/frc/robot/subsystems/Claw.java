@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-import java.util.logging.Logger;
+import org.littletonrobotics.junction.Logger;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -18,16 +18,17 @@ import frc.sorutil.motor.SuController.ControlMode;
 import frc.robot.Constants;
 
 public class Claw extends SubsystemBase {
+  private final java.util.logging.Logger logger;
+  private final Logger aLogger;
 
-  Solenoid extendSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Pneumatics.CLAW_SOLENOID_CHANNEL); 
+  Solenoid extendSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Pneumatics.CLAW_SOLENOID_CHANNEL);
 
   private SuSparkMax rollerMotorLeft;
   private SuSparkMax rollerMotorRight;
 
-  private final Logger logger;
-
   public Claw() {
-    logger = Logger.getLogger(Claw.class.getName());
+    logger = java.util.logging.Logger.getLogger(Claw.class.getName());
+    aLogger = Logger.getInstance();
 
     MotorConfiguration rollerControllerConfig = new MotorConfiguration();
 
@@ -38,6 +39,8 @@ public class Claw extends SubsystemBase {
     null);
     rollerMotorRight = new SuSparkMax(new CANSparkMax(Constants.Motor.ROLLER_RIGHT, MotorType.kBrushless), "Right Roller Motor", rollerControllerConfig, 
     null);
+
+    logger.info("Claw Initialized.");
   }
 
   public void intake(double volts) {
@@ -69,7 +72,7 @@ public class Claw extends SubsystemBase {
 
   @Override
   public void periodic() {
-    
+    aLogger.recordOutput("Claw/Open", extendSolenoid.get());
   }
 
   @Override
