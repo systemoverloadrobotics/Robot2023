@@ -8,9 +8,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SerialPort;
 import frc.robot.Constants;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.kauailabs.navx.frc.AHRS;
 
 public class Swerve extends SubsystemBase {
+	private final java.util.logging.Logger logger;
+  private final Logger aLogger;
+
 	private final SwerveModule frontLeft;
 	private final SwerveModule frontRight;
 	private final SwerveModule backLeft;
@@ -27,6 +32,9 @@ public class Swerve extends SubsystemBase {
 			});
 
 	public Swerve() {
+    logger = java.util.logging.Logger.getLogger(Swerve.class.getName());
+    aLogger = Logger.getInstance();
+
 		frontLeft = new SwerveModule("Front Left", Constants.Motor.SWERVE_FRONT_LEFT_POWER,
 				Constants.Motor.SWERVE_FRONT_LEFT_STEER, 0);
 		frontRight = new SwerveModule("Front Right", Constants.Motor.SWERVE_FRONT_RIGHT_POWER,
@@ -36,6 +44,8 @@ public class Swerve extends SubsystemBase {
 		backRight = new SwerveModule("Back Right", Constants.Motor.SWERVE_BACK_RIGHT_POWER,
 				Constants.Motor.SWERVE_BACK_RIGHT_STEER, 0);
 		gyro.reset();
+
+    logger.info("Swerve Drive Initialized.");
 	}
 
 	public void stopModules() {

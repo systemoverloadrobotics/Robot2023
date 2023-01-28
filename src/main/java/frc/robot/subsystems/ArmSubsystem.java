@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-import java.util.logging.Logger;
+import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
@@ -21,7 +21,8 @@ import frc.sorutil.motor.SuTalonFx;
 import frc.sorutil.motor.SuController.ControlMode;
 
 public class ArmSubsystem extends SubsystemBase {
-  private final Logger logger;
+  private final java.util.logging.Logger logger;
+  private final Logger aLogger;
 
   private SuTalonFx jointA;
   private SuTalonFx jointB;
@@ -30,7 +31,8 @@ public class ArmSubsystem extends SubsystemBase {
 
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
-    logger = Logger.getLogger(ArmSubsystem.class.getName());
+    logger = java.util.logging.Logger.getLogger(ArmSubsystem.class.getName());
+    aLogger = Logger.getInstance();
 
     MotorConfiguration jointMotorConfig = new MotorConfiguration();
 

@@ -7,7 +7,8 @@ import java.util.List;
 import java.io.IOException;
 import java.util.ArrayList; 
 import edu.wpi.first.math.Pair;
-import java.util.logging.Logger;
+
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
 import org.photonvision.RobotPoseEstimator;
 import org.photonvision.RobotPoseEstimator.PoseStrategy;
@@ -22,21 +23,28 @@ import frc.robot.Constants;
 
 
 public class Vision extends SubsystemBase {
-  private final Logger logger;
+  private final java.util.logging.Logger logger;
+  private final Logger aLogger;
+
   private final PhotonCamera camera;
-  private PhotonPipelineResult results;
   private final AprilTagFieldLayout aprilTagFieldLayout; 
   private final RobotPoseEstimator robotPoseEstimator;
 
+  private PhotonPipelineResult results;
+
   public Vision() throws IOException { //IOException is thrown when the file for April Tag field layout isn't found
+    logger = java.util.logging.Logger.getLogger(Vision.class.getName());
+    aLogger = Logger.getInstance();
+
     Transform3d robotCam = new Transform3d(Constants.Vision.CAMERA_POSITION, Constants.Vision.CAMERA_ROTATION);
-    logger = Logger.getLogger(Vision.class.getName());
     camera = new PhotonCamera("Camera");
     results = camera.getLatestResult();
     aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource("/edu/wpi/first/apriltag/2023-chargedup.json");
     var cameraList = new ArrayList<Pair<PhotonCamera,  Transform3d>>();
     cameraList.add(new Pair<PhotonCamera, Transform3d>(camera, robotCam)); 
     robotPoseEstimator = new RobotPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cameraList);
+
+    logger.info("Vision Initialized.");
   } 
   
   /**

@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import java.util.logging.Logger;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.SwerveDrive;
@@ -19,16 +18,16 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   @SuppressWarnings("unused")
-  private final Logger logger;
+  private final java.util.logging.Logger logger;
 
   // The robot's subsystems and commands are defined here...
   private Swerve swerve = new Swerve(); 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    logger = Logger.getLogger(RobotContainer.class.getName());
-    // Configure the button bindings
+    logger = java.util.logging.Logger.getLogger(RobotContainer.class.getName());
 
+    // Configure the button bindings
     configureButtonBindings();
   }
 

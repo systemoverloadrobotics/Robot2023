@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import java.util.logging.Logger;
+import org.littletonrobotics.junction.Logger;
 
 //Rev imports 
 import com.revrobotics.CANSparkMax;
@@ -25,15 +25,17 @@ import frc.sorutil.motor.SuController.ControlMode;
 import frc.robot.Constants;
 
 public class SwerveModule extends SubsystemBase {
+	private java.util.logging.Logger logger = java.util.logging.Logger.getLogger(SwerveModule.class.getName());
+  private final Logger aLogger;
 
 	private SuSparkMax powerController;
 	private SuSparkMax steeringController;
 	private final String name;
 
-	private Logger logger = Logger.getLogger(SwerveModule.class.getName());
 
 	public SwerveModule(String name, int powerID, int steerID, double offset) {
 		this.name = name;
+		aLogger = Logger.getInstance();
 
 		MotorConfiguration powerControllerConfig = new MotorConfiguration();
 
@@ -61,6 +63,8 @@ public class SwerveModule extends SubsystemBase {
 
 		((CANSparkMax) steeringController.rawController())
 				.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle).setZeroOffset(offset);
+    
+    logger.info("\tModule " + name + " Initialized.");
 	}
 
 	public String getName() {
