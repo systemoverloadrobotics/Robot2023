@@ -9,10 +9,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.sorutil.ConstantAxis;
-import frc.sorutil.SorMath;
 import frc.sorutil.motor.PidProfile;
 
 /**
@@ -101,7 +99,10 @@ public final class Constants {
         public static final double SWERVE_ROTATION_CURRENT_LIMIT = 15.0;
         public static final double SWERVE_ROTATION_MAX_OUTPUT = 0.5;
 
-        public static final double SWERVE_MAX_SPEED = 0.9 * SorMath.revsPerMinuteToSpeedMetersPerSecond(4, (5600 / 6.75)); // m/s
+        public static final double DISTANCE_PER_REV = Units.inchesToMeters(4 * Math.PI);
+        public static final double NEO_MAX_SPEED = 5600; // RPM
+        public static final double MAX_WHEEL_SPEED = ((NEO_MAX_SPEED/60) * DISTANCE_PER_REV) / 6.75;
+        public static final double SWERVE_MAX_SPEED = 0.9 * MAX_WHEEL_SPEED; // m/s
         public static final double SWERVE_MAX_ACCELERATION = 3; // m/s^2
         public static final double SWERVE_ROTATION_MAX_SPEED = 3; // rad/s
         public static final double SWERVE_ROTATION_MAX_ACCELERATION = Math.PI; // rads/s^2
@@ -110,8 +111,8 @@ public final class Constants {
     }
 
     public static final class Input {
-        public static final double SWERVE_X_INPUT = -(new Joystick(1).getRawAxis(0));
-        public static final double SWERVE_Y_INPUT = -(new Joystick(1).getRawAxis(1));
-        public static final double SWERVE_ROTATION_INPUT = new Joystick(0).getRawAxis(0);
+        public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(1, 0);
+        public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(1, 1);
+        public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
     }
 }

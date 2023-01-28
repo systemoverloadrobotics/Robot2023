@@ -1,4 +1,5 @@
-package frc.robot.modules;
+package frc.robot.subsystems;
+
 import java.util.logging.Logger;
 
 //Rev imports 
@@ -32,8 +33,8 @@ public class SwerveModule extends SubsystemBase {
 	private Logger logger = Logger.getLogger(SwerveModule.class.getName());
 
 	public SwerveModule(String name, int powerID, int steerID, double offset) {
-
 		this.name = name;
+
 		MotorConfiguration powerControllerConfig = new MotorConfiguration();
 
 		powerControllerConfig.setPidProfile(Constants.Swerve.POWER_PROFILE);
@@ -42,7 +43,7 @@ public class SwerveModule extends SubsystemBase {
 
 		SensorConfiguration powerSensorConfig = new SensorConfiguration(
 				new SensorConfiguration.IntegratedSensorSource(6.75));
-		powerController = new SuSparkMax(new CANSparkMax(powerID, MotorType.kBrushless), name + " power",
+		powerController = new SuSparkMax(new CANSparkMax(powerID, MotorType.kBrushless), name + " Power",
 				powerControllerConfig, powerSensorConfig);
 		
 		// Steer Controller configuration
@@ -55,7 +56,7 @@ public class SwerveModule extends SubsystemBase {
 		SensorConfiguration steerSensorConfig = new SensorConfiguration(
 				new SensorConfiguration.ConnectedSensorSource(4096, 1, ConnectedSensorType.PWM_ENCODER));
 
-		steeringController = new SuSparkMax(new CANSparkMax(steerID, MotorType.kBrushless), name + " steer",
+		steeringController = new SuSparkMax(new CANSparkMax(steerID, MotorType.kBrushless), name + " Steer",
 				steerControllerConfig, steerSensorConfig);
 
 		((CANSparkMax) steeringController.rawController())
@@ -65,6 +66,7 @@ public class SwerveModule extends SubsystemBase {
 	public String getName() {
 		return this.name; 
 	}
+
 	public SwerveModuleState getState() {
 		return new SwerveModuleState(this.powerController.outputVelocity(),
 				Rotation2d.fromDegrees(this.steeringController.outputPosition()));
@@ -79,12 +81,12 @@ public class SwerveModule extends SubsystemBase {
 
 	public SwerveModulePosition getPosition() {
 		return new SwerveModulePosition(
-			SorMath.degreesToMeters(2, powerController.outputPosition()),
+			SorMath.degreesToMeters(4, powerController.outputPosition()),
 			new Rotation2d(steeringController.outputPosition()));
 	}
 
 	public void stop() {
-		powerController.set(ControlMode.PERCENT_OUTPUT, 0);
-		this.steeringController.set(ControlMode.PERCENT_OUTPUT, 0);
+		powerController.stop();
+		steeringController.stop();
 	}
 }

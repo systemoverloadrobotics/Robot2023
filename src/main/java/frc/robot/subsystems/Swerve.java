@@ -6,10 +6,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.modules.SwerveModule;
+
 import com.kauailabs.navx.frc.AHRS;
 
 public class Swerve extends SubsystemBase {
@@ -19,9 +17,6 @@ public class Swerve extends SubsystemBase {
 	private final SwerveModule backRight;
 
 	private AHRS gyro = new AHRS(SerialPort.Port.kUSB);
-
-
-	// TODO: add the gyro for this season
 	private SwerveDriveOdometry odometry = new SwerveDriveOdometry(
 			Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS, new Rotation2d(0),
 			new SwerveModulePosition[] {
@@ -33,13 +28,13 @@ public class Swerve extends SubsystemBase {
 
 	public Swerve() {
 		frontLeft = new SwerveModule("Front Left", Constants.Motor.SWERVE_FRONT_LEFT_POWER,
-				Constants.Motor.SWERVE_FRONT_LEFT_STEER, 2389);
+				Constants.Motor.SWERVE_FRONT_LEFT_STEER, 0);
 		frontRight = new SwerveModule("Front Right", Constants.Motor.SWERVE_FRONT_RIGHT_POWER,
-				Constants.Motor.SWERVE_FRONT_RIGHT_STEER, 805 - 2);
+				Constants.Motor.SWERVE_FRONT_RIGHT_STEER, 0);
 		backLeft = new SwerveModule("Back Left", Constants.Motor.SWERVE_BACK_LEFT_POWER,
-				Constants.Motor.SWERVE_BACK_LEFT_STEER, 478 + 5);
+				Constants.Motor.SWERVE_BACK_LEFT_STEER, 0);
 		backRight = new SwerveModule("Back Right", Constants.Motor.SWERVE_BACK_RIGHT_POWER,
-				Constants.Motor.SWERVE_BACK_RIGHT_STEER, 1421 + 30);
+				Constants.Motor.SWERVE_BACK_RIGHT_STEER, 0);
 		gyro.reset();
 	}
 
@@ -66,9 +61,7 @@ public class Swerve extends SubsystemBase {
 		backRight.setState(desiredStates[3]);
 	}
 
-	//gyro offset constant
 	public Rotation2d getRotation2d() {
-		
 		return Rotation2d.fromDegrees(gyro.getYaw());
 	}
 
@@ -78,6 +71,5 @@ public class Swerve extends SubsystemBase {
 				frontLeft.getPosition(), frontRight.getPosition(), backLeft.getPosition(),
 				backRight.getPosition()
 		});
-
 	}
 }
