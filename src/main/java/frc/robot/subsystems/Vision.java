@@ -28,7 +28,7 @@ public class Vision extends SubsystemBase {
   private final AprilTagFieldLayout aprilTagFieldLayout; 
   private final RobotPoseEstimator robotPoseEstimator;
 
-  public Vision() throws IOException {
+  public Vision() throws IOException { //IOException is thrown when the file for April Tag field layout isn't found
     Transform3d robotCam = new Transform3d(Constants.Vision.CAMERA_POSITION, Constants.Vision.CAMERA_ROTATION);
     logger = Logger.getLogger(Vision.class.getName());
     camera = new PhotonCamera("Camera");
@@ -77,6 +77,8 @@ public class Vision extends SubsystemBase {
   
   @Override
   public void periodic() {
-    if(camera.isConnected()) results = camera.getLatestResult(); 
+    if(camera.isConnected()) {
+      results = camera.getLatestResult();
+    }
   }
 }
