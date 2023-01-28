@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.sorutil.motor.MotorConfiguration;
-import frc.sorutil.motor.PidProfile;
 import frc.sorutil.motor.SuSparkMax;
 import frc.sorutil.motor.SuController.ControlMode;
 import frc.robot.Constants;

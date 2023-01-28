@@ -20,8 +20,6 @@ public class Swerve extends SubsystemBase {
 
 	private AHRS gyro = new AHRS(SerialPort.Port.kUSB);
 
-	private final Timer resetTimer = new Timer();
-	private boolean resetRun;
 
 	// TODO: add the gyro for this season
 	private SwerveDriveOdometry odometry = new SwerveDriveOdometry(
@@ -37,14 +35,12 @@ public class Swerve extends SubsystemBase {
 		frontLeft = new SwerveModule("Front Left", Constants.Motor.SWERVE_FRONT_LEFT_POWER,
 				Constants.Motor.SWERVE_FRONT_LEFT_STEER, 2389);
 		frontRight = new SwerveModule("Front Right", Constants.Motor.SWERVE_FRONT_RIGHT_POWER,
-				Constants.Motor.SWERVE_FRONT_RIGHT_POWER, 805 - 2);
+				Constants.Motor.SWERVE_FRONT_RIGHT_STEER, 805 - 2);
 		backLeft = new SwerveModule("Back Left", Constants.Motor.SWERVE_BACK_LEFT_POWER,
 				Constants.Motor.SWERVE_BACK_LEFT_STEER, 478 + 5);
 		backRight = new SwerveModule("Back Right", Constants.Motor.SWERVE_BACK_RIGHT_POWER,
 				Constants.Motor.SWERVE_BACK_RIGHT_STEER, 1421 + 30);
-
-		resetTimer.start();
-
+		gyro.reset();
 	}
 
 	public void stopModules() {
@@ -70,23 +66,18 @@ public class Swerve extends SubsystemBase {
 		backRight.setState(desiredStates[3]);
 	}
 
+	//gyro offset constant
 	public Rotation2d getRotation2d() {
+		
 		return Rotation2d.fromDegrees(gyro.getYaw());
 	}
 
 	@Override
 	public void periodic() {
-		SmartDashboard.putData("Gyro", gyro);
-
-		// Run reset once after a second.
-		if (!resetRun && resetTimer.get() > 1) {
-			gyro.reset();
-			resetRun = true;
-		}
-
 		odometry.update(gyro.getRotation2d(), new SwerveModulePosition[] {
 				frontLeft.getPosition(), frontRight.getPosition(), backLeft.getPosition(),
 				backRight.getPosition()
 		});
+
 	}
 }
