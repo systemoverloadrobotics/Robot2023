@@ -10,10 +10,12 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.sorutil.SorMath;
 import frc.sorutil.motor.MotorConfiguration;
+import frc.sorutil.motor.PidProfile;
 import frc.sorutil.motor.SensorConfiguration;
 import frc.sorutil.motor.SuController;
 import frc.sorutil.motor.SuSparkMax;
@@ -25,59 +27,52 @@ public class ArmSubsystem extends SubsystemBase {
   private SuTalonFx jointA;
   private SuTalonFx jointB;
   private SuSparkMax cascade;
+  private Pair<Double, Double> intendedPosition;
 
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
     logger = Logger.getLogger(ArmSubsystem.class.getName());
     MotorConfiguration jointMotorConfig = new MotorConfiguration();
     MotorConfiguration cascadeMotorConfig = new MotorConfiguration();
+    jointMotorConfig.setPidProfile(new PidProfile(0, 0, 0));// placeholders
     jointMotorConfig.setCurrentLimit(Constants.Motor.ARM_JOINT_CURRENT_LIMIT);
+    cascadeMotorConfig.setPidProfile(new PidProfile(0, 0, 0));// placeholders
     cascadeMotorConfig.setCurrentLimit(Constants.Motor.ARM_CASCADE_CURRENT_LIMIT);
-    SensorConfiguration jointSensorConfiguration = new SensorConfiguration(new SensorConfiguration.IntegratedSensorSource(1));
-    SensorConfiguration cascadeSensorConfiguration = new SensorConfiguration(new SensorConfiguration.IntegratedSensorSource(1));
-    jointA = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_INDEX), "Joint Motor A", jointMotorConfig, jointSensorConfiguration);
-    jointB = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_FOLLOWER_INDEX), "Joint Motor B", jointMotorConfig, jointSensorConfiguration);
-    cascade = new SuSparkMax(new CANSparkMax(Constants.Motor.ARM_CASCADE_FOLLOWER_INDEX, MotorType.kBrushless), "Cascade Motor", jointMotorConfig, cascadeSensorConfiguration);
+    SensorConfiguration jointSensorConfiguration = new SensorConfiguration(
+        new SensorConfiguration.IntegratedSensorSource(1));
+    SensorConfiguration cascadeSensorConfiguration = new SensorConfiguration(
+        new SensorConfiguration.IntegratedSensorSource(1));
+    jointA = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_INDEX), "Joint Motor A", jointMotorConfig,
+        jointSensorConfiguration);
+    jointB = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_FOLLOWER_INDEX), "Joint Motor B", jointMotorConfig,
+        jointSensorConfiguration);
+    cascade = new SuSparkMax(new CANSparkMax(Constants.Motor.ARM_CASCADE_INDEX, MotorType.kBrushless), "Cascade Motor",
+        cascadeMotorConfig, cascadeSensorConfiguration);
     jointB.follow(jointA);
   }
 
   /*
-   * Reference plane for 2d coordinate has origin at joint with plane parallel to side view
+   * Reference plane for 2d coordinate has origin at joint with plane parallel to
+   * side view
    * x and y units are feet
    */
-  public void setPosition(double x, double y) {
-    double[] vec = cartesianToPolar(x, y);
-    jointA.set(ControlMode.POSITION, SorMath.degreesToTicks(Math.toDegrees(vec[1]), Constants.Motor.ARM_JOINT_ENCODER_RESOLUTION));
-    cascade.set(ControlMode.POSITION, lengthToTicks(vec[0]));
+  public void setPosition(Pair<Double, Double> pair) {
+    intendedPosition = pair;
   }
 
-  public double[] getElevatorPosition() {
-    double r = ticksToLength(cascade.outputPosition());
-    double theta = Math.toRadians(SorMath.ticksToDegrees(jointA.outputPosition(), Constants.Motor.ARM_JOINT_ENCODER_RESOLUTION));
-    return new double[]{r, theta}; 
-  }
-
-  public double[] cartesianToPolar(double x, double y) {
-    return new double[]{Math.sqrt(Math.pow(x, 2) + Math.pow(x, 2)), Math.atan2(y, x)};
-  }
-
-  public double[] polarToCartesian(double r, double theta) {
-    return new double[]{r * Math.cos(theta), r * Math.sin(theta)};
-  }
-
-  public double lengthToTicks(double length) {
-    double ticks = (length - Constants.Motor.ARM_CASCADE_STARTING_HEIGHT) * Constants.Motor.ARM_CASCADE_TICKS_PER_FEET;
-    return ticks < 0 ? 0 : ticks;
-  }
-
-  public double ticksToLength(double ticks) {
-    double length = (ticks / Constants.Motor.ARM_CASCADE_TICKS_PER_FEET) + Constants.Motor.ARM_CASCADE_STARTING_HEIGHT;
-    return length;
+  public Pair<Double, Double> getManipulatorPosition() {
+    double r = 0.0444754 / 2;
+    double theta = Math.toRadians(jointA.outputPosition());
+    Pair<Double, Double> position = new Pair<>(r, theta);
+    return position;
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    // This method will be called once per scheduler run4
+    double[] vec = SorMath.cartesianToPolar(intendedPosition.getFirst(), intendedPosition.getSecond());
+    jointA.set(ControlMode.POSITION, Math.toDegrees(vec[1]));
+    cascade.set(ControlMode.POSITION, vec[0]);
   }
 
   @Override
