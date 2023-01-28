@@ -8,9 +8,8 @@ import java.util.logging.Logger;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
+import edu.wpi.first.wpilibj.simulation.JoystickSim;
 import frc.robot.commands.SwerveDrive;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Swerve;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -25,12 +24,7 @@ public class RobotContainer {
   private final Logger logger;
 
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-  private Swerve swerve = new Swerve();
-  private final ExampleCommand autoCommand = new ExampleCommand(exampleSubsystem);
-
-  private GenericHID leftMaster = new GenericHID(0);
-  private GenericHID rightMaster = new GenericHID(1);
+  private Swerve swerve = new Swerve(); 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -47,8 +41,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    swerve.setDefaultCommand(new SwerveDrive(swerve, () -> -rightMaster.getRawAxis(0),
-    () -> -rightMaster.getRawAxis(1), () -> leftMaster.getRawAxis(0)));
+    swerve.setDefaultCommand(new SwerveDrive(swerve, () -> Constants.Input.SWERVE_X_INPUT, 
+    () -> Constants.Input.SWERVE_X_INPUT, () -> Constants.Input.SWERVE_ROTATION_INPUT));
   }
 
   /**
@@ -58,6 +52,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return autoCommand;
+    return null;
   }
 }

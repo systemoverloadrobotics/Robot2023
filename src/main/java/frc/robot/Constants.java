@@ -4,14 +4,15 @@
 
 package frc.robot;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.sorutil.ConstantAxis;
+import frc.sorutil.SorMath;
 import frc.sorutil.motor.PidProfile;
 
 /**
@@ -47,7 +48,7 @@ public final class Constants {
                 new Translation2d(RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2),
                 new Translation2d(RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2));
     }
-    
+
     public static final class Drive {
         // Drive settings here
         // TODO: replace these with actual constants
@@ -63,8 +64,10 @@ public final class Constants {
         public static final double CAMERA_ROTATION_PITCH = 0; // Radians
         public static final double CAMERA_ROTATION_YAW = 0; // Radians
 
-        public static final Translation3d CAMERA_POSITION = new Translation3d(CAMERA_POSITION_X, CAMERA_POSITION_Y, CAMERA_POSITION_Z);
-        public static final Rotation3d CAMERA_ROTATION = new Rotation3d(CAMERA_ROTATION_ROLL,CAMERA_ROTATION_PITCH,CAMERA_ROTATION_YAW);
+        public static final Translation3d CAMERA_POSITION = new Translation3d(CAMERA_POSITION_X, CAMERA_POSITION_Y,
+                CAMERA_POSITION_Z);
+        public static final Rotation3d CAMERA_ROTATION = new Rotation3d(CAMERA_ROTATION_ROLL, CAMERA_ROTATION_PITCH,
+                CAMERA_ROTATION_YAW);
     }
 
     public static final class Motor {
@@ -79,11 +82,11 @@ public final class Constants {
 
         public static final int SWERVE_BACK_RIGHT_POWER = 7;
         public static final int SWERVE_BACK_RIGHT_STEER = 8;
-        
+
         public static final int ROLLER_LEFT = 5;
         public static final int ROLLER_RIGHT = 6;
     }
-    
+
     public static final class Pneumatics {
         public static final int CLAW_SOLENOID_CHANNEL = 1;
     }
@@ -91,22 +94,24 @@ public final class Constants {
     public static final class Swerve {
         public static final PidProfile STEER_PROFILE = new PidProfile(0.03, 0, 0.1);
         public static final PidProfile POWER_PROFILE = new PidProfile(0.0001, 0.0, 0);
-  
-        public static final double SWERVE_MAX_SPEED = 5.18; // m/s
+
+        public static final double SWERVE_POWER_CURRENT_LIMIT = 15.0;
+        public static final double SWERVE_POWER_MAX_OUTPUT = 0.5;
+
+        public static final double SWERVE_ROTATION_CURRENT_LIMIT = 15.0;
+        public static final double SWERVE_ROTATION_MAX_OUTPUT = 0.5;
+
+        public static final double SWERVE_MAX_SPEED = 0.9 * SorMath.revsPerMinuteToSpeedMetersPerSecond(4, (5600 / 6.75)); // m/s
         public static final double SWERVE_MAX_ACCELERATION = 3; // m/s^2
         public static final double SWERVE_ROTATION_MAX_SPEED = 3; // rad/s
         public static final double SWERVE_ROTATION_MAX_ACCELERATION = Math.PI; // rads/s^2
-  
+
         public static final double SWERVE_DEADBAND = 0.05;
-  
-        public static final class Characteristics {
-          public static final double MPS_TO_RPM = 1315 / 4;
-          public static final double COUNTS_PER_100MS = 4201;
-        }
-      }
-      public static final class Input {
-        public static final ConstantAxis SWERVE_X = new ConstantAxis(0, 1);
-        public static final ConstantAxis SWERVE_Y = new ConstantAxis(0, 2);
-        public static final ConstantAxis SWERVE_ROTATION = new ConstantAxis(1, 1);
-      }
+    }
+
+    public static final class Input {
+        public static final double SWERVE_X_INPUT = -(new Joystick(1).getRawAxis(0));
+        public static final double SWERVE_Y_INPUT = -(new Joystick(1).getRawAxis(1));
+        public static final double SWERVE_ROTATION_INPUT = new Joystick(0).getRawAxis(0);
+    }
 }

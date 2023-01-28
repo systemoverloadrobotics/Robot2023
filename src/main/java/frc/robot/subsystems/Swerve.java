@@ -20,8 +20,6 @@ public class Swerve extends SubsystemBase {
 
 	private AHRS gyro = new AHRS(SerialPort.Port.kUSB);
 
-	private final Timer resetTimer = new Timer();
-	private boolean resetRun;
 
 	// TODO: add the gyro for this season
 	private SwerveDriveOdometry odometry = new SwerveDriveOdometry(
@@ -43,8 +41,6 @@ public class Swerve extends SubsystemBase {
 		backRight = new SwerveModule("Back Right", Constants.Motor.SWERVE_BACK_RIGHT_POWER,
 				Constants.Motor.SWERVE_BACK_RIGHT_STEER, 1421 + 30);
 		gyro.reset();
-		resetTimer.start();
-
 	}
 
 	public void stopModules() {
@@ -78,18 +74,10 @@ public class Swerve extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		SmartDashboard.putData("Gyro", gyro);
-		// Run reset once after a second.
-		// if (!resetRun && resetTimer.get() > 1) {
-		// 	gyro.reset();
-		// 	resetRun = true;
-		// }
-		SmartDashboard.putNumber("better-gyro", gyro.getYaw()); 
 		odometry.update(gyro.getRotation2d(), new SwerveModulePosition[] {
 				frontLeft.getPosition(), frontRight.getPosition(), backLeft.getPosition(),
 				backRight.getPosition()
 		});
 
-		SmartDashboard.putNumber("fl-steer", frontLeft.getState().angle.getDegrees());
 	}
 }

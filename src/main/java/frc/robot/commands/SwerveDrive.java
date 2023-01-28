@@ -31,7 +31,6 @@ public class SwerveDrive extends CommandBase {
 
   private double cleanAndScaleInput(double input, SlewRateLimiter limiter, double speedScaling) {
     input = (Math.abs(input) > Constants.Swerve.SWERVE_DEADBAND) ? input : 0;
-    SmartDashboard.putNumber("input", input); 
     input = SorMath.signedSquare(input);
     input = limiter.calculate(input);
     input *= speedScaling;
@@ -43,7 +42,6 @@ public class SwerveDrive extends CommandBase {
   @Override
   public void execute() {
     // get joystick inputs and clean/scale them
-    System.out.println(xSupplier.getAsDouble());
     double xSpeed = cleanAndScaleInput(xSupplier.getAsDouble(), xLimiter,
         Constants.Swerve.SWERVE_MAX_SPEED);
     double ySpeed = cleanAndScaleInput(ySupplier.getAsDouble(), yLimiter,
@@ -55,12 +53,12 @@ public class SwerveDrive extends CommandBase {
     ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed,
         rotationSpeed, swerve.getRotation2d());
     // Calculate swerve module states using the desired state of the robot chassis.
-    SwerveModuleState[] moduleState =
+    SwerveModuleState[] moduleStates =
         Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
-    SwerveDriveKinematics .desaturateWheelSpeeds(moduleState,
+    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates,
         Constants.Swerve.SWERVE_MAX_SPEED);
-    SmartDashboard.putNumber("wantedrpos", moduleState[0].angle.getDegrees());
-    swerve.setModuleStates(moduleState);
+    SmartDashboard.putNumber("wantedrpos", moduleStates[0].angle.getDegrees());
+    swerve.setModuleStates(moduleStates);
   }
 
   // Called once when the command ends or is interrupted.

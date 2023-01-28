@@ -1,30 +1,27 @@
 package frc.robot.modules;
-
 import java.util.logging.Logger;
 
-import com.ctre.phoenix.sensors.CANCoder;
+//Rev imports 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+//Swerve WPIlib improts 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+
+//SORUtil Imports 
 import frc.sorutil.SorMath;
 import frc.sorutil.motor.MotorConfiguration;
-import frc.sorutil.motor.PidProfile;
 import frc.sorutil.motor.SensorConfiguration;
-import frc.sorutil.motor.SuController;
 import frc.sorutil.motor.SuSparkMax;
-import frc.sorutil.motor.SensorConfiguration.CanCoder;
 import frc.sorutil.motor.SensorConfiguration.ConnectedSensorType;
-import frc.sorutil.motor.SensorConfiguration.ExternalSensor;
 import frc.sorutil.motor.SuController.ControlMode;
+
+//Robot Constants Import 
+import frc.robot.Constants;
 
 public class SwerveModule extends SubsystemBase {
 
@@ -37,27 +34,23 @@ public class SwerveModule extends SubsystemBase {
 	public SwerveModule(String name, int powerID, int steerID, double offset) {
 
 		this.name = name;
-		// Power controller configuration
 		MotorConfiguration powerControllerConfig = new MotorConfiguration();
 
-		// TODO: adjust the PID values for power controller
 		powerControllerConfig.setPidProfile(Constants.Swerve.POWER_PROFILE);
-		powerControllerConfig.setCurrentLimit(15.0);
-		powerControllerConfig.setMaxOutput(0.5);
+		powerControllerConfig.setCurrentLimit(Constants.Swerve.SWERVE_POWER_CURRENT_LIMIT);
+		powerControllerConfig.setMaxOutput(Constants.Swerve.SWERVE_POWER_MAX_OUTPUT);
 
-		// TODO: find gear ratio for outputOffset
 		SensorConfiguration powerSensorConfig = new SensorConfiguration(
 				new SensorConfiguration.IntegratedSensorSource(6.75));
 		powerController = new SuSparkMax(new CANSparkMax(powerID, MotorType.kBrushless), name + " power",
 				powerControllerConfig, powerSensorConfig);
-
+		
 		// Steer Controller configuration
 		MotorConfiguration steerControllerConfig = new MotorConfiguration();
 
-		// TODO: adjust the PID values for power controller
 		steerControllerConfig.setPidProfile(Constants.Swerve.STEER_PROFILE);
-		steerControllerConfig.setCurrentLimit(20.0);
-		steerControllerConfig.setMaxOutput(1);
+		steerControllerConfig.setCurrentLimit(Constants.Swerve.SWERVE_ROTATION_CURRENT_LIMIT);
+		steerControllerConfig.setMaxOutput(Constants.Swerve.SWERVE_ROTATION_MAX_OUTPUT);
 		
 		SensorConfiguration steerSensorConfig = new SensorConfiguration(
 				new SensorConfiguration.ConnectedSensorSource(4096, 1, ConnectedSensorType.PWM_ENCODER));
@@ -69,6 +62,9 @@ public class SwerveModule extends SubsystemBase {
 				.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle).setZeroOffset(offset);
 	}
 
+	public String getName() {
+		return this.name; 
+	}
 	public SwerveModuleState getState() {
 		return new SwerveModuleState(this.powerController.outputVelocity(),
 				Rotation2d.fromDegrees(this.steeringController.outputPosition()));
@@ -78,8 +74,6 @@ public class SwerveModule extends SubsystemBase {
 		state = SwerveModuleState.optimize(state, getState().angle);
 		powerController.set(ControlMode.VELOCITY,
 				SorMath.speedMetersPerSecondToRevsPerMinute(4, state.speedMetersPerSecond));
-		// SmartDashboard.putNumber("steer-" + name, state.angle.getDegrees());
-		// SmartDashboard.putNumber("steer-encoder-" + name, powerController.outputPosition());
 		steeringController.set(ControlMode.POSITION, state.angle.getDegrees());
 	}
 
