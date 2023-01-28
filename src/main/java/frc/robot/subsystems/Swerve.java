@@ -21,6 +21,8 @@ public class Swerve extends SubsystemBase {
 	private final SwerveModule backLeft;
 	private final SwerveModule backRight;
 
+  private SwerveModuleState[] lastIntendedStates;
+
 	private AHRS gyro = new AHRS(SerialPort.Port.kUSB);
 	private SwerveDriveOdometry odometry = new SwerveDriveOdometry(
 			Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS, new Rotation2d(0),
@@ -65,6 +67,8 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public void setModuleStates(SwerveModuleState[] desiredStates) {
+    lastIntendedStates = desiredStates;
+
 		frontLeft.setState(desiredStates[0]);
 		frontRight.setState(desiredStates[1]);
 		backLeft.setState(desiredStates[2]);
@@ -81,5 +85,8 @@ public class Swerve extends SubsystemBase {
 				frontLeft.getPosition(), frontRight.getPosition(), backLeft.getPosition(),
 				backRight.getPosition()
 		});
+
+    aLogger.recordOutput("SwerveDrive/IntendedStates", lastIntendedStates);
+    aLogger.recordOutput("SwerveDrive/GyroscopeHeading", getRotation2d().getDegrees());
 	}
 }

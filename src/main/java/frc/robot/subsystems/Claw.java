@@ -72,7 +72,7 @@ public class Claw extends SubsystemBase {
 
   @Override
   public void periodic() {
-    
+    aLogger.recordOutput("Claw/Open", extendSolenoid.get());
   }
 
   @Override

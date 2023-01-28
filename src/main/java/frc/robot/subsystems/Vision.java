@@ -88,5 +88,9 @@ public class Vision extends SubsystemBase {
     if(camera.isConnected()) {
       results = camera.getLatestResult();
     }
+
+    aLogger.recordOutput("Vision/HasTarget", targetsExist());
+    aLogger.recordOutput("Vision/CameraConnected", camera.isConnected());
+    aLogger.recordOutput("Vision/VisionPose", robotPoseEstimator.getReferencePose());
   }
 }

@@ -63,8 +63,10 @@ public class SwerveModule extends SubsystemBase {
 
 		((CANSparkMax) steeringController.rawController())
 				.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle).setZeroOffset(offset);
+		
+		stateName = "Swerve/" + name.replace(" ", "") + "/ModuleState";
     
-    logger.info("\tModule " + name + " Initialized.");
+		logger.info("\tModule " + name + " Initialized.");
 	}
 
 	public String getName() {
@@ -92,5 +94,12 @@ public class SwerveModule extends SubsystemBase {
 	public void stop() {
 		powerController.stop();
 		steeringController.stop();
+	}
+
+	private final String stateName;
+
+	@Override
+	public void periodic() {
+		aLogger.recordOutput(stateName, getState());
 	}
 }
