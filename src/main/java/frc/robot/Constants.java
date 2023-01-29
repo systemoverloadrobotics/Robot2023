@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.sorutil.ConstantAxis;
@@ -134,5 +135,12 @@ public final class Constants {
         public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(1, 0);
         public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(1, 1);
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
+    }
+    public static final class Auto{
+        public static final double SWERVE_ROTATION_MAX_SPEED = 3; // rad/s
+        public static final double SWERVE_ROTATION_MAX_ACCELERATION = Math.PI; // rads/s^2
+         public static final TrapezoidProfile.Constraints SWERVE_PID_CONSTRAINTS =
+         new TrapezoidProfile.Constraints(SWERVE_ROTATION_MAX_SPEED,
+            SWERVE_ROTATION_MAX_ACCELERATION);
     }
 }
