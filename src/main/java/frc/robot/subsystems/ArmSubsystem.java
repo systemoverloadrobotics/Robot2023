@@ -4,13 +4,9 @@
 
 package frc.robot.subsystems;
 
-
-import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -21,11 +17,13 @@ import frc.robot.Constants;
 import frc.sorutil.SorMath;
 import frc.sorutil.motor.MotorConfiguration;
 import frc.sorutil.motor.SensorConfiguration;
+import frc.sorutil.motor.SuController.ControlMode;
 import frc.sorutil.motor.SuSparkMax;
 import frc.sorutil.motor.SuTalonFx;
-import frc.sorutil.motor.SuController.ControlMode;
+import org.littletonrobotics.junction.Logger;
 
 public class ArmSubsystem extends SubsystemBase {
+
   private final java.util.logging.Logger logger;
   private final Logger aLogger;
 
@@ -35,21 +33,42 @@ public class ArmSubsystem extends SubsystemBase {
   private Pair<Double, Double> intendedPosition;
 
   private static class ArmModel {
+
     private final Mechanism2d mech = new Mechanism2d(3, 3);
     private final MechanismLigament2d arm;
     private final MechanismLigament2d elevator;
 
     public ArmModel(String name) {
-      var root = mech.getRoot(name, 3 - Constants.Arm.ARM_PIVOT_X, Constants.Arm.ARM_PIVOT_Y);
-      arm = root.append(
-          new MechanismLigament2d("arm", Constants.Arm.MIN_ARM_LENGTH, 90, 4, new Color8Bit(Color.kAquamarine)));
-      elevator = arm.append(
-          new MechanismLigament2d("elevator", -Constants.Arm.MIN_ARM_LENGTH, 0, 6, new Color8Bit(Color.kGreen)));
+      var root = mech.getRoot(
+        name,
+        3 - Constants.Arm.ARM_PIVOT_X,
+        Constants.Arm.ARM_PIVOT_Y
+      );
+      arm =
+        root.append(
+          new MechanismLigament2d(
+            "arm",
+            Constants.Arm.MIN_ARM_LENGTH,
+            90,
+            4,
+            new Color8Bit(Color.kAquamarine)
+          )
+        );
+      elevator =
+        arm.append(
+          new MechanismLigament2d(
+            "elevator",
+            -Constants.Arm.MIN_ARM_LENGTH,
+            0,
+            6,
+            new Color8Bit(Color.kGreen)
+          )
+        );
     }
 
     /**
      * update changes the position of the arm model to match the arguments passed.
-     * 
+     *
      * The first argument should be angle of the arm in degrees measured from
      * straight out as 0, and the second argument should be the length of the arm
      * from the pivot, accounting for the minimum length of the arm.
@@ -63,7 +82,7 @@ public class ArmSubsystem extends SubsystemBase {
       return mech;
     }
   }
-  
+
   // Logging visualization
   private ArmModel intentMechanism = new ArmModel("ArmIntent");
   private ArmModel currentMechanism = new ArmModel("ArmCurrent");
@@ -78,21 +97,41 @@ public class ArmSubsystem extends SubsystemBase {
     jointMotorConfig.setPidProfile(Constants.Arm.ARM_PID_PROFILE);
     jointMotorConfig.setCurrentLimit(Constants.Arm.ARM_JOINT_CURRENT_LIMIT);
     SensorConfiguration jointSensorConfiguration = new SensorConfiguration(
-        new SensorConfiguration.IntegratedSensorSource(1));
-    jointA = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_INDEX), "Joint Motor A", jointMotorConfig,
-        jointSensorConfiguration);
-    jointB = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_FOLLOWER_INDEX), "Joint Motor B", jointMotorConfig,
-        jointSensorConfiguration);
+      new SensorConfiguration.IntegratedSensorSource(1)
+    );
+    jointA =
+      new SuTalonFx(
+        new WPI_TalonFX(Constants.Motor.ARM_JOINT_INDEX),
+        "Joint Motor A",
+        jointMotorConfig,
+        jointSensorConfiguration
+      );
+    jointB =
+      new SuTalonFx(
+        new WPI_TalonFX(Constants.Motor.ARM_JOINT_FOLLOWER_INDEX),
+        "Joint Motor B",
+        jointMotorConfig,
+        jointSensorConfiguration
+      );
     jointB.follow(jointA);
 
     MotorConfiguration cascadeMotorConfig = new MotorConfiguration();
     cascadeMotorConfig.setPidProfile(Constants.Arm.CASCADE_PID_PROFILE);
     cascadeMotorConfig.setCurrentLimit(Constants.Arm.ARM_CASCADE_CURRENT_LIMIT);
     SensorConfiguration cascadeSensorConfiguration = new SensorConfiguration(
-        new SensorConfiguration.IntegratedSensorSource(1));
+      new SensorConfiguration.IntegratedSensorSource(1)
+    );
 
-    cascade = new SuSparkMax(new CANSparkMax(Constants.Motor.ARM_CASCADE_INDEX, MotorType.kBrushless), "Cascade Motor",
-        cascadeMotorConfig, cascadeSensorConfiguration);
+    cascade =
+      new SuSparkMax(
+        new CANSparkMax(
+          Constants.Motor.ARM_CASCADE_INDEX,
+          MotorType.kBrushless
+        ),
+        "Cascade Motor",
+        cascadeMotorConfig,
+        cascadeSensorConfiguration
+      );
 
     logger.info("Arm Initialized.");
   }
@@ -119,12 +158,18 @@ public class ArmSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     // TODO: This should be changed to run a constant program that seeks the correct
     // position while keeping the arm safe.
-    double[] vec = SorMath.cartesianToPolar(intendedPosition.getFirst(), intendedPosition.getSecond());
+    double[] vec = SorMath.cartesianToPolar(
+      intendedPosition.getFirst(),
+      intendedPosition.getSecond()
+    );
     jointA.set(ControlMode.POSITION, Math.toDegrees(vec[1]));
     cascade.set(ControlMode.POSITION, vec[0]);
 
     intentMechanism.update(Math.toDegrees(vec[1]), vec[0]);
-    currentMechanism.update(jointA.outputPosition(), getManipulatorPosition().getFirst());
+    currentMechanism.update(
+      jointA.outputPosition(),
+      getManipulatorPosition().getFirst()
+    );
     aLogger.recordOutput("Arm/IntendedPosition", intentMechanism.asMechanism());
     aLogger.recordOutput("Arm/CurrentPosition", currentMechanism.asMechanism());
   }
