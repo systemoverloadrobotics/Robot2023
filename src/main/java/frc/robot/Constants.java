@@ -87,7 +87,7 @@ public final class Constants {
         // Motor indexes + configs here
         public static final int ARM_JOINT_INDEX = 0;
         public static final int ARM_JOINT_FOLLOWER_INDEX = 1;
-        public static final int ARM_CASCADE_INDEX = 2;
+        public static final int ARM_CASCADE_INDEX = 20;
 
         public static final int SWERVE_FRONT_LEFT_POWER = 1;
         public static final int SWERVE_FRONT_LEFT_STEER = 2;

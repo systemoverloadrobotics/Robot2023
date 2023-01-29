@@ -1,27 +1,18 @@
 {
-  "HALProvider": {
-    "Other Devices": {
-      "SPARK MAX [1]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [2]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [3]": {
-        "header": {
-          "open": true
-        }
-      }
-    }
-  },
   "NTProvider": {
     "types": {
+      "/AdvantageKit/RealOutputs/Arm/CurrentPosition": "Mechanism2d",
+      "/AdvantageKit/RealOutputs/Arm/IntendedPosition": "Mechanism2d",
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Gyro": "Gyro"
+    }
+  },
+  "NetworkTables": {
+    "Retained Values": {
+      "open": false
+    },
+    "Transitory Values": {
+      "open": false
     }
   }
 }
