@@ -24,28 +24,27 @@ public class DriveTrainPoseEstimator extends SubsystemBase {
   private Swerve swerve;
   private Vision vision;
   private SwerveDrivePoseEstimator poseEstimator;
-  
+ 
+
   public DriveTrainPoseEstimator() {
+   
     logger = Logger.getLogger(DriveTrainPoseEstimator.class.getName());
-    poseEstimator = new SwerveDrivePoseEstimator(
-        Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS, 
-        swerve.getHeading(), 
-        swerve.getModulePositions(), 
-        new Pose2d(),
+    poseEstimator = new SwerveDrivePoseEstimator(Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS,
+        swerve.getHeading(), swerve.getModulePositions(), new Pose2d(),
         new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.1),
-        new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.1)
-    );
+        new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.1));
+    var visionEstimatedPose = vision.getEstimatedGlobalPose(getEstimatedPose());
+    poseEstimator.addVisionMeasurement(visionEstimatedPose.getFirst(), Timer.getFPGATimestamp());
   }
 
-  public Pose2d getEstimatedPose(){
+  public Pose2d getEstimatedPose() {
     return poseEstimator.getEstimatedPosition();
   }
 
   @Override
   public void periodic() {
-    var visionEstimatedPose = vision.getEstimatedGlobalPose(getEstimatedPose());
-    poseEstimator.addVisionMeasurement(visionEstimatedPose.getFirst(), Timer.getFPGATimestamp());
-    poseEstimator.resetPosition(swerve.getHeading(), swerve.getModulePositions(), getEstimatedPose());
+    poseEstimator.updateWithTime(Timer.getFPGATimestamp(), swerve.getHeading(), swerve.getModulePositions());
+   
   }
 
   @Override
