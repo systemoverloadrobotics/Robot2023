@@ -39,23 +39,23 @@ public class AutoPaths {
         String alliance = DriverStation.getAlliance().equals(Alliance.Red) ? "red" : "blue";
         String basePathFileName = "auto_" + alliance + "_" + getDSPosition() + "_";
         // Do arm stuff here for config from ScoringPosition
-        SequentialCommandGroup command = new SequentialCommandGroup();
-        command.addCommands(); // TODO: arm command for score
+        SequentialCommandGroup autoCommandGroup = new SequentialCommandGroup();
+        autoCommandGroup.addCommands(); // TODO: arm command for score
         switch (piece) {
             case ONE:
-                command.addCommands(getPathCommand(swerve, basePathFileName + "one_A"));
+                autoCommandGroup.addCommands(getPathCommand(swerve, basePathFileName + "one_taxi"));
                 if (balance) {
-                    command.addCommands(getPathCommand(swerve, "auto_balance_prep" + alliance));
-                    command.addCommands(); // TODO: Balance command
+                    autoCommandGroup.addCommands(getPathCommand(swerve, "auto_balance_prep" + alliance));
+                    autoCommandGroup.addCommands(); // TODO: Balance command
                 }
                 break;
             case TWO:
-                command.addCommands(getPathCommand(swerve, basePathFileName + "two_A"));
-                command.addCommands(); // TODO: arm command for pickup
-                command.addCommands(getPathCommand(swerve, basePathFileName + "two_B"));
-                command.addCommands(); // TODO: arm command for score
+                autoCommandGroup.addCommands(getPathCommand(swerve, basePathFileName + "two_pickup"));
+                autoCommandGroup.addCommands(); // TODO: arm command for pickup
+                autoCommandGroup.addCommands(getPathCommand(swerve, basePathFileName + "two_dropoff"));
+                autoCommandGroup.addCommands(); // TODO: arm command for score
         }
-        return command;
+        return autoCommandGroup;
     }
 
     private static String getDSPosition() {
