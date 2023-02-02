@@ -28,7 +28,7 @@ public class AutoPaths {
             Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS,
             Constants.Auto.X_PID_CONTROLLER,
             Constants.Auto.Y_PID_CONTROLLER, 
-            Constants.Auto.DEG_PID_CONTROLLER,
+            Constants.Auto.ROT_PID_CONTROLLER,
             swerve::setModuleStates, 
             swerve
         );
@@ -36,25 +36,39 @@ public class AutoPaths {
     }
 
     private static Command createAutoCommand(Swerve swerve, ScoringPosition goal, PieceCount piece, boolean balance) {
-        String alliance = DriverStation.getAlliance().equals(Alliance.Red) ? "red_" : "blue_";
-        SequentialCommandGroup command = new SequentialCommandGroup(
-            // TODO: ARM DROPOFF
-            getPathCommand(swerve, "auto_" + alliance + piece + "_" + goal) 
-        );
-        if (balance) {
-            command.addCommands(
-                getPathCommand(swerve, "auto_balance")
-            );
-        }
-        if (piece == PieceCount.TWO) {
-            command.addCommands(
-                getPathCommand(swerve, "auto_" + alliance + piece + "_" + goal + "_pathA"),
-                // TODO: ARM PICKUP
-                getPathCommand(swerve, "auto_" + alliance + piece + "_" + goal + "_pathB")
-                // TODO: MORE ARM DROPOFF
-            );
+        String alliance = DriverStation.getAlliance().equals(Alliance.Red) ? "red" : "blue";
+        String basePathFileName = "auto_" + alliance + "_" + getDSPosition() + "_";
+        // Do arm stuff here for config from ScoringPosition
+        SequentialCommandGroup command = new SequentialCommandGroup();
+        command.addCommands(); // TODO: arm command for score
+        switch (piece) {
+            case ONE:
+                command.addCommands(getPathCommand(swerve, basePathFileName + "one_A"));
+                if (balance) {
+                    command.addCommands(getPathCommand(swerve, "auto_balance_prep" + alliance));
+                    command.addCommands(); // TODO: Balance command
+                }
+                break;
+            case TWO:
+                command.addCommands(getPathCommand(swerve, basePathFileName + "two_A"));
+                command.addCommands(); // TODO: arm command for pickup
+                command.addCommands(getPathCommand(swerve, basePathFileName + "two_B"));
+                command.addCommands(); // TODO: arm command for score
         }
         return command;
+    }
+
+    private static String getDSPosition() {
+        switch (DriverStation.getLocation()) {
+            case 1:
+                return "left";
+            case 2:
+                return "middle";
+            case 3:
+                return "right";
+            default:
+                return null;
+        }
     }
 
     public enum PieceCount {
