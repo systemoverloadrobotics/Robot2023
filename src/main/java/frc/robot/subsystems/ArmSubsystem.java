@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.Pair;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.util.Color;
@@ -35,16 +36,23 @@ public class ArmSubsystem extends SubsystemBase {
   private Pair<Double, Double> intendedPosition;
 
   private static class ArmModel {
-    private final Mechanism2d mech = new Mechanism2d(3, 3);
-    private final MechanismLigament2d arm;
-    private final MechanismLigament2d elevator;
+    private final Mechanism2d mech = new Mechanism2d(2, 2);
+    private final MechanismLigament2d elevatorExtension;
+    private final MechanismLigament2d armBack;
 
     public ArmModel(String name) {
-      var root = mech.getRoot(name, 3 - Constants.Arm.ARM_PIVOT_X, Constants.Arm.ARM_PIVOT_Y);
-      arm = root.append(
-          new MechanismLigament2d("arm", Constants.Arm.MIN_ARM_LENGTH, 90, 4, new Color8Bit(Color.kAquamarine)));
-      elevator = arm.append(
-          new MechanismLigament2d("elevator", -Constants.Arm.MIN_ARM_LENGTH, 0, 6, new Color8Bit(Color.kGreen)));
+      var root = mech.getRoot(name, 1, 0);
+      var upright = root
+          .append(
+              new MechanismLigament2d("upright", Constants.Arm.ARM_PIVOT_Y, 90, 4, new Color8Bit(Color.kDarkKhaki)));
+      armBack = upright.append(
+          new MechanismLigament2d("armBack", Constants.Arm.MIN_ARM_LENGTH, 90, 8, new Color8Bit(Color.kAquamarine)));
+      armBack.append(
+          new MechanismLigament2d("arm", Constants.Arm.MIN_ARM_LENGTH * 2, 180, 8, new Color8Bit(Color.kAquamarine)));
+      elevatorExtension = armBack
+          .append(new MechanismLigament2d("elevatorExtension", 0, 180, 4, new Color8Bit(Color.kAquamarine)));
+      elevatorExtension.append(
+          new MechanismLigament2d("elevator", Constants.Arm.MIN_ARM_LENGTH * 2, 0, 4, new Color8Bit(Color.kGreen)));
     }
 
     /**
@@ -55,8 +63,8 @@ public class ArmSubsystem extends SubsystemBase {
      * from the pivot, accounting for the minimum length of the arm.
      */
     public void update(double angle, double length) {
-      arm.setAngle(angle);
-      elevator.setLength(length);
+      armBack.setAngle(angle);
+      elevatorExtension.setLength(length);
     }
 
     public Mechanism2d asMechanism() {
@@ -119,12 +127,15 @@ public class ArmSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     // TODO: This should be changed to run a constant program that seeks the correct
     // position while keeping the arm safe.
-    double[] vec = SorMath.cartesianToPolar(intendedPosition.getFirst(), intendedPosition.getSecond());
-    jointA.set(ControlMode.POSITION, Math.toDegrees(vec[1]));
-    cascade.set(ControlMode.POSITION, vec[0]);
+    if (intendedPosition != null) {
+      double[] vec = SorMath.cartesianToPolar(intendedPosition.getFirst(), intendedPosition.getSecond());
+      jointA.set(ControlMode.POSITION, Math.toDegrees(vec[1]));
+      cascade.set(ControlMode.POSITION, vec[0]);
+      intentMechanism.update(Math.toDegrees(vec[1]), vec[0]);
+    }
 
-    intentMechanism.update(Math.toDegrees(vec[1]), vec[0]);
     currentMechanism.update(jointA.outputPosition(), getManipulatorPosition().getFirst());
+
     aLogger.recordOutput("Arm/IntendedPosition", intentMechanism.asMechanism());
     aLogger.recordOutput("Arm/CurrentPosition", currentMechanism.asMechanism());
   }
