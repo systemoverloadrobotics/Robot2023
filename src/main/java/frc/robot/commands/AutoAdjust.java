@@ -5,12 +5,15 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Swerve;
+import frc.robot.Constants;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
 import frc.robot.subsystems.Vision;
+
+import java.util.ArrayList;
 import java.util.logging.Logger;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.sorutil.path.AsyncTrajectory;
 
 /** An example command that uses an example subsystem. */
 public class AutoAdjust extends CommandBase {
@@ -18,6 +21,9 @@ public class AutoAdjust extends CommandBase {
   private final Swerve swerve;
   private final DriveTrainPoseEstimator poseEstimator;
   private final Vision vision;
+  private Pose2d currentPose;
+  private Pose2d targetPose;
+  private int grid;
 
   /**
    * Creates a new ExampleCommand.
@@ -29,7 +35,7 @@ public class AutoAdjust extends CommandBase {
     this.poseEstimator = poseEstimator;
     this.swerve = swerve;
     this.vision = vision;
-    // Use addRequirements() here to declare subsystem dependencies.
+    currentPose = poseEstimator.getEstimatedPose();
     addRequirements(poseEstimator, vision, swerve);
   }
 
@@ -40,19 +46,15 @@ public class AutoAdjust extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Pose2d currentPose = poseEstimator.getEstimatedPose();
+    if(grid == 1 || grid == 3)
+    switch(grid){
+      case 1:
+       AsyncTrajectory.generateTrajectory(currentPose, targetPose, new ArrayList<>(), Constants.Scoring.AUTO_TRAJECTORY_CONFIG);
+      case 2:
 
-    Transform3d target = vision.getBestTarget().getBestCameraToTarget();
-    double tagDistance = target.getTranslation().getX();
-    // double reportedZAngle = -Math.toDegrees(target.getRotation().getZ());
-    // double zAngle = Math.copySign(180 - Math.abs(reportedZAngle), reportedZAngle);
-    // double xTranslation = Math.toDegrees(Math.sin(Math.toRadians(90 - zAngle))) / (tagDistance * Math.toDegrees(Math.sin(Math.toRadians(zAngle))));
-    // double slope = -tagDistance/xTranslation;
-
-
-
+    }
     
-  }
+  } 
 
   // Called once the command ends or is interrupted.
   @Override
