@@ -49,7 +49,7 @@ public class AutoAdjust extends CommandBase {
     if(grid == 1 || grid == 3)
     switch(grid){
       case 1:
-       AsyncTrajectory.generateTrajectory(currentPose, targetPose, new ArrayList<>(), Constants.Scoring.AUTO_TRAJECTORY_CONFIG);
+       AsyncTrajectory.generateTrajectory(currentPose, targetPose, new ArrayList<>(), Constants.Scoring.SCORING_TRAJECTORY_CONFIG);
       case 2:
 
     }

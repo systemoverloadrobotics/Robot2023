@@ -128,10 +128,10 @@ public final class Constants {
 
         public static final double AUTO_SWERVE_MAX_VELOCITY = 3; // Meters per second
         public static final double AUTO_SWERVE_MAX_ACCELERATION = 2.5; // Meters per second
-        public static final TrajectoryConfig AUTO_TRAJECTORY_CONFIG =
+        public static final TrajectoryConfig SCORING_TRAJECTORY_CONFIG =
                 new TrajectoryConfig(AUTO_SWERVE_MAX_VELOCITY, AUTO_SWERVE_MAX_ACCELERATION);
 
-        public static final double MAX_AUTOMOVE_DISTANCE = 2; // meters
+        public static final double MIN_AUTOMOVE_DISTANCE = 2; // meters
 
         public static final HashMap<Integer, Alliance> VALID_SCORING_TARGETS = new HashMap<>();
         static {
