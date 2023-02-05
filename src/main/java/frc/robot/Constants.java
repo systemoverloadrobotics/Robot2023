@@ -4,13 +4,18 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.sorutil.ConstantAxis;
+import frc.sorutil.ConstantButton;
 import frc.sorutil.motor.PidProfile;
 
 /**
@@ -69,6 +74,18 @@ public final class Constants {
         public static final Rotation3d CAMERA_ROTATION = new Rotation3d(CAMERA_ROTATION_ROLL, CAMERA_ROTATION_PITCH,
                 CAMERA_ROTATION_YAW);
     }
+
+    public static final HashMap<Integer, Alliance> VALID_SCORING_TARGETS;
+
+    static {
+        VALID_SCORING_TARGETS = new HashMap<>();
+        VALID_SCORING_TARGETS.put(1, Alliance.Red);
+        VALID_SCORING_TARGETS.put(2, Alliance.Red);
+        VALID_SCORING_TARGETS.put(3, Alliance.Red);
+        VALID_SCORING_TARGETS.put(6, Alliance.Blue);
+        VALID_SCORING_TARGETS.put(7, Alliance.Blue);
+        VALID_SCORING_TARGETS.put(8, Alliance.Blue);
+    }
     
     public static final class Arm {
         public static final PidProfile ARM_PID_PROFILE = new PidProfile(0, 0, 0);
@@ -110,6 +127,22 @@ public final class Constants {
 
     public static final class Claw {
         public static final double CLAW_VELOCITY = 1000; // units/sec
+    }
+
+    public static final class Scoring {
+        public static final ConstantButton UPPER_LEFT_CONE = new ConstantButton(1, 0);
+        public static final ConstantButton UPPER_MIDDLE_CUBE = new ConstantButton(1, 1);
+        public static final ConstantButton UPPER_RIGHT_CONE = new ConstantButton(1, 2);
+        public static final ConstantButton MIDDLE_LEFT_CONE = new ConstantButton(1, 3);
+        public static final ConstantButton MIDDLE_MIDDLE_CUBE = new ConstantButton(1,4);
+        public static final ConstantButton MIDDLE_RIGHT_CONE = new ConstantButton(1, 5);
+        public static final ConstantButton HYBRID_LEFT = new ConstantButton(1, 6);
+        public static final ConstantButton HYBRID_MIDDLE = new ConstantButton(1, 7);
+        public static final ConstantButton HYBRID_RIGHT = new ConstantButton(1, 8);
+
+        public static final double AUTO_SWERVE_MAX_VELOCITY = 3; //Meters per second
+        public static final double AUTO_SWERVE_MAX_ACCELERATION = 2.5; //Meters per second
+        public static final TrajectoryConfig AUTO_TRAJECTORY_CONFIG = new TrajectoryConfig(AUTO_SWERVE_MAX_VELOCITY, AUTO_SWERVE_MAX_ACCELERATION);
     }
 
     public static final class Motor {
