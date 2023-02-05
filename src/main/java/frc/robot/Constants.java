@@ -19,16 +19,13 @@ import frc.sorutil.ConstantButton;
 import frc.sorutil.motor.PidProfile;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide
- * numerical or boolean
- * constants. This class should not be used for any other purpose. All constants
- * should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
+ * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean constants. This
+ * class should not be used for any other purpose. All constants should be declared globally (i.e. public static). Do
+ * not put anything functional in this class.
  *
  * <p>
- * It is advised to statically import this class (or one of its inner classes)
- * wherever the
- * constants are needed, to reduce verbosity.
+ * It is advised to statically import this class (or one of its inner classes) wherever the constants are needed, to
+ * reduce verbosity.
  */
 public final class Constants {
     public static final String PROJECT_NAME = "Robot2023";
@@ -47,11 +44,12 @@ public final class Constants {
         public static final double LENGTH = Units.inchesToMeters(26);
 
         public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(4) * Math.PI;
-        public static final SwerveDriveKinematics SWERVE_DRIVE_KINEMATICS = new SwerveDriveKinematics(
-                new Translation2d(-RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2),
-                new Translation2d(-RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2),
-                new Translation2d(RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2),
-                new Translation2d(RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2));
+        public static final SwerveDriveKinematics SWERVE_DRIVE_KINEMATICS =
+                new SwerveDriveKinematics(
+                        new Translation2d(-RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2),
+                        new Translation2d(-RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2),
+                        new Translation2d(RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2),
+                        new Translation2d(RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2));
     }
 
     public static final class Drive {
@@ -69,24 +67,12 @@ public final class Constants {
         public static final double CAMERA_ROTATION_PITCH = 0; // Radians
         public static final double CAMERA_ROTATION_YAW = 0; // Radians
 
-        public static final Translation3d CAMERA_POSITION = new Translation3d(CAMERA_POSITION_X, CAMERA_POSITION_Y,
-                CAMERA_POSITION_Z);
-        public static final Rotation3d CAMERA_ROTATION = new Rotation3d(CAMERA_ROTATION_ROLL, CAMERA_ROTATION_PITCH,
-                CAMERA_ROTATION_YAW);
+        public static final Translation3d CAMERA_POSITION =
+                new Translation3d(CAMERA_POSITION_X, CAMERA_POSITION_Y, CAMERA_POSITION_Z);
+        public static final Rotation3d CAMERA_ROTATION =
+                new Rotation3d(CAMERA_ROTATION_ROLL, CAMERA_ROTATION_PITCH, CAMERA_ROTATION_YAW);
     }
 
-    public static final HashMap<Integer, Alliance> VALID_SCORING_TARGETS;
-
-    static {
-        VALID_SCORING_TARGETS = new HashMap<>();
-        VALID_SCORING_TARGETS.put(1, Alliance.Red);
-        VALID_SCORING_TARGETS.put(2, Alliance.Red);
-        VALID_SCORING_TARGETS.put(3, Alliance.Red);
-        VALID_SCORING_TARGETS.put(6, Alliance.Blue);
-        VALID_SCORING_TARGETS.put(7, Alliance.Blue);
-        VALID_SCORING_TARGETS.put(8, Alliance.Blue);
-    }
-    
     public static final class Arm {
         public static final PidProfile ARM_PID_PROFILE = new PidProfile(0, 0, 0);
         public static final PidProfile CASCADE_PID_PROFILE = new PidProfile(0, 0, 0);
@@ -134,15 +120,42 @@ public final class Constants {
         public static final ConstantButton UPPER_MIDDLE_CUBE = new ConstantButton(1, 1);
         public static final ConstantButton UPPER_RIGHT_CONE = new ConstantButton(1, 2);
         public static final ConstantButton MIDDLE_LEFT_CONE = new ConstantButton(1, 3);
-        public static final ConstantButton MIDDLE_MIDDLE_CUBE = new ConstantButton(1,4);
+        public static final ConstantButton MIDDLE_MIDDLE_CUBE = new ConstantButton(1, 4);
         public static final ConstantButton MIDDLE_RIGHT_CONE = new ConstantButton(1, 5);
         public static final ConstantButton HYBRID_LEFT = new ConstantButton(1, 6);
         public static final ConstantButton HYBRID_MIDDLE = new ConstantButton(1, 7);
         public static final ConstantButton HYBRID_RIGHT = new ConstantButton(1, 8);
 
-        public static final double AUTO_SWERVE_MAX_VELOCITY = 3; //Meters per second
-        public static final double AUTO_SWERVE_MAX_ACCELERATION = 2.5; //Meters per second
-        public static final TrajectoryConfig AUTO_TRAJECTORY_CONFIG = new TrajectoryConfig(AUTO_SWERVE_MAX_VELOCITY, AUTO_SWERVE_MAX_ACCELERATION);
+        public static final double AUTO_SWERVE_MAX_VELOCITY = 3; // Meters per second
+        public static final double AUTO_SWERVE_MAX_ACCELERATION = 2.5; // Meters per second
+        public static final TrajectoryConfig AUTO_TRAJECTORY_CONFIG =
+                new TrajectoryConfig(AUTO_SWERVE_MAX_VELOCITY, AUTO_SWERVE_MAX_ACCELERATION);
+
+        public static final double MAX_AUTOMOVE_DISTANCE = 2; // meters
+
+        public static final HashMap<Integer, Alliance> VALID_SCORING_TARGETS = new HashMap<>();
+        static {
+            VALID_SCORING_TARGETS.put(1, Alliance.Red);
+            VALID_SCORING_TARGETS.put(2, Alliance.Red);
+            VALID_SCORING_TARGETS.put(3, Alliance.Red);
+            VALID_SCORING_TARGETS.put(6, Alliance.Blue);
+            VALID_SCORING_TARGETS.put(7, Alliance.Blue);
+            VALID_SCORING_TARGETS.put(8, Alliance.Blue);
+        }
+
+        public static final HashMap<Alliance, HashSet<Integer>> TARGETS_PER_ALLIANCE = new HashMap<>();
+        static {
+            var redTargets = new HashSet<Integer>();
+            redTargets.add(1);
+            redTargets.add(2);
+            redTargets.add(3);
+            var blueTargets = new HashSet<Integer>();
+            blueTargets.add(6);
+            blueTargets.add(7);
+            blueTargets.add(8);
+            TARGETS_PER_ALLIANCE.put(Alliance.Red, redTargets);
+            TARGETS_PER_ALLIANCE.put(Alliance.Red, blueTargets);
+        }
     }
 
     public static final class Motor {
@@ -183,7 +196,8 @@ public final class Constants {
 
         public static final double DISTANCE_PER_REV = Units.inchesToMeters(4 * Math.PI);
         public static final double NEO_MAX_SPEED = 5600; // RPM
-        public static final double MAX_WHEEL_SPEED = ((NEO_MAX_SPEED/60) * DISTANCE_PER_REV) / 6.75;
+        public static final double MAX_WHEEL_SPEED =
+                ((NEO_MAX_SPEED / 60) * DISTANCE_PER_REV) / 6.75;
         public static final double SWERVE_MAX_SPEED = 0.9 * MAX_WHEEL_SPEED; // m/s
         public static final double SWERVE_MAX_ACCELERATION = 3; // m/s^2
         public static final double SWERVE_ROTATION_MAX_SPEED = 3; // rad/s
