@@ -67,7 +67,7 @@ public class Vision extends SubsystemBase {
     return camera.isConnected() ? results.getTargets() : null;  
   }
 
-  public Pose2d getPose3d(int id) {
+  public Pose2d getPose2d(int id) {
     Pose3d temPose3d = (aprilTagFieldLayout.getTagPose(id).get());
     return new Pose2d(temPose3d.getX(), temPose3d.getY(), new Rotation2d(temPose3d.getRotation().getX(), temPose3d.getRotation().getY()));
   }

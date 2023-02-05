@@ -8,8 +8,11 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
 import frc.robot.subsystems.Vision;
+import frc.sorutil.path.AsyncTrajectory;
 import java.util.logging.Logger;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -43,10 +46,14 @@ public class GridSelector extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    targetPose = vision.getPose2d(getClosestId());
+    Trajectory tagTrajectory = (Trajectory) AsyncTrajectory.generateTrajectory(currentPose, targetPose, null, Constants.Scoring.SCORING_TRAJECTORY_CONFIG);
+    
+  }
 
-  //gives closest grid location to the bot
-  public GridLocation getGridLocation() {
+  //gives closest apriltag to the bot
+  public int getClosestId() {
     var allianceTargets = Constants.Scoring.TARGETS_PER_ALLIANCE.get(DriverStation.getAlliance());
     double closestDistance = -1;
     int closestId = 0;
@@ -61,9 +68,13 @@ public class GridSelector extends CommandBase {
     //checks if the closest april tag if within the minimum distance
     targetPose = vision.getPose2d(closestId);
     if (distanceFormula(currentPose.getX(), currentPose.getY(), targetPose.getX(), targetPose.getY()) > Constants.Scoring.MIN_AUTOMOVE_DISTANCE) {
-          return null;
+          return -1;
     }
-    switch (closestId) {
+    return closestId;
+  }
+
+  public GridLocation getGridLocation(int id) {
+    switch (id) {
       case 1:
         return GridLocation.RIGHT;
       case 2:
@@ -80,7 +91,6 @@ public class GridSelector extends CommandBase {
         return null;
     }
   }
-
   public static enum GridLocation {
     LEFT, MIDDLE, RIGHT
   }
