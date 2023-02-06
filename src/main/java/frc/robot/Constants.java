@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.sorutil.ConstantAxis;
+import frc.sorutil.ConstantButton;
 import frc.sorutil.motor.PidProfile;
 
 /**
@@ -134,5 +135,8 @@ public final class Constants {
         public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(1, 0);
         public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(1, 1);
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
+        
+        public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0,0);
+        public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0,0);
     }
 }

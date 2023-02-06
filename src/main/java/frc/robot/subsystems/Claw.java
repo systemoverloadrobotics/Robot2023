@@ -77,6 +77,6 @@ public class Claw extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    // This method will be cawelled once per scheduler run during simulation
+    // This method will be called once per scheduler run during simulation
   }
 }

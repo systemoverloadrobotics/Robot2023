@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public class Led extends SubsystemBase {
   private final Logger logger;
@@ -17,33 +19,39 @@ public class Led extends SubsystemBase {
 
   /** Creates a new ExampleSubsystem. */
   public Led() {
-    // todo
     logger = Logger.getLogger(Led.class.getName());
     
-   led = new AddressableLED(9);
+    led = new AddressableLED(9);
 
     // Default to a length of 60, start empty output
     // Length is expensive to set, so only set it once, then just update data
      ledBuffer = new AddressableLEDBuffer(150);
-    led.setLength(ledBuffer.getLength());
+     led.setLength(ledBuffer.getLength());
 
     // Set the data
     led.setData(ledBuffer);
     led.start();
 
-    
-     
-     
   }
-  public void setLEDColor(int red, int green , int blue){
-    for(var i = 0; i<ledBuffer.getLength(); i++ ){
-        ledBuffer.setRGB(i, red, green, blue);
+  private void led(Color8Bit color8Bit) {
+  }
+  
+  public void setLEDColor(boolean isPurple){
+    if (isPurple) {
+      for(var i = 0; i<ledBuffer.getLength(); i++ ){
+        led(new Color8Bit(Color.kPurple));
+          // ledBuffer.setRGB(i, red, green, blue);
+      }
     }
-    led.setData(ledBuffer);
+    else {
+      for(var i = 0; i<ledBuffer.getLength(); i++ ){
+        led(new Color8Bit(Color.kYellow));
+    }
   }
  
-  
-  
+    led.setData(ledBuffer); 
+  }
+
 
   @Override
   public void periodic() {
@@ -55,4 +63,3 @@ public class Led extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 }
-
