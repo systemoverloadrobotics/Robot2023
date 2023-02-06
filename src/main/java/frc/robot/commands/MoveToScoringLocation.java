@@ -5,11 +5,16 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Swerve;
+import frc.robot.Constants;
 import frc.robot.GridSelector.GridLocation;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
 import frc.robot.subsystems.Vision;
+import frc.sorutil.path.AsyncTrajectory;
+import java.util.ArrayList;
+import java.util.concurrent.Future;
 import java.util.logging.Logger;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
@@ -21,6 +26,9 @@ public class MoveToScoringLocation extends CommandBase {
   private Pose2d currentPose;
   private Pose2d targetPose;
   private final GridLocation selectedGridLocation;
+  private Future<Trajectory> futureTrajectory;
+  private boolean isTrajectoryGenerated;
+  private Trajectory trajectory;
   
 
   /**
@@ -41,12 +49,22 @@ public class MoveToScoringLocation extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    futureTrajectory = AsyncTrajectory.generateTrajectory(currentPose, targetPose, new ArrayList<>(), Constants.Scoring.SCORING_TRAJECTORY_CONFIG);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {} 
+  public void execute() {
+    if(futureTrajectory.isDone() && !isTrajectoryGenerated) {
+      try{
+        trajectory = futureTrajectory.get();
+        isTrajectoryGenerated = true;
+      }
+      catch(Exception Exception) {
+        throw new RuntimeException("MoveToGrid unreachable block");
+      }
+    }
+  } 
 
   // Called once the command ends or is interrupted.
   @Override
@@ -57,4 +75,5 @@ public class MoveToScoringLocation extends CommandBase {
   public boolean isFinished() {
     return false;
   }
+
 }

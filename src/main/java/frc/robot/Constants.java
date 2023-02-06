@@ -150,6 +150,7 @@ public final class Constants {
                 new TrajectoryConfig(AUTO_SWERVE_MAX_VELOCITY, AUTO_SWERVE_MAX_ACCELERATION);
 
         public static final double MIN_AUTOMOVE_DISTANCE = 2; // meters
+        public static final double NEXT_TO_TAG_OFFSET = 0;
 
         public static final HashMap<Integer, Alliance> VALID_SCORING_TARGETS = new HashMap<>();
         static {

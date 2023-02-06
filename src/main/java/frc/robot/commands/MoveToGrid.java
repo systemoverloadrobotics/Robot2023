@@ -28,11 +28,13 @@ public class MoveToGrid extends CommandBase {
   private final DriveTrainPoseEstimator poseEstimator;
   private final Vision vision;
   private Pose2d currentPose;
-  private Pose2d targetPose;
+  private Pose2d TagPose;
+  private Pose2d NextToTagPose;
   private int selectedGridId;
   private Future<Trajectory> futureTrajectory;
   private Trajectory trajectory;
   private HolonomicDriveController controller;
+  private boolean isTrajectoryGenerated;
 
   /**
    * Creates a new ExampleCommand.
@@ -52,21 +54,25 @@ public class MoveToGrid extends CommandBase {
   @Override
   public void initialize() {
     selectedGridId = GridSelector.getClosestId(vision, poseEstimator);
-    targetPose = GridSelector.getTagPose2d(selectedGridId);
-    futureTrajectory = AsyncTrajectory.generateTrajectory(currentPose, targetPose, new ArrayList<>(), Constants.Scoring.SCORING_TRAJECTORY_CONFIG);
+    TagPose = GridSelector.getTagPose2d(selectedGridId);
+    NextToTagPose = new Pose2d(TagPose.getX(), TagPose.getY() + Constants.Scoring.NEXT_TO_TAG_OFFSET, TagPose.getRotation());
+    futureTrajectory = AsyncTrajectory.generateTrajectory(currentPose, NextToTagPose, new ArrayList<>(), Constants.Scoring.SCORING_TRAJECTORY_CONFIG);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(futureTrajectory.isDone()) {
+    if(futureTrajectory.isDone() && !isTrajectoryGenerated) {
       try{
         trajectory = futureTrajectory.get();
+        isTrajectoryGenerated = true;
       }
-      catch(Exception InterruptedException) {}
+      catch(Exception Exception) {
+        throw new RuntimeException("MoveToGrid unreachable block");
+      }
     }
     Trajectory.State goal = trajectory.sample(Constants.Scoring.TRAJECTORY_SAMPLE_TIME);
-    ChassisSpeeds chassisSpeeds = controller.calculate(currentPose, goal, targetPose.getRotation());
+    ChassisSpeeds chassisSpeeds = controller.calculate(currentPose, goal, NextToTagPose.getRotation());
     SwerveModuleState[] moduleStates = Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
     swerve.setModuleStates(moduleStates);
   }

@@ -56,6 +56,7 @@ public class GridSelector {
         LEFT, MIDDLE, RIGHT
     }
 
+    
     public static Pose2d getTagPose2d(int id) {
         Pose3d temPose3d = (Constants.Vision.TAG_FIELD_LAYOUT.getTagPose(id).get());
         return new Pose2d(temPose3d.getX(), temPose3d.getY(), new Rotation2d(temPose3d.getRotation().getX(), temPose3d.getRotation().getY()));
