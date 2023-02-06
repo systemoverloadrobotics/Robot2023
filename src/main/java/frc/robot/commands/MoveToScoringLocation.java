@@ -6,8 +6,12 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.Swerve;
 import frc.robot.Constants;
+import frc.robot.GridSelector;
 import frc.robot.GridSelector.GridLocation;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
+import frc.robot.commands.MoveToGrid;
 import frc.robot.subsystems.Vision;
 import frc.sorutil.path.AsyncTrajectory;
 import java.util.ArrayList;
@@ -23,8 +27,10 @@ public class MoveToScoringLocation extends CommandBase {
   private final Swerve swerve;
   private final DriveTrainPoseEstimator poseEstimator;
   private final Vision vision;
+  private final ArmSubsystem arm;
+  private final Claw claw;
   private Pose2d currentPose;
-  private Pose2d targetPose;
+  private Pose2d ScoringLocationPose;
   private final GridLocation selectedGridLocation;
   private Future<Trajectory> futureTrajectory;
   private boolean isTrajectoryGenerated;
@@ -36,11 +42,13 @@ public class MoveToScoringLocation extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public MoveToScoringLocation(DriveTrainPoseEstimator poseEstimator, Swerve swerve, Vision vision, GridLocation selectedGridLocation) {
+  public MoveToScoringLocation(DriveTrainPoseEstimator poseEstimator, Swerve swerve, Vision vision, ArmSubsystem arm, Claw claw, GridLocation selectedGridLocation) {
     logger = Logger.getLogger(MoveToScoringLocation.class.getName());
     this.poseEstimator = poseEstimator;
     this.swerve = swerve;
     this.vision = vision;
+    this.arm = arm;
+    this.claw = claw;
     this.selectedGridLocation = selectedGridLocation;
     currentPose = poseEstimator.getEstimatedPose();
     addRequirements(poseEstimator, vision, swerve);
@@ -48,23 +56,16 @@ public class MoveToScoringLocation extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    futureTrajectory = AsyncTrajectory.generateTrajectory(currentPose, targetPose, new ArrayList<>(), Constants.Scoring.SCORING_TRAJECTORY_CONFIG);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(futureTrajectory.isDone() && !isTrajectoryGenerated) {
-      try{
-        trajectory = futureTrajectory.get();
-        isTrajectoryGenerated = true;
+      switch(selectedGridLocation) {
+        case LEFT:
+          ScoringLocationPose = new Pose2d(currentPose.getX() + Constants.Scoring.LEFT_NODE_LEFT_GRID_OFFSET, currentPose.getY(), currentPose.getRotation());
       }
-      catch(Exception Exception) {
-        throw new RuntimeException("MoveToGrid unreachable block");
-      }
-    }
-  } 
+  }
 
   // Called once the command ends or is interrupted.
   @Override

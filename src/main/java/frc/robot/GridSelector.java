@@ -8,6 +8,7 @@ import frc.robot.subsystems.DriveTrainPoseEstimator;
 import frc.robot.subsystems.Vision;
 
 public class GridSelector {
+    private static int selectedGridId;
     // gives closest apriltag to the bot
     public static int getClosestId(Vision vision, DriveTrainPoseEstimator poseEstimator) {
         Pose2d currentPose = poseEstimator.getEstimatedPose();
@@ -30,6 +31,7 @@ public class GridSelector {
         if (distanceFormula(currentPose.getX(), currentPose.getY(), targetTagPose.getX(), targetTagPose.getY()) > Constants.Scoring.MIN_AUTOMOVE_DISTANCE) {
             return -1;
         }
+        selectedGridId = closestId;
         return closestId;
     }
     
@@ -66,5 +68,7 @@ public class GridSelector {
         return Math.sqrt((Math.pow(y2 - y1, 2)) + (Math.pow(x2 - x1, 2)));
     }
 
-
+    public static GridLocation getSelectedGrid() {
+        return getGridLocation(selectedGridId);
+    }
 }
