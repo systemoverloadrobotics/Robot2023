@@ -4,13 +4,18 @@
 
 package frc.robot;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -69,6 +74,19 @@ public final class Constants {
                 new Translation3d(CAMERA_POSITION_X, CAMERA_POSITION_Y, CAMERA_POSITION_Z);
         public static final Rotation3d CAMERA_ROTATION =
                 new Rotation3d(CAMERA_ROTATION_ROLL, CAMERA_ROTATION_PITCH, CAMERA_ROTATION_YAW);
+
+        public static final AprilTagFieldLayout TAG_FIELD_LAYOUT;
+
+        static {
+            AprilTagFieldLayout temp = null;
+            try {
+                temp = AprilTagFieldLayout
+                        .loadFromResource("/edu/wpi/first/apriltag/2023-chargedup.json");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            TAG_FIELD_LAYOUT = temp;
+        }
     }
 
     public static final class Arm {
@@ -114,7 +132,8 @@ public final class Constants {
             VALID_SCORING_TARGETS.put(8, Alliance.Blue);
         }
 
-        public static final HashMap<Alliance, HashSet<Integer>> TARGETS_PER_ALLIANCE = new HashMap<>();
+        public static final HashMap<Alliance, HashSet<Integer>> TARGETS_PER_ALLIANCE =
+                new HashMap<>();
         static {
             var redTargets = new HashSet<Integer>();
             redTargets.add(1);
@@ -127,6 +146,12 @@ public final class Constants {
             TARGETS_PER_ALLIANCE.put(Alliance.Red, redTargets);
             TARGETS_PER_ALLIANCE.put(Alliance.Red, blueTargets);
         }
+
+        public static final PIDController X_CONTROLLER = new PIDController(0, 0, 0);
+        public static final PIDController Y_CONTROLLER = new PIDController(0, 0, 0);
+        public static final ProfiledPIDController THETA_CONTROLLER = new ProfiledPIDController(0, 0,
+                0, new Constraints(AUTO_SWERVE_MAX_VELOCITY, AUTO_SWERVE_MAX_ACCELERATION));
+        public static final double TRAJECTORY_SAMPLE_TIME = 0; // seconds
     }
 
     public static final class Motor {

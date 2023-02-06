@@ -31,7 +31,6 @@ public class Vision extends SubsystemBase {
   private final Logger aLogger;
 
   private final PhotonCamera camera;
-  private final AprilTagFieldLayout aprilTagFieldLayout; 
   private final RobotPoseEstimator robotPoseEstimator;
 
   private PhotonPipelineResult results;
@@ -43,10 +42,9 @@ public class Vision extends SubsystemBase {
     Transform3d robotCam = new Transform3d(Constants.Vision.CAMERA_POSITION, Constants.Vision.CAMERA_ROTATION);
     camera = new PhotonCamera("Camera");
     results = camera.getLatestResult();
-    aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource("/edu/wpi/first/apriltag/2023-chargedup.json");
     var cameraList = new ArrayList<Pair<PhotonCamera,  Transform3d>>();
     cameraList.add(new Pair<PhotonCamera, Transform3d>(camera, robotCam)); 
-    robotPoseEstimator = new RobotPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cameraList);
+    robotPoseEstimator = new RobotPoseEstimator(Constants.Vision.TAG_FIELD_LAYOUT, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cameraList);
 
     logger.info("Vision Initialized.");
   } 
@@ -67,10 +65,6 @@ public class Vision extends SubsystemBase {
     return camera.isConnected() ? results.getTargets() : null;  
   }
 
-  public Pose2d getPose2d(int id) {
-    Pose3d temPose3d = (aprilTagFieldLayout.getTagPose(id).get());
-    return new Pose2d(temPose3d.getX(), temPose3d.getY(), new Rotation2d(temPose3d.getRotation().getX(), temPose3d.getRotation().getY()));
-  }
 
   /**
    * Returns the estimated pose from the camera based on at least one AprilTag
