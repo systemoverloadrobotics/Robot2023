@@ -77,7 +77,14 @@ public final class Constants {
         public static final double ARM_CASCADE_CURRENT_LIMIT = 20;
         public static final int ARM_JOINT_ENCODER_RESOLUTION = 4096;
         public static final double ARM_CASCADE_TICKS_PER_FEET = 1200; // PLACEHOLDER
-        public static final double ARM_CASCADE_STARTING_HEIGHT = 1.5f;
+        public static final double ARM_CASCADE_STARTING_HEIGHT = 1.5; // feet
+        public static final int ARM_CASCADE_TOLERANCE = 8; // units
+        public static final int ARM_JOINT_TOLERANCE = 8; // units
+        public static final double ARM_PREDICTIVE_TIMESPAN = 0.25; // seconds
+        public static final double ARM_HEIGHT_FROM_GROUND = -1.5; // ft
+        public static final double ARM_HEIGHT_FROM_BASE = -1; // ft
+        public static final double ARM_MIN_ANGLE_COLLISION = 4; // rad
+        public static final double ARM_MAX_ANGLE_COLLISION = 5; // rad
 
         // Geometry
         public static final double ARM_PIVOT_X = Units.inchesToMeters(11);

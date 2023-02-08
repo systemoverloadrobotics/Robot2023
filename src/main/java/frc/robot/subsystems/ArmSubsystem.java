@@ -6,13 +6,10 @@ package frc.robot.subsystems;
 
 
 import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.math.Pair;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.util.Color;
@@ -22,9 +19,9 @@ import frc.robot.Constants;
 import frc.sorutil.SorMath;
 import frc.sorutil.motor.MotorConfiguration;
 import frc.sorutil.motor.SensorConfiguration;
+import frc.sorutil.motor.SuController.ControlMode;
 import frc.sorutil.motor.SuSparkMax;
 import frc.sorutil.motor.SuTalonFx;
-import frc.sorutil.motor.SuController.ControlMode;
 
 public class ArmSubsystem extends SubsystemBase {
   private final java.util.logging.Logger logger;
@@ -34,6 +31,8 @@ public class ArmSubsystem extends SubsystemBase {
   private SuTalonFx jointB;
   private SuSparkMax cascade;
   private Pair<Double, Double> intendedPosition;
+  private boolean pause;
+  private boolean preventExtension;
 
   private static class ArmModel {
     private final Mechanism2d mech = new Mechanism2d(2, 2);
@@ -102,6 +101,8 @@ public class ArmSubsystem extends SubsystemBase {
     cascade = new SuSparkMax(new CANSparkMax(Constants.Motor.ARM_CASCADE_INDEX, MotorType.kBrushless), "Cascade Motor",
         cascadeMotorConfig, cascadeSensorConfiguration);
 
+    pause = false;
+
     logger.info("Arm Initialized.");
   }
 
@@ -122,16 +123,57 @@ public class ArmSubsystem extends SubsystemBase {
     return position;
   }
 
+  public double cascadeTicksToFeet(double ticks) {
+    return Constants.Arm.ARM_CASCADE_STARTING_HEIGHT + (ticks / Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     // TODO: This should be changed to run a constant program that seeks the correct
     // position while keeping the arm safe.
-    if (intendedPosition != null) {
-      double[] vec = SorMath.cartesianToPolar(intendedPosition.getFirst(), intendedPosition.getSecond());
+
+    // When the arm is detected to be in the forbidden zone, the variable state for pause and preventExtension typically goes:
+    // pause/preventExtension = true -> pause = false (when arm is fully retracted) -> preventExtension = false (when arm is moved to right position)
+    double[] vec = SorMath.cartesianToPolar(intendedPosition.getFirst(), intendedPosition.getSecond());
+    if (pause) {
+      jointA.set(ControlMode.VELOCITY, 0);
+      cascade.set(ControlMode.POSITION, 0); 
+      if (cascade.outputPosition() < Constants.Arm.ARM_CASCADE_TOLERANCE) { // code to check if the arm is fully retracted
+        pause = false;
+      }
+      intentMechanism.update(0, 0);
+    }
+    else if (preventExtension) {
       jointA.set(ControlMode.POSITION, Math.toDegrees(vec[1]));
-      cascade.set(ControlMode.POSITION, vec[0]);
-      intentMechanism.update(Math.toDegrees(vec[1]), vec[0]);
+      cascade.set(ControlMode.POSITION, 0);
+      if (Math.abs(jointA.outputPosition() - SorMath.degreesToTicks(Math.toDegrees(vec[1]), 4096)) % 4096 < Constants.Arm.ARM_JOINT_TOLERANCE) { // checks if joint is in the right position
+        preventExtension = false;
+      }
+      intentMechanism.update(Math.toDegrees(vec[1]), 0);
+    }
+    else if (intendedPosition != null) {
+      // Running a predictive program to check whether collision is imminent in the near future
+      double estimatedLength = cascadeTicksToFeet(cascade.outputPosition() + (cascade.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN)); // 1/4 seconds should give us enough time to respond
+      double estimatedAngle = SorMath.degreesToTicks((jointA.outputPosition() + jointA.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN) % 360, 4096);
+      double[] cartesian = SorMath.polarToCartesian(estimatedLength, estimatedAngle);
+
+      if (
+        cartesian[1] <= Constants.Arm.ARM_HEIGHT_FROM_BASE && 
+        estimatedAngle > Constants.Arm.ARM_MIN_ANGLE_COLLISION && 
+        estimatedAngle < Constants.Arm.ARM_MAX_ANGLE_COLLISION) { // inside box bound
+        pause = true;
+        preventExtension = true;
+      }
+      else if (cartesian[1] <= Constants.Arm.ARM_HEIGHT_FROM_GROUND) { // lower than ground
+        pause = true;
+        preventExtension = true;
+      }
+      else { // All good to go!
+        jointA.set(ControlMode.POSITION, Math.toDegrees(vec[1]));
+        cascade.set(ControlMode.POSITION, vec[0]);
+        intentMechanism.update(Math.toDegrees(vec[1]), vec[0]);
+      }
     }
 
     currentMechanism.update(jointA.outputPosition(), getManipulatorPosition().getFirst());
