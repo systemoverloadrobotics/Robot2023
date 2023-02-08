@@ -80,12 +80,13 @@ public class Robot extends LoggedRobot {
       aLogger.addDataReceiver(new WPILOGWriter("/media/sda1")); // Log to USB Flash
       aLogger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
     } else {
-      setUseTiming(false); // Disable time spacing when simulating, run as fast as possible
-      String logPath = LogFileUtil.findReplayLog(); // Pull replay from Scope or prompt user
-      aLogger.setReplaySource(new WPILOGReader(logPath));
+     // setUseTiming(false); // Disable time spacing when simulating, run as fast as possible
+      // String logPath = LogFileUtil.findReplayLog(); // Pull replay from Scope or prompt user
+      // aLogger.setReplaySource(new WPILOGReader(logPath));
 
       // Save output to same file, with a _sim suffix
-      aLogger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); 
+      //aLogger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); 
+      aLogger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
     }
 
     aLogger.start();
