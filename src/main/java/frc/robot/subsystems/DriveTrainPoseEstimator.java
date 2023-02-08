@@ -30,7 +30,7 @@ public class DriveTrainPoseEstimator extends SubsystemBase {
     poseEstimator =
       new SwerveDrivePoseEstimator(
         Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS,
-        swerve.getHeading(),
+        swerve.getRotation2d(),
         swerve.getModulePositions(),
         new Pose2d(),
         new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.1),
@@ -38,14 +38,11 @@ public class DriveTrainPoseEstimator extends SubsystemBase {
       );
   }
 
-  public void addVisionMeasurement(
-    Pose2d visionMeasurement,
-    double timestampSeconds
-  ) {
+  public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds) {
     poseEstimator.addVisionMeasurement(
       visionMeasurement,
       timestampSeconds,
-      VecBuilder.fill(0, 0, 0) //TODO: Add vision measurement covariance
+      VecBuilder.fill(0.1, 0.1, 0.1)
     );
   }
 
@@ -57,7 +54,7 @@ public class DriveTrainPoseEstimator extends SubsystemBase {
   public void periodic() {
     poseEstimator.updateWithTime(
       Timer.getFPGATimestamp(),
-      swerve.getHeading(),
+      swerve.getRotation2d(),
       swerve.getModulePositions()
     );
   }
