@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -23,6 +24,7 @@ public class Swerve extends SubsystemBase {
 
   private SwerveModuleState[] lastIntendedStates;
 
+
   private AHRS gyro = new AHRS(SerialPort.Port.kUSB);
   private SwerveDriveOdometry odometry = new SwerveDriveOdometry(
       Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS, new Rotation2d(0),
@@ -34,6 +36,7 @@ public class Swerve extends SubsystemBase {
       });
 
   public Swerve() {
+
     logger = java.util.logging.Logger.getLogger(Swerve.class.getName());
     aLogger = Logger.getInstance();
 
@@ -48,6 +51,7 @@ public class Swerve extends SubsystemBase {
     gyro.reset();
 
     logger.info("Swerve Drive Initialized.");
+
   }
 
   public void stopModules() {
@@ -79,6 +83,16 @@ public class Swerve extends SubsystemBase {
     return Rotation2d.fromDegrees(gyro.getYaw());
   }
 
+ 
+  public SwerveModulePosition[] getModulePositions() {
+		return new SwerveModulePosition[] {
+			frontLeft.getPosition(),
+			frontRight.getPosition(),
+			backLeft.getPosition(),
+			backRight.getPosition()
+		};
+	}
+
   @Override
   public void periodic() {
     odometry.update(gyro.getRotation2d(), new SwerveModulePosition[] {
@@ -88,6 +102,7 @@ public class Swerve extends SubsystemBase {
 
     aLogger.recordOutput("SwerveDrive/IntendedStates",
         lastIntendedStates == null ? new SwerveModuleState[] {} : lastIntendedStates);
+
     aLogger.recordOutput("SwerveDrive/GyroscopeHeading", getRotation2d().getDegrees());
   }
 }

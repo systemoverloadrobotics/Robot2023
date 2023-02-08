@@ -34,6 +34,8 @@ public final class Constants {
     // Configure the power module used on the robot
     public static final ModuleType POWER_MODULE_TYPE = ModuleType.kRev;
 
+    public static final double NOMINAL_VOLTAGE = 12.0;
+
     public static final class RobotDimensions {
         // TODO: replace these with actual dimensions
         public static final double WIDTH = Units.inchesToMeters(28);
