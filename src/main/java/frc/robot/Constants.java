@@ -105,21 +105,13 @@ public final class Constants {
     }
 
     public static final class Scoring {
-        public static final ConstantButton UPPER_LEFT_CONE = new ConstantButton(1, 0);
-        public static final ConstantButton UPPER_MIDDLE_CUBE = new ConstantButton(1, 1);
-        public static final ConstantButton UPPER_RIGHT_CONE = new ConstantButton(1, 2);
-        public static final ConstantButton MIDDLE_LEFT_CONE = new ConstantButton(1, 3);
-        public static final ConstantButton MIDDLE_MIDDLE_CUBE = new ConstantButton(1, 4);
-        public static final ConstantButton MIDDLE_RIGHT_CONE = new ConstantButton(1, 5);
-        public static final ConstantButton HYBRID_LEFT = new ConstantButton(1, 6);
-        public static final ConstantButton HYBRID_MIDDLE = new ConstantButton(1, 7);
-        public static final ConstantButton HYBRID_RIGHT = new ConstantButton(1, 8);
 
         public static final double AUTO_SWERVE_MAX_VELOCITY = 3; // Meters per second
         public static final double AUTO_SWERVE_MAX_ACCELERATION = 2.5; // Meters per second
         public static final TrajectoryConfig SCORING_TRAJECTORY_CONFIG =
                 new TrajectoryConfig(AUTO_SWERVE_MAX_VELOCITY, AUTO_SWERVE_MAX_ACCELERATION);
 
+        //TODO: replace the offsets with actual values
         public static final double MIN_AUTOMOVE_DISTANCE = 2; // meters
         public static final double NEXT_TO_TAG_OFFSET = 0; //coordinates
         
@@ -214,5 +206,16 @@ public final class Constants {
         public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(1, 0);
         public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(1, 1);
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
+
+        //scoring
+        public static final ConstantButton UPPER_LEFT_CONE = new ConstantButton(1, 0);
+        public static final ConstantButton UPPER_MIDDLE_CUBE = new ConstantButton(1, 1);
+        public static final ConstantButton UPPER_RIGHT_CONE = new ConstantButton(1, 2);
+        public static final ConstantButton MIDDLE_LEFT_CONE = new ConstantButton(1, 3);
+        public static final ConstantButton MIDDLE_MIDDLE_CUBE = new ConstantButton(1, 4);
+        public static final ConstantButton MIDDLE_RIGHT_CONE = new ConstantButton(1, 5);
+        public static final ConstantButton HYBRID_LEFT = new ConstantButton(1, 6);
+        public static final ConstantButton HYBRID_MIDDLE = new ConstantButton(1, 7);
+        public static final ConstantButton HYBRID_RIGHT = new ConstantButton(1, 8);
     }
 }

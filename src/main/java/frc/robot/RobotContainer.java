@@ -6,9 +6,17 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.Arm;
+import frc.robot.GridSelector.GridLocation;
+import frc.robot.commands.MoveToGrid;
+import frc.robot.commands.MoveToScoringLocation;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.Swerve;
-import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.DriveTrainPoseEstimator;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -21,12 +29,19 @@ public class RobotContainer {
   private final java.util.logging.Logger logger;
 
   // The robot's subsystems and commands are defined here...
-  private Swerve swerve = new Swerve(); 
+  private Swerve swerve; 
+  private DriveTrainPoseEstimator poseEstimator;
+  private Vision vision;
+  private ArmSubsystem arm;
+  private Claw claw;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     logger = java.util.logging.Logger.getLogger(RobotContainer.class.getName());
-
+    poseEstimator = new DriveTrainPoseEstimator();
+    vision = new Vision();
+    arm = new ArmSubsystem();
+    claw = new Claw();
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -40,6 +55,17 @@ public class RobotContainer {
   private void configureButtonBindings() {
     swerve.setDefaultCommand(new SwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
         () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), Constants.Input.SWERVE_ROTATION_INPUT.get()));
+
+    //scoring
+    Constants.Input.UPPER_LEFT_CONE.get().whileTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 1));
+    Constants.Input.UPPER_MIDDLE_CUBE.get().whileTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 2));
+    Constants.Input.UPPER_RIGHT_CONE.get().whileTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 3));
+    Constants.Input.MIDDLE_LEFT_CONE.get().whileTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 4));
+    Constants.Input.MIDDLE_LEFT_CONE.get().whileTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 5));
+    Constants.Input.MIDDLE_LEFT_CONE.get().whileTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 6));
+    Constants.Input.HYBRID_LEFT.get().whileTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 7));
+    Constants.Input.HYBRID_MIDDLE.get().whileTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 8));
+    Constants.Input.HYBRID_RIGHT.get().whileTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 9));
   }
 
   /**

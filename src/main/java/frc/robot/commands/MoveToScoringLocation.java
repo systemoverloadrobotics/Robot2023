@@ -13,6 +13,7 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
 import frc.robot.commands.MoveToGrid;
 import frc.robot.subsystems.Vision;
+import frc.sorutil.ConstantButton;
 import frc.sorutil.path.AsyncTrajectory;
 import java.util.ArrayList;
 import java.util.concurrent.Future;
@@ -32,6 +33,7 @@ public class MoveToScoringLocation extends CommandBase {
   private Pose2d currentPose;
   private Pose2d ScoringLocationPose;
   private final GridLocation selectedGridLocation;
+  private final int buttonPressed;
   private Future<Trajectory> futureTrajectory;
   private boolean isTrajectoryGenerated;
   private Trajectory trajectory;
@@ -42,7 +44,7 @@ public class MoveToScoringLocation extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public MoveToScoringLocation(DriveTrainPoseEstimator poseEstimator, Swerve swerve, Vision vision, ArmSubsystem arm, Claw claw, GridLocation selectedGridLocation) {
+  public MoveToScoringLocation(DriveTrainPoseEstimator poseEstimator, Swerve swerve, Vision vision, ArmSubsystem arm, Claw claw, GridLocation selectedGridLocation, int buttonPressed) {
     logger = Logger.getLogger(MoveToScoringLocation.class.getName());
     this.poseEstimator = poseEstimator;
     this.swerve = swerve;
@@ -50,6 +52,7 @@ public class MoveToScoringLocation extends CommandBase {
     this.arm = arm;
     this.claw = claw;
     this.selectedGridLocation = selectedGridLocation;
+    this.buttonPressed = buttonPressed;
     currentPose = poseEstimator.getEstimatedPose();
     addRequirements(poseEstimator, vision, swerve);
   }
@@ -61,10 +64,6 @@ public class MoveToScoringLocation extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      switch(selectedGridLocation) {
-        case LEFT:
-          ScoringLocationPose = new Pose2d(currentPose.getX() + Constants.Scoring.LEFT_NODE_LEFT_GRID_OFFSET, currentPose.getY(), currentPose.getRotation());
-      }
   }
 
   // Called once the command ends or is interrupted.
@@ -76,5 +75,4 @@ public class MoveToScoringLocation extends CommandBase {
   public boolean isFinished() {
     return false;
   }
-
 }
