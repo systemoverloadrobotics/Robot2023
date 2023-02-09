@@ -58,11 +58,11 @@ public class Claw extends SubsystemBase {
     rollerMotorRight.stop();
   }
 
-  public void extend() {
+  public void openClaw() {
     extendSolenoid.set(true);
   }
 
-  public void retract() {
+  public void closeClaw() {
     extendSolenoid.set(false);
   }
 

@@ -31,6 +31,7 @@ public class MoveToGrid extends CommandBase {
   private Pose2d TagPose;
   private Pose2d NextToTagPose;
   private int selectedGridId;
+  public boolean isBotAtGrid;
   private Future<Trajectory> futureTrajectory;
   private Trajectory trajectory;
   private HolonomicDriveController controller;
@@ -79,7 +80,11 @@ public class MoveToGrid extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    if(currentPose == NextToTagPose) {
+      isBotAtGrid = true;
+    }
+  }
 
 
   // Returns true when the command should end.
@@ -90,5 +95,9 @@ public class MoveToGrid extends CommandBase {
 
   public GridLocation getSelectedGrid() {
     return GridSelector.getGridLocation(selectedGridId);
+  }
+
+  public boolean isBotAtGrid() {
+    return isBotAtGrid;
   }
 }

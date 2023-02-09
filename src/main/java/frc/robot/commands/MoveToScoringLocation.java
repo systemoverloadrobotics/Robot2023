@@ -6,19 +6,19 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.Swerve;
 import frc.robot.Constants;
-import frc.robot.GridSelector;
 import frc.robot.GridSelector.GridLocation;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
-import frc.robot.commands.MoveToGrid;
 import frc.robot.subsystems.Vision;
-import frc.sorutil.ConstantButton;
 import frc.sorutil.path.AsyncTrajectory;
 import java.util.ArrayList;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
+import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -39,6 +39,7 @@ public class MoveToScoringLocation extends CommandBase {
   private Future<Trajectory> futureTrajectory;
   private boolean isTrajectoryGenerated;
   private Trajectory trajectory;
+  private HolonomicDriveController controller;
   
 
   /**
@@ -55,36 +56,29 @@ public class MoveToScoringLocation extends CommandBase {
     this.claw = claw;
     this.selectedGridLocation = selectedGridLocation;
     this.buttonPressed = buttonPressed;
+    controller = new HolonomicDriveController(Constants.Scoring.X_CONTROLLER, Constants.Scoring.Y_CONTROLLER, Constants.Scoring.THETA_CONTROLLER);
     currentPose = poseEstimator.getEstimatedPose();
-    addRequirements(poseEstimator, vision, swerve);
+    addRequirements(poseEstimator, vision, swerve, arm, claw);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    switch(selectedGridLocation) {
-      case RIGHT:
-        offsetLeft = Constants.Scoring.RIGHT_GRID_LEFT_NODE_OFFSET;
-        offsetRight = Constants.Scoring.RIGHT_GRID_RIGHT_NODE_OFFSET;
-      case MIDDLE:
-        offsetLeft = Constants.Scoring.MIDDLE_GRID_LEFT_NODE_OFFSET;
-        offsetRight = Constants.Scoring.MIDDLE_GRID_RIGHT_NODE_OFFSET;
-      case LEFT:
-        offsetLeft = Constants.Scoring.LEFT_GRID_LEFT_NODE_OFFSET;
-        offsetRight = Constants.Scoring.LEFT_GRID_RIGHT_NODE_OFFSET;
-    }
     switch(buttonPressed % 3) {
       case 0:
-        ScoringLocationPose = new Pose2d(currentPose.getX() + offsetRight, currentPose.getY(), currentPose.getRotation());
+        ScoringLocationPose = new Pose2d(currentPose.getX() + Constants.Scoring.RIGHT_NODE_OFFSET, currentPose.getY(), currentPose.getRotation());
       case 1:
-        ScoringLocationPose = new Pose2d(currentPose.getX() + offsetLeft, currentPose.getY(), currentPose.getRotation());
+        ScoringLocationPose = new Pose2d(currentPose.getX() + Constants.Scoring.LEFT_NODE_OFFSET, currentPose.getY(), currentPose.getRotation());
     }
-    futureTrajectory = AsyncTrajectory.generateTrajectory(currentPose, ScoringLocationPose, new ArrayList<>(), Constants.Scoring.SCORING_TRAJECTORY_CONFIG);
+    if(currentPose != ScoringLocationPose) {
+      futureTrajectory = AsyncTrajectory.generateTrajectory(currentPose, ScoringLocationPose, new ArrayList<>(), Constants.Scoring.SCORING_TRAJECTORY_CONFIG);
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //move to the correct node given the grid
     if(futureTrajectory.isDone() && !isTrajectoryGenerated) {
       try{
         trajectory = futureTrajectory.get();
@@ -94,7 +88,11 @@ public class MoveToScoringLocation extends CommandBase {
         throw new RuntimeException("MoveToGrid unreachable block");
       }
     }
-    
+    Trajectory.State goal = trajectory.sample(Constants.Scoring.TRAJECTORY_SAMPLE_TIME);
+    ChassisSpeeds chassisSpeeds = controller.calculate(currentPose, goal, ScoringLocationPose.getRotation());
+    SwerveModuleState[] moduleStates = Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+    swerve.setModuleStates(moduleStates);
+    scoreOnGrid(buttonPressed);
   }
 
   // Called once the command ends or is interrupted.
@@ -105,5 +103,31 @@ public class MoveToScoringLocation extends CommandBase {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  public void scoreOnGrid(int buttonPressed) {
+    if(buttonPressed == 1 || buttonPressed == 3) {//upper cones
+      //do arm commands for upper cone
+      claw.openClaw();
+    }
+    else if(buttonPressed == 4 || buttonPressed == 6) {//middle cones
+      //do arm commands for middle cone
+      claw.openClaw();
+    }
+    else if(buttonPressed == 7 || buttonPressed == 9) {//hybrid left and right
+      //do arm commands for hybrid
+      claw.openClaw();
+    }
+    else if(buttonPressed == 2) {//Upper cube
+      //do arm commands for upper cube
+      claw.outtake(Constants.Motor.CLAW_VOLTAGE);
+    }
+    else if(buttonPressed == 5) {//Middle cube
+      //do arm commands for middle cube
+      claw.outtake(Constants.Motor.CLAW_VOLTAGE);
+    }
+    else if(buttonPressed == 8) {//hybrid middle
+      //do arm commands for hybrid middle
+    }
   }
 }

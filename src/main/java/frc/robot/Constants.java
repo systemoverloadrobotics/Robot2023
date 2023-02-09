@@ -144,12 +144,8 @@ public final class Constants {
         public static final double MIN_AUTOMOVE_DISTANCE = 2; // meters
         public static final double NEXT_TO_TAG_OFFSET = 0; 
         
-        public static final double LEFT_GRID_LEFT_NODE_OFFSET = 0; 
-        public static final double LEFT_GRID_RIGHT_NODE_OFFSET = 0; 
-        public static final double MIDDLE_GRID_LEFT_NODE_OFFSET = 0; 
-        public static final double MIDDLE_GRID_RIGHT_NODE_OFFSET = 0; 
-        public static final double RIGHT_GRID_LEFT_NODE_OFFSET = 0; 
-        public static final double RIGHT_GRID_RIGHT_NODE_OFFSET = 0; 
+        public static final double RIGHT_NODE_OFFSET = 0;
+        public static final double LEFT_NODE_OFFSET = -RIGHT_NODE_OFFSET; 
         
 
         public static final HashMap<Integer, Alliance> VALID_SCORING_TARGETS = new HashMap<>();
@@ -204,6 +200,8 @@ public final class Constants {
 
         public static final int ROLLER_LEFT = 5;
         public static final int ROLLER_RIGHT = 6;
+
+        public static final double CLAW_VOLTAGE = 0;
     }
 
     public static final class Pneumatics {
