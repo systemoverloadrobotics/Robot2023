@@ -33,6 +33,8 @@ public class MoveToScoringLocation extends CommandBase {
   private Pose2d currentPose;
   private Pose2d ScoringLocationPose;
   private final GridLocation selectedGridLocation;
+  private double offsetRight;
+  private double offsetLeft;
   private final int buttonPressed;
   private Future<Trajectory> futureTrajectory;
   private boolean isTrajectoryGenerated;
@@ -59,11 +61,40 @@ public class MoveToScoringLocation extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    switch(selectedGridLocation) {
+      case RIGHT:
+        offsetLeft = Constants.Scoring.RIGHT_GRID_LEFT_NODE_OFFSET;
+        offsetRight = Constants.Scoring.RIGHT_GRID_RIGHT_NODE_OFFSET;
+      case MIDDLE:
+        offsetLeft = Constants.Scoring.MIDDLE_GRID_LEFT_NODE_OFFSET;
+        offsetRight = Constants.Scoring.MIDDLE_GRID_RIGHT_NODE_OFFSET;
+      case LEFT:
+        offsetLeft = Constants.Scoring.LEFT_GRID_LEFT_NODE_OFFSET;
+        offsetRight = Constants.Scoring.LEFT_GRID_RIGHT_NODE_OFFSET;
+    }
+    switch(buttonPressed % 3) {
+      case 0:
+        ScoringLocationPose = new Pose2d(currentPose.getX() + offsetRight, currentPose.getY(), currentPose.getRotation());
+      case 1:
+        ScoringLocationPose = new Pose2d(currentPose.getX() + offsetLeft, currentPose.getY(), currentPose.getRotation());
+    }
+    futureTrajectory = AsyncTrajectory.generateTrajectory(currentPose, ScoringLocationPose, new ArrayList<>(), Constants.Scoring.SCORING_TRAJECTORY_CONFIG);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(futureTrajectory.isDone() && !isTrajectoryGenerated) {
+      try{
+        trajectory = futureTrajectory.get();
+        isTrajectoryGenerated = true;
+      }
+      catch(Exception Exception) {
+        throw new RuntimeException("MoveToGrid unreachable block");
+      }
+    }
+    
   }
 
   // Called once the command ends or is interrupted.
