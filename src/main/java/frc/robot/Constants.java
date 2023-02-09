@@ -113,14 +113,15 @@ public final class Constants {
 
         //TODO: replace the offsets with actual values
         public static final double MIN_AUTOMOVE_DISTANCE = 2; // meters
-        public static final double NEXT_TO_TAG_OFFSET = 0; //coordinates
+        public static final double NEXT_TO_TAG_OFFSET = 0; 
         
-        public static final double LEFT_NODE_LEFT_GRID_OFFSET = 0; //coordinates
-        public static final double RIGHT_NODE_LEFT_GRID_OFFSET = 0; //coordinates
-        public static final double LEFT_NODE_MIDDLE_GRID_OFFSET = 0; //coordinates
-        public static final double RIGHT_NODE_MIDDLE_GRID_OFFSET = 0; //coordinates
-        public static final double LEFT_NODE_RIGHT_GRID_OFFSET = 0; //coordinates
-        public static final double RIGHT_NODE_RIGHT_GRID_OFFSET = 0; //coordinates
+        public static final double LEFT_GRID_LEFT_NODE_OFFSET = 0; 
+        public static final double LEFT_GRID_RIGHT_NODE_OFFSET = 0; 
+        public static final double MIDDLE_GRID_LEFT_NODE_OFFSET = 0; 
+        public static final double MIDDLE_GRID_RIGHT_NODE_OFFSET = 0; 
+        public static final double RIGHT_GRID_LEFT_NODE_OFFSET = 0; 
+        public static final double RIGHT_GRID_RIGHT_NODE_OFFSET = 0; 
+        
 
         public static final HashMap<Integer, Alliance> VALID_SCORING_TARGETS = new HashMap<>();
         static {
