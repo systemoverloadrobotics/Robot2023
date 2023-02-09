@@ -16,10 +16,7 @@ import org.photonvision.RobotPoseEstimator;
 import org.photonvision.RobotPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -35,7 +32,7 @@ public class Vision extends SubsystemBase {
 
   private PhotonPipelineResult results;
 
-  public Vision() throws IOException { //IOException is thrown when the file for April Tag field layout isn't found
+  public Vision() { //IOException is thrown when the file for April Tag field layout isn't found
     logger = java.util.logging.Logger.getLogger(Vision.class.getName());
     aLogger = Logger.getInstance();
 
