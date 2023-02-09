@@ -158,10 +158,8 @@ public class ArmSubsystem extends SubsystemBase {
       double estimatedAngle = SorMath.degreesToTicks((jointA.outputPosition() + jointA.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN) % 360, 4096);
       double[] cartesian = SorMath.polarToCartesian(estimatedLength, estimatedAngle);
 
-      if (
-        cartesian[1] <= Constants.Arm.ARM_HEIGHT_FROM_BASE && 
-        estimatedAngle > Constants.Arm.ARM_MIN_ANGLE_COLLISION && 
-        estimatedAngle < Constants.Arm.ARM_MAX_ANGLE_COLLISION) { // inside box bound
+      if (cartesian[1] <= Constants.Arm.ARM_HEIGHT_FROM_BASE) { // inside box bound
+        if (between(estimatedAngle, Constants.Arm.ARM_MIN_ANGLE_COLLISION_A, Constants.Arm.ARM_MAX_ANGLE_COLLISION_A) || between(estimatedAngle, Constants.Arm.ARM_MIN_ANGLE_COLLISION_B, Constants.Arm.ARM_MAX_ANGLE_COLLISION_B))
         pause = true;
         preventExtension = true;
       }
@@ -185,5 +183,9 @@ public class ArmSubsystem extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+  }
+
+  public boolean between(double in, double low, double high) {
+    return in > low && in < high;
   }
 }
