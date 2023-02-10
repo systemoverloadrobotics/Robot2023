@@ -9,12 +9,12 @@ import frc.robot.subsystems.Vision;
 
 public class GridSelector {
     private static int SELECTED_GRID_ID;
-    // gives closest apriltag to the bot
+    // gives closest apriltag with respect to your alliance
     public static int getClosestId(Vision vision, DriveTrainPoseEstimator poseEstimator) {
         Pose2d currentPose = poseEstimator.getEstimatedPose();
         double closestDistance = -1;
         int closestId = 0;
-        // finds the closest april tag to the bot
+        // finds the closest Grid on your alliance
         for (int id : Constants.Scoring.TARGETS_PER_ALLIANCE.get(DriverStation.getAlliance())) {
             double tempIdDistance = currentPose.getTranslation().getDistance(getTagPose2d(closestId).getTranslation());
             if (tempIdDistance > closestDistance) {

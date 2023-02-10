@@ -43,11 +43,12 @@ public class MoveToGrid extends CommandBase {
    * @param subsystem The subsystem used by this command.
    */
   public MoveToGrid(DriveTrainPoseEstimator poseEstimator, Swerve swerve, Vision vision) {
-    logger = Logger.getLogger(MoveToScoringLocation.class.getName());
+    logger = Logger.getLogger(MoveToGrid.class.getName());
     this.poseEstimator = poseEstimator;
     this.swerve = swerve;
     this.vision = vision;
     controller = new HolonomicDriveController(Constants.Scoring.X_CONTROLLER, Constants.Scoring.Y_CONTROLLER, Constants.Scoring.THETA_CONTROLLER);
+    currentPose = poseEstimator.getEstimatedPose();
     addRequirements(poseEstimator, vision, swerve);
   }
 
