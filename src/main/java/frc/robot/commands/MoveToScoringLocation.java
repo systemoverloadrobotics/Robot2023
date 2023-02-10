@@ -4,9 +4,10 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.Swerve;
+
 import frc.robot.Constants;
 import frc.robot.GridSelector.GridLocation;
+import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
@@ -108,26 +109,22 @@ public class MoveToScoringLocation extends CommandBase {
   public void scoreOnGrid(int buttonPressed) {
     if(buttonPressed == 1 || buttonPressed == 3) {//upper cones
       //do arm commands for upper cone
-      claw.openClaw();
     }
     else if(buttonPressed == 4 || buttonPressed == 6) {//middle cones
       //do arm commands for middle cone
-      claw.openClaw();
     }
     else if(buttonPressed == 7 || buttonPressed == 9) {//hybrid left and right
       //do arm commands for hybrid
-      claw.openClaw();
     }
     else if(buttonPressed == 2) {//Upper cube
       //do arm commands for upper cube
-      claw.outtake(Constants.Motor.CLAW_VOLTAGE);
     }
     else if(buttonPressed == 5) {//Middle cube
       //do arm commands for middle cube
-      claw.outtake(Constants.Motor.CLAW_VOLTAGE);
     }
     else if(buttonPressed == 8) {//hybrid middle
       //do arm commands for hybrid middle
     }
+    claw.outtake(Constants.Motor.CLAW_VOLTAGE);
   }
 }
