@@ -18,14 +18,12 @@ import frc.robot.Constants;
 import frc.robot.GridSelector;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Vision;
 import frc.sorutil.path.AsyncTrajectory;
 
 /** An example command that uses an example subsystem. */
 public class MoveToHumanPlayer extends CommandBase {
   private final Logger logger;
   private final Swerve swerve;
-  private final Vision vision;
   private final DriveTrainPoseEstimator poseEstimator;
   private final HolonomicDriveController controller;
   private Future<Trajectory> futureTrajectory;
@@ -39,15 +37,14 @@ public class MoveToHumanPlayer extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public MoveToHumanPlayer(Swerve swerve, Vision vision, DriveTrainPoseEstimator poseEstimator) {
+  public MoveToHumanPlayer(Swerve swerve, DriveTrainPoseEstimator poseEstimator) {
     logger = Logger.getLogger(MoveToHumanPlayer.class.getName());
     this.swerve = swerve;
-    this.vision = vision;
     this.poseEstimator = poseEstimator;
     currentPose = poseEstimator.getEstimatedPose();
     controller = new HolonomicDriveController(Constants.Scoring.X_CONTROLLER, Constants.Scoring.Y_CONTROLLER, Constants.Scoring.THETA_CONTROLLER);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(swerve, vision, poseEstimator);
+    addRequirements(swerve, poseEstimator);
   }
 
   // Called when the command is initially scheduled.

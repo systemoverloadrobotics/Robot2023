@@ -112,10 +112,14 @@ public final class Constants {
         // Placeholder
         public static final double ARM_PRESET_LOW_X = 3; // ft
         public static final double ARM_PRESET_LOW_Y = 1; // ft
-        public static final double ARM_PRESET_MID_X = 3; // ft
-        public static final double ARM_PRESET_MID_Y = 2; // ft
-        public static final double ARM_PRESET_HIGH_X = 3; // ft
-        public static final double ARM_PRESET_HIGH_Y = 3; // ft
+        public static final double ARM_PRESET_MID_CONE_X = 3; // ft
+        public static final double ARM_PRESET_MID_CONE_Y = 2; // ft
+        public static final double ARM_PRESET_MID_CUBE_X = 3; // ft
+        public static final double ARM_PRESET_MID_CUBE_Y = 2; // ft
+        public static final double ARM_PRESET_HIGH_CONE_X = 3; // ft
+        public static final double ARM_PRESET_HIGH_CONE_Y = 3; // ft
+        public static final double ARM_PRESET_HIGH_CUBE_X = 3; // ft
+        public static final double ARM_PRESET_HIGH_CUBE_Y = 3; // ft
         public static final double ARM_PRESET_TRAY_X = 3; // ft
         public static final double ARM_PRESET_TRAY_Y = 2; // ft
         public static final double ARM_PRESET_STOW_X = 0; // ft

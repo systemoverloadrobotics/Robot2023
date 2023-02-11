@@ -7,15 +7,18 @@ package frc.robot.commands;
 
 import frc.robot.Constants;
 import frc.robot.GridSelector.GridLocation;
+import frc.robot.RobotContainer.ScoringLocations;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.ArmSubsystem.ArmHeight;
 import frc.sorutil.path.AsyncTrajectory;
 import java.util.ArrayList;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -31,16 +34,15 @@ public class MoveToScoringLocation extends CommandBase {
   private final Vision vision;
   private final ArmSubsystem arm;
   private final Claw claw;
-  private Pose2d currentPose;
-  private Pose2d ScoringLocationPose;
+  private Pose2d currentPose, ScoringLocationPose;
   private final GridLocation selectedGridLocation;
-  private double offsetRight;
-  private double offsetLeft;
-  private final int buttonPressed;
+  private double offsetRight, offsetLeft;
+  private final ScoringLocations scoringLocation;
   private Future<Trajectory> futureTrajectory;
   private boolean isTrajectoryGenerated;
   private Trajectory trajectory;
   private HolonomicDriveController controller;
+  private ArmHeight height;
   
 
   /**
@@ -48,7 +50,7 @@ public class MoveToScoringLocation extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public MoveToScoringLocation(DriveTrainPoseEstimator poseEstimator, Swerve swerve, Vision vision, ArmSubsystem arm, Claw claw, GridLocation selectedGridLocation, int buttonPressed) {
+  public MoveToScoringLocation(DriveTrainPoseEstimator poseEstimator, Swerve swerve, Vision vision, ArmSubsystem arm, Claw claw, GridLocation selectedGridLocation, ScoringLocations scoringLocation) {
     logger = Logger.getLogger(MoveToScoringLocation.class.getName());
     this.poseEstimator = poseEstimator;
     this.swerve = swerve;
@@ -56,7 +58,7 @@ public class MoveToScoringLocation extends CommandBase {
     this.arm = arm;
     this.claw = claw;
     this.selectedGridLocation = selectedGridLocation;
-    this.buttonPressed = buttonPressed;
+    this.scoringLocation = scoringLocation;
     controller = new HolonomicDriveController(Constants.Scoring.X_CONTROLLER, Constants.Scoring.Y_CONTROLLER, Constants.Scoring.THETA_CONTROLLER);
     currentPose = poseEstimator.getEstimatedPose();
     addRequirements(poseEstimator, vision, swerve, arm, claw);
@@ -76,7 +78,7 @@ public class MoveToScoringLocation extends CommandBase {
         offsetLeft = Constants.Scoring.LEFT_GRID_LEFT_NODE_OFFSET;
         offsetRight = Constants.Scoring.LEFT_GRID_RIGHT_NODE_OFFSET;
     }
-    switch(buttonPressed % 3) {
+    switch((scoringLocation.ordinal()+1) % 3) {
       case 0:
         ScoringLocationPose = new Pose2d(currentPose.getX() + offsetLeft, currentPose.getY(), currentPose.getRotation());
       case 1:
@@ -104,7 +106,7 @@ public class MoveToScoringLocation extends CommandBase {
     ChassisSpeeds chassisSpeeds = controller.calculate(currentPose, goal, ScoringLocationPose.getRotation());
     SwerveModuleState[] moduleStates = Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
     swerve.setModuleStates(moduleStates);
-    scoreOnGrid(buttonPressed);
+    scoreOnGrid(scoringLocation);
   }
 
   // Called once the command ends or is interrupted.
@@ -117,25 +119,22 @@ public class MoveToScoringLocation extends CommandBase {
     return false;
   }
 
-  public void scoreOnGrid(int buttonPressed) {
-    if(buttonPressed == 1 || buttonPressed == 3) {//upper cones
-      //do arm commands for upper cone
+  public void scoreOnGrid(ScoringLocations scoringLocation) {
+    switch (scoringLocation) {
+      case UPPER_LEFT_CONE, UPPER_RIGHT_CONE:
+        height = ArmHeight.HIGH_CONE;
+      case UPPER_MIDDLE_CUBE:
+        height = ArmHeight.HIGH_CUBE;
+      case MIDDLE_LEFT_CONE, MIDDLE_RIGHT_CONE:
+        height = ArmHeight.MID_CONE;
+      case MIDDLE_MIDDLE_CUBE:
+        height = ArmHeight.MID_CUBE;
+      case HYBRID_LEFT, HYBRID_MIDDLE, HYBRID_RIGHT:
+        height = ArmHeight.LOW;
     }
-    else if(buttonPressed == 4 || buttonPressed == 6) {//middle cones
-      //do arm commands for middle cone
+    arm.setPosition(height.getCoordinates());
+    if(ArmSubsystem.withinRange(arm.getManipulatorPosition(), height.getCoordinates(), 0.25, 0.25)) {
+      claw.outtake();
     }
-    else if(buttonPressed == 7 || buttonPressed == 9) {//hybrid left and right
-      //do arm commands for hybrid
-    }
-    else if(buttonPressed == 2) {//Upper cube
-      //do arm commands for upper cube
-    }
-    else if(buttonPressed == 5) {//Middle cube
-      //do arm commands for middle cube
-    }
-    else if(buttonPressed == 8) {//hybrid middle
-      //do arm commands for hybrid middle
-    }
-    claw.outtake(Constants.Motor.CLAW_VOLTAGE);
   }
 }
