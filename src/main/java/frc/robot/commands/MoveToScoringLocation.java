@@ -65,11 +65,22 @@ public class MoveToScoringLocation extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    switch(selectedGridLocation) {
+      case RIGHT:
+        offsetLeft = Constants.Scoring.RIGHT_GRID_LEFT_NODE_OFFSET;
+        offsetRight = Constants.Scoring.RIGHT_GRID_RIGHT_NODE_OFFSET;
+      case MIDDLE:
+        offsetLeft = Constants.Scoring.MIDDLE_GRID_LEFT_NODE_OFFSET;
+        offsetRight = Constants.Scoring.MIDDLE_GRID_RIGHT_NODE_OFFSET;
+      case LEFT:
+        offsetLeft = Constants.Scoring.LEFT_GRID_LEFT_NODE_OFFSET;
+        offsetRight = Constants.Scoring.LEFT_GRID_RIGHT_NODE_OFFSET;
+    }
     switch(buttonPressed % 3) {
       case 0:
-        ScoringLocationPose = new Pose2d(currentPose.getX() + Constants.Scoring.RIGHT_NODE_OFFSET, currentPose.getY(), currentPose.getRotation());
+        ScoringLocationPose = new Pose2d(currentPose.getX() + offsetLeft, currentPose.getY(), currentPose.getRotation());
       case 1:
-        ScoringLocationPose = new Pose2d(currentPose.getX() + Constants.Scoring.LEFT_NODE_OFFSET, currentPose.getY(), currentPose.getRotation());
+        ScoringLocationPose = new Pose2d(currentPose.getX() + offsetRight, currentPose.getY(), currentPose.getRotation());
     }
     if(currentPose != ScoringLocationPose) {
       futureTrajectory = AsyncTrajectory.generateTrajectory(currentPose, ScoringLocationPose, new ArrayList<>(), Constants.Scoring.SCORING_TRAJECTORY_CONFIG);
