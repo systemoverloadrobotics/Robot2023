@@ -66,7 +66,7 @@ public class MoveToHumanPlayer extends CommandBase {
           isTrajectoryGenerated = true;
         }
         catch(Exception Exception) {
-          throw new RuntimeException("MoveToGrid unreachable block");
+          throw new RuntimeException("MoveToHumanPlayer unreachable block");
         }
       }
       Trajectory.State goal = trajectory.sample(Constants.Scoring.TRAJECTORY_SAMPLE_TIME);
