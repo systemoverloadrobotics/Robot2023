@@ -112,6 +112,10 @@ public class ArmSubsystem extends SubsystemBase {
     intendedPosition = pair;
   }
 
+  public void stop() {
+    setPosition(getManipulatorPosition());
+  }
+
   // TODO: Fix this, callers should not be expected to convert from polar coordinates.
   public Pair<Double, Double> getManipulatorPosition() {
     double r = 0.0444754 / 2;
@@ -226,7 +230,29 @@ public class ArmSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
-  public boolean between(double in, double low, double high) {
+  public static boolean between(double in, double low, double high) {
     return in > low && in < high;
+  }
+
+  public static boolean withinRange(Pair<Double, Double> in, Pair<Double, Double> origin, double xdiff, double ydiff) {
+    return between(in.getFirst(), origin.getFirst() - xdiff, origin.getFirst() + xdiff) && between(in.getSecond(), origin.getSecond() - ydiff, origin.getSecond() + ydiff);
+  }
+
+  public enum ArmHeight {
+    LOW(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_LOW_X, Constants.Arm.ARM_PRESET_LOW_Y)), 
+    MID(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_MID_X, Constants.Arm.ARM_PRESET_MID_Y)), 
+    HIGH(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_HIGH_X, Constants.Arm.ARM_PRESET_HIGH_Y)), 
+    TRAY(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_TRAY_X, Constants.Arm.ARM_PRESET_TRAY_Y)),
+    STOW(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_STOW_X, Constants.Arm.ARM_PRESET_STOW_Y));
+
+    private Pair<Double, Double> coordinates;
+
+    ArmHeight(Pair<Double, Double> coordinates) {
+      this.coordinates = coordinates;
+    }
+
+    public Pair<Double, Double> getCoordinates() {
+        return coordinates;
+    }
   }
 }

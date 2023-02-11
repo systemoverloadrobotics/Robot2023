@@ -88,10 +88,28 @@ public final class Constants {
         public static final double ARM_MIN_ANGLE_COLLISION_B = 3.5; // rad
         public static final double ARM_MAX_ANGLE_COLLISION_B = 5; // rad
 
+        // Placeholder
+        public static final double ARM_PRESET_LOW_X = 3; // ft
+        public static final double ARM_PRESET_LOW_Y = 1; // ft
+        public static final double ARM_PRESET_MID_X = 3; // ft
+        public static final double ARM_PRESET_MID_Y = 2; // ft
+        public static final double ARM_PRESET_HIGH_X = 3; // ft
+        public static final double ARM_PRESET_HIGH_Y = 3; // ft
+        public static final double ARM_PRESET_TRAY_X = 3; // ft
+        public static final double ARM_PRESET_TRAY_Y = 2; // ft
+        public static final double ARM_PRESET_STOW_X = 0; // ft
+        public static final double ARM_PRESET_STOW_Y = 1; // ft
+
         // Geometry
         public static final double ARM_PIVOT_X = Units.inchesToMeters(11);
         public static final double ARM_PIVOT_Y = Units.inchesToMeters(32.5);
         public static final double MIN_ARM_LENGTH = Units.inchesToMeters(18);
+
+        // Preset Heights
+    }
+
+    public static final class Claw {
+        public static final double CLAW_VELOCITY = 1000; // units/sec
     }
 
     public static final class Motor {

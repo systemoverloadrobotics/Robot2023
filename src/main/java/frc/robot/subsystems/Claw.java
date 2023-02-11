@@ -32,7 +32,7 @@ public class Claw extends SubsystemBase {
 
     MotorConfiguration rollerControllerConfig = new MotorConfiguration();
 
-    rollerControllerConfig.setCurrentLimit(20.0);
+    rollerControllerConfig.setCurrentLimit(5.0);
     rollerControllerConfig.setMaxOutput(0.8);
     
     rollerMotorLeft = new SuSparkMax(new CANSparkMax(Constants.Motor.ROLLER_LEFT, MotorType.kBrushless), "Left Roller Motor", rollerControllerConfig, 
@@ -43,14 +43,14 @@ public class Claw extends SubsystemBase {
     logger.info("Claw Initialized.");
   }
 
-  public void intake(double volts) {
-    rollerMotorLeft.set(ControlMode.VOLTAGE, volts);
-    rollerMotorRight.set(ControlMode.VOLTAGE, -volts);
+  public void intake() {
+    rollerMotorLeft.set(ControlMode.VELOCITY, Constants.Claw.CLAW_VELOCITY);
+    rollerMotorRight.set(ControlMode.VELOCITY, -Constants.Claw.CLAW_VELOCITY);
   }
 
-  public void outtake(double volts) {
-    rollerMotorLeft.set(ControlMode.VOLTAGE, -volts);
-    rollerMotorRight.set(ControlMode.VOLTAGE, volts);
+  public void outtake() {
+    rollerMotorLeft.set(ControlMode.VELOCITY, -Constants.Claw.CLAW_VELOCITY);
+    rollerMotorRight.set(ControlMode.VELOCITY, Constants.Claw.CLAW_VELOCITY);
   }
 
   public void stop() {
