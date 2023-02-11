@@ -57,15 +57,21 @@ public class RobotContainer {
         () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), Constants.Input.SWERVE_ROTATION_INPUT.get()));
 
     //scoring
-    Constants.Input.UPPER_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 1));
-    Constants.Input.UPPER_MIDDLE_CUBE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 2));
-    Constants.Input.UPPER_RIGHT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 3));
-    Constants.Input.MIDDLE_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 4));
-    Constants.Input.MIDDLE_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 5));
-    Constants.Input.MIDDLE_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 6));
-    Constants.Input.HYBRID_LEFT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 7));
-    Constants.Input.HYBRID_MIDDLE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 8));
-    Constants.Input.HYBRID_RIGHT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), 9));
+    Constants.Input.UPPER_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.UPPER_LEFT_CONE));
+    Constants.Input.UPPER_MIDDLE_CUBE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.UPPER_MIDDLE_CUBE));
+    Constants.Input.UPPER_RIGHT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.UPPER_RIGHT_CONE));
+    Constants.Input.MIDDLE_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.MIDDLE_LEFT_CONE));
+    Constants.Input.MIDDLE_MIDDLE_CUBE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.MIDDLE_MIDDLE_CUBE));
+    Constants.Input.MIDDLE_RIGHT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.MIDDLE_RIGHT_CONE));
+    Constants.Input.HYBRID_LEFT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.HYBRID_LEFT));
+    Constants.Input.HYBRID_MIDDLE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.HYBRID_MIDDLE));
+    Constants.Input.HYBRID_RIGHT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.HYBRID_RIGHT));
+  }
+
+  public enum ScoringLocations {
+    UPPER_LEFT_CONE, UPPER_MIDDLE_CUBE, UPPER_RIGHT_CONE,
+    MIDDLE_LEFT_CONE, MIDDLE_MIDDLE_CUBE, MIDDLE_RIGHT_CONE,
+    HYBRID_LEFT, HYBRID_MIDDLE, HYBRID_RIGHT;
   }
 
   /**

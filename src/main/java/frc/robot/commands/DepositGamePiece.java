@@ -1,17 +1,8 @@
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.Swerve;
-import frc.sorutil.SorMath;
 
 public class DepositGamePiece extends CommandBase {
   private ArmSubsystem arm;
