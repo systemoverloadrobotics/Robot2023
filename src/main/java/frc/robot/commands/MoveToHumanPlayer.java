@@ -23,6 +23,7 @@ import frc.sorutil.path.AsyncTrajectory;
 /** An example command that uses an example subsystem. */
 public class MoveToHumanPlayer extends CommandBase {
   private final Logger logger;
+  private final org.littletonrobotics.junction.Logger aLogger;
   private final Swerve swerve;
   private final DriveTrainPoseEstimator poseEstimator;
   private final HolonomicDriveController controller;
@@ -39,6 +40,7 @@ public class MoveToHumanPlayer extends CommandBase {
    */
   public MoveToHumanPlayer(Swerve swerve, DriveTrainPoseEstimator poseEstimator) {
     logger = Logger.getLogger(MoveToHumanPlayer.class.getName());
+    aLogger = org.littletonrobotics.junction.Logger.getInstance();
     this.swerve = swerve;
     this.poseEstimator = poseEstimator;
     currentPose = poseEstimator.getEstimatedPose();
@@ -61,6 +63,7 @@ public class MoveToHumanPlayer extends CommandBase {
         try{
           trajectory = futureTrajectory.get();
           isTrajectoryGenerated = true;
+          aLogger.recordOutput("Scoring/MoveToHumanPlayerTrajectory", trajectory);
         }
         catch(Exception Exception) {
           throw new RuntimeException("MoveToHumanPlayer unreachable block");

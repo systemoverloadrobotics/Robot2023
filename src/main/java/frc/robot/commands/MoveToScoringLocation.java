@@ -18,7 +18,6 @@ import frc.sorutil.path.AsyncTrajectory;
 import java.util.ArrayList;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -29,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /** An example command that uses an example subsystem. */
 public class MoveToScoringLocation extends CommandBase {
   private final Logger logger;
+  private final org.littletonrobotics.junction.Logger alogger;
   private final Swerve swerve;
   private final DriveTrainPoseEstimator poseEstimator;
   private final Vision vision;
@@ -52,6 +52,7 @@ public class MoveToScoringLocation extends CommandBase {
    */
   public MoveToScoringLocation(DriveTrainPoseEstimator poseEstimator, Swerve swerve, Vision vision, ArmSubsystem arm, Claw claw, GridLocation selectedGridLocation, ScoringLocations scoringLocation) {
     logger = Logger.getLogger(MoveToScoringLocation.class.getName());
+    alogger = org.littletonrobotics.junction.Logger.getInstance();
     this.poseEstimator = poseEstimator;
     this.swerve = swerve;
     this.vision = vision;
@@ -97,9 +98,10 @@ public class MoveToScoringLocation extends CommandBase {
       try{
         trajectory = futureTrajectory.get();
         isTrajectoryGenerated = true;
+        alogger.recordOutput("Scoring/MoveToScoringLocationTrajectory", trajectory);
       }
       catch(Exception Exception) {
-        throw new RuntimeException("MoveToGrid unreachable block");
+        throw new RuntimeException("MoveToScoringLocation unreachable block");
       }
     }
     Trajectory.State goal = trajectory.sample(Constants.Scoring.TRAJECTORY_SAMPLE_TIME);

@@ -9,14 +9,10 @@ import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import java.util.logging.Logger;
-import org.photonvision.PhotonCamera;
 
 public class DriveTrainPoseEstimator extends SubsystemBase {
 
@@ -24,9 +20,10 @@ public class DriveTrainPoseEstimator extends SubsystemBase {
   private Swerve swerve;
   private Vision vision;
   private SwerveDrivePoseEstimator poseEstimator;
-
+  private final org.littletonrobotics.junction.Logger aLogger;
   public DriveTrainPoseEstimator() {
     logger = Logger.getLogger(DriveTrainPoseEstimator.class.getName());
+    aLogger = org.littletonrobotics.junction.Logger.getInstance();
     poseEstimator =
       new SwerveDrivePoseEstimator(
         Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS,
@@ -60,6 +57,7 @@ public class DriveTrainPoseEstimator extends SubsystemBase {
       swerve.getRotation2d(),
       swerve.getModulePositions()
     );
+    aLogger.recordOutput("PoseEstimator/position", getEstimatedPose());
   }
 
   @Override
