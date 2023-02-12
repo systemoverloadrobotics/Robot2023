@@ -110,6 +110,7 @@ public final class Constants {
         public static final double ARM_MAX_ANGLE_COLLISION_B = 5; // rad
 
         // Placeholder
+        //TODO replace with actual values
         public static final double ARM_PRESET_LOW_X = 3; // ft
         public static final double ARM_PRESET_LOW_Y = 1; // ft
         public static final double ARM_PRESET_MID_CONE_X = 3; // ft
