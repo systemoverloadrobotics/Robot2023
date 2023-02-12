@@ -240,11 +240,15 @@ public final class Constants {
     }
 
     public static final class Input {
+        //TODO: Fix idx
         public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(1, 0);
         public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(1, 1);
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
 
         //scoring
+        public static final ConstantButton POSITION_TO_CLOSEST_GRID = new ConstantButton(1, 0);
+        public static final ConstantButton POSITION_TO_HUMAN_PLAYER = new ConstantButton(1, 1);
+
         public static final ConstantButton UPPER_LEFT_CONE = new ConstantButton(1, 0);
         public static final ConstantButton UPPER_MIDDLE_CUBE = new ConstantButton(1, 1);
         public static final ConstantButton UPPER_RIGHT_CONE = new ConstantButton(1, 2);

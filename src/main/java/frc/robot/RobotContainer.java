@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Arm;
 import frc.robot.GridSelector.GridLocation;
 import frc.robot.commands.MoveToGrid;
+import frc.robot.commands.MoveToHumanPlayer;
 import frc.robot.commands.MoveToScoringLocation;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.Swerve;
@@ -57,6 +58,9 @@ public class RobotContainer {
         () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), Constants.Input.SWERVE_ROTATION_INPUT.get()));
 
     //scoring
+    Constants.Input.POSITION_TO_CLOSEST_GRID.get().onTrue(new MoveToGrid(poseEstimator, swerve, vision));
+    Constants.Input.POSITION_TO_HUMAN_PLAYER.get().onTrue(new MoveToHumanPlayer(swerve, poseEstimator));
+
     Constants.Input.UPPER_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.UPPER_LEFT_CONE));
     Constants.Input.UPPER_MIDDLE_CUBE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.UPPER_MIDDLE_CUBE));
     Constants.Input.UPPER_RIGHT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.UPPER_RIGHT_CONE));
