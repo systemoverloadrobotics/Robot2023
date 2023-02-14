@@ -36,18 +36,12 @@ public class Led extends SubsystemBase {
   private void led(Color8Bit color8Bit) {
   }
   
-  public void setLEDColor(boolean isPurple){
-    if (isPurple) {
+  public void setLEDColor(Color color8Bit){
       for(var i = 0; i<ledBuffer.getLength(); i++ ){
-        led(new Color8Bit(Color.kPurple));
+        led(new Color8Bit(color8Bit));
           // ledBuffer.setRGB(i, red, green, blue);
       }
-    }
-    else {
-      for(var i = 0; i<ledBuffer.getLength(); i++ ){
-        led(new Color8Bit(Color.kYellow));
-    }
-  }
+
  
     led.setData(ledBuffer); 
   }
