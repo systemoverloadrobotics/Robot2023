@@ -30,7 +30,7 @@ public class DepositGamePiece extends CommandBase {
   @Override
   public void execute() {
     arm.setPosition(height.getCoordinates());
-    if (ArmSubsystem.withinRange(arm.getManipulatorPosition(), height.getCoordinates(), 0.25, 0.25)) {
+    if (arm.withinRange(height.getCoordinates(), 0.25, 0.25)) {
       claw.outtake();
     }
   }

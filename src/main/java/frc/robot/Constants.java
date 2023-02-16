@@ -83,10 +83,10 @@ public final class Constants {
         public static final double ARM_PREDICTIVE_TIMESPAN = 0.25; // seconds
         public static final double ARM_HEIGHT_FROM_GROUND = -1.5; // ft
         public static final double ARM_HEIGHT_FROM_BASE = -1; // ft
-        public static final double ARM_MIN_ANGLE_COLLISION_A = 5.3; // rad
-        public static final double ARM_MAX_ANGLE_COLLISION_A = 5.8; // rad
-        public static final double ARM_MIN_ANGLE_COLLISION_B = 3.5; // rad
-        public static final double ARM_MAX_ANGLE_COLLISION_B = 5; // rad
+        public static final double ARM_MIN_ANGLE_COLLISION_A = 300; // degrees
+        public static final double ARM_MAX_ANGLE_COLLISION_A = 330; // degrees
+        public static final double ARM_MIN_ANGLE_COLLISION_B = 200; // degrees
+        public static final double ARM_MAX_ANGLE_COLLISION_B = 280; // degrees
 
         // Placeholder
         public static final double ARM_PRESET_LOW_X = 3; // ft

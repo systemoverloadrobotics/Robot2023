@@ -191,7 +191,7 @@ public class ArmSubsystem extends SubsystemBase {
     aLogger.recordOutput("Arm/CurrentPosition", currentMechanism.asMechanism());
   }
 
-  private void arm() {
+  private void refreshArmGoal() {
     double[] desiredPosition =
         SorMath.cartesianToPolar(intendedPosition.getFirst(), intendedPosition.getSecond());
     if (!isArmReady()) {
@@ -215,14 +215,14 @@ public class ArmSubsystem extends SubsystemBase {
 
 
   private boolean isCascadeSafe(double[] cartesian) {
-    return cartesian[1] >= Constants.Arm.ARM_HEIGHT_FROM_BASE;
+    return cartesian[1] < Constants.Arm.ARM_HEIGHT_FROM_BASE;
   }
 
   private boolean isArmPositionSafe(double estimatedAngle) {
     return between(estimatedAngle,
-    Constants.Arm.ARM_MIN_ANGLE_COLLISION_A, Constants.Arm.ARM_MAX_ANGLE_COLLISION_A)
-    || between(estimatedAngle, Constants.Arm.ARM_MIN_ANGLE_COLLISION_B,
-        Constants.Arm.ARM_MAX_ANGLE_COLLISION_B); 
+    Math.toRadians(Constants.Arm.ARM_MIN_ANGLE_COLLISION_A), Math.toRadians(Constants.Arm.ARM_MAX_ANGLE_COLLISION_A))
+    || between(estimatedAngle, Math.toRadians(Constants.Arm.ARM_MIN_ANGLE_COLLISION_B),
+    Math.toRadians(Constants.Arm.ARM_MAX_ANGLE_COLLISION_B)); 
   }
 
   @Override
@@ -234,8 +234,8 @@ public class ArmSubsystem extends SubsystemBase {
     return in > low && in < high;
   }
 
-  public static boolean withinRange(Pair<Double, Double> in, Pair<Double, Double> origin, double xdiff, double ydiff) {
-    return between(in.getFirst(), origin.getFirst() - xdiff, origin.getFirst() + xdiff) && between(in.getSecond(), origin.getSecond() - ydiff, origin.getSecond() + ydiff);
+  public boolean withinRange(Pair<Double, Double> goal, double xdiff, double ydiff) {
+    return between(getManipulatorPosition().getFirst(), goal.getFirst() - xdiff, goal.getFirst() + xdiff) && between(getManipulatorPosition().getSecond(), goal.getSecond() - ydiff, goal.getSecond() + ydiff);
   }
 
   public enum ArmHeight {
