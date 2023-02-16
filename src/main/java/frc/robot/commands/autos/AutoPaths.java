@@ -35,7 +35,7 @@ public class AutoPaths {
         return command;
     }
 
-    private static Command createAutoCommand(Swerve swerve, ScoringPosition goal, PieceCount piece, boolean balance) {
+    public static Command createAutoCommand(Swerve swerve, ScoringPosition goal, PieceCount piece, boolean balance) {
         String alliance = DriverStation.getAlliance().equals(Alliance.Red) ? "red" : "blue";
         String basePathFileName = "auto_" + alliance + "_" + getDSPosition() + "_";
         // Do arm stuff here for config from ScoringPosition
@@ -45,7 +45,7 @@ public class AutoPaths {
             case ONE:
                 autoCommandGroup.addCommands(getPathCommand(swerve, basePathFileName + "one_taxi"));
                 if (balance) {
-                    autoCommandGroup.addCommands(getPathCommand(swerve, "auto_balance_prep" + alliance));
+                    autoCommandGroup.addCommands(getPathCommand(swerve, "auto_balance_prep_" + alliance));
                     autoCommandGroup.addCommands(); // TODO: Balance command
                 }
                 break;
@@ -70,7 +70,9 @@ public class AutoPaths {
                 return null;
         }
     }
-
+public enum PathName {
+    
+}
     public enum PieceCount {
         ONE("one"),
         TWO("two");

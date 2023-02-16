@@ -140,9 +140,9 @@ public final class Constants {
     }
     public static final class Auto {
         public static final TrapezoidProfile.Constraints SWERVE_STRAFE_PID_CONSTRAINTS =
-            new TrapezoidProfile.Constraints(Swerve.SWERVE_MAX_SPEED, Swerve.SWERVE_DEADBAND);
+            new TrapezoidProfile.Constraints(Swerve.SWERVE_MAX_SPEED, Swerve.SWERVE_MAX_ACCELERATION);
         public static final TrapezoidProfile.Constraints SWERVE_ROTATION_PID_CONSTRAINTS =
-            new TrapezoidProfile.Constraints(Swerve.SWERVE_ROTATION_MAX_SPEED, Swerve.SWERVE_ROTATION_MAX_SPEED);
+            new TrapezoidProfile.Constraints(Swerve.SWERVE_ROTATION_MAX_SPEED, Swerve.SWERVE_ROTATION_MAX_ACCELERATION);
         public static final ProfiledPIDController PROFILED_ROT_PID_CONTROLLER = new ProfiledPIDController(0, 0, 0, Constants.Auto.SWERVE_ROTATION_PID_CONSTRAINTS);
         public static final PIDController X_PID_CONTROLLER = new PIDController(0, 0, 0);
         public static final PIDController Y_PID_CONTROLLER = new PIDController(0, 0, 0);
