@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -90,6 +91,16 @@ public class Swerve extends SubsystemBase {
   public Rotation2d getRotation2d() {
     return Rotation2d.fromDegrees(gyro.getYaw());
   }
+
+ 
+  public SwerveModulePosition[] getModulePositions() {
+		return new SwerveModulePosition[] {
+			frontLeft.getPosition(),
+			frontRight.getPosition(),
+			backLeft.getPosition(),
+			backRight.getPosition()
+		};
+	}
 
   @Override
   public void periodic() {
