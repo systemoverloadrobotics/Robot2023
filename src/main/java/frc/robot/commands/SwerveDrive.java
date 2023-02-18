@@ -50,15 +50,7 @@ public class SwerveDrive extends CommandBase {
         Constants.Swerve.SWERVE_ROTATION_MAX_SPEED);
     SmartDashboard.putNumber("rspeed", rotationSpeed);
     SmartDashboard.putNumber("rotation 2d", swerve.getRotation2d().getDegrees());
-    ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed,
-        rotationSpeed, swerve.getRotation2d());
-    // Calculate swerve module states using the desired state of the robot chassis.
-    SwerveModuleState[] moduleStates =
-        Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates,
-        Constants.Swerve.SWERVE_MAX_SPEED);
-    SmartDashboard.putNumber("wantedrpos", moduleStates[0].angle.getDegrees());
-    swerve.setModuleStates(moduleStates);
+    swerve.setModuleStates(xSpeed, ySpeed, rotationSpeed, true);
   }
 
   // Called once when the command ends or is interrupted.
