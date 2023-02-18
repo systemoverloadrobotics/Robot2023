@@ -70,6 +70,15 @@ public class Swerve extends SubsystemBase {
     };
   }
 
+  public SwerveModulePosition[] getModulePositions() {
+    return new SwerveModulePosition[] {
+        frontLeft.getPosition(),
+        frontRight.getPosition(),
+        backLeft.getPosition(),
+        backRight.getPosition()
+    };
+  }
+
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     lastIntendedStates = desiredStates;
 

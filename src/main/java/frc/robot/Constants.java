@@ -4,10 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.sorutil.ConstantAxis;
@@ -137,4 +141,8 @@ public final class Constants {
         public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(1, 1);
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
     }
+     public static final class PoseEstimation {
+        public static final Matrix<N3, N1> POSE_GYRO_STD = VecBuilder.fill(0.1, 0.1, 0.1);
+        public static final Matrix<N3, N1> POSE_VISION_STD = VecBuilder.fill(0.1, 0.1, 0.1);
+     }
 }
