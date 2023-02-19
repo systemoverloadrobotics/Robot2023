@@ -10,6 +10,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.util.Color;
@@ -31,6 +33,7 @@ public class ArmSubsystem extends SubsystemBase {
   private SuTalonFx jointB;
   private SuSparkMax cascade;
   private Pair<Double, Double> intendedPosition;
+  private boolean safeMode;
   private boolean retractCascade;
   private boolean preventExtension;
 
@@ -73,6 +76,14 @@ public class ArmSubsystem extends SubsystemBase {
   private ArmModel intentMechanism = new ArmModel("ArmIntent");
   private ArmModel currentMechanism = new ArmModel("ArmCurrent");
 
+    private final TrapezoidProfile.Constraints constraintsAngle = new TrapezoidProfile.Constraints(175, 75);  // Units/s, Units/s^2
+    private TrapezoidProfile.State goalAngle;
+    private TrapezoidProfile.State currentAngle;
+
+    private final TrapezoidProfile.Constraints constraintsArmLength = new TrapezoidProfile.Constraints(175, 75);  // Units/s, Units/s^2
+    private TrapezoidProfile.State goalArmLength;
+    private TrapezoidProfile.State currentArmLength;
+
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
     logger = java.util.logging.Logger.getLogger(ArmSubsystem.class.getName());
@@ -102,6 +113,13 @@ public class ArmSubsystem extends SubsystemBase {
 
     retractCascade = false;
 
+    stop();
+    goalAngle = new TrapezoidProfile.State(jointA.outputPosition(), 0);
+    currentAngle = new TrapezoidProfile.State(jointA.outputPosition(), jointA.outputVelocity());
+
+    goalArmLength = new TrapezoidProfile.State(cascade.outputPosition(), 0);
+    currentArmLength = new TrapezoidProfile.State(cascade.outputPosition(), cascade.outputVelocity());
+
     logger.info("Arm Initialized.");
   }
 
@@ -110,6 +128,9 @@ public class ArmSubsystem extends SubsystemBase {
    */
   public void setPosition(Pair<Double, Double> pair) {
     intendedPosition = pair;
+    Rotation2d position = new Rotation2d(pair.getFirst(), pair.getSecond());
+    goalAngle = new TrapezoidProfile.State(SorMath.degreesToTicks(position.getDegrees(), 4096), 0);
+    goalArmLength = new TrapezoidProfile.State(cascadeFeetToTicks(Math.hypot(pair.getFirst(), pair.getSecond())), 0);
   }
 
   public void stop() {
@@ -125,83 +146,78 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public double cascadeTicksToFeet(double ticks) {
-    return Constants.Arm.ARM_CASCADE_STARTING_HEIGHT
-        + (ticks / Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
+    return Constants.Arm.ARM_CASCADE_STARTING_HEIGHT + (ticks / Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
+  }
+
+  public double cascadeFeetToTicks(double feet) {
+    return ((feet - Constants.Arm.ARM_CASCADE_STARTING_HEIGHT) * Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
+  }
+
+  public double calcFeedForward() {
+    return 0;
   }
 
   @Override
   public void periodic() {
+
     // This method will be called once per scheduler run
     // TODO: This should be changed to run a constant program that seeks the correct
     // position while keeping the arm safe.
 
     // When the arm is detected to be in the forbidden zone, the variable state for pause and preventExtension typically
     // goes:
-    // pause/preventExtension = true -> pause = false (when arm is fully retracted) -> preventExtension = false (when arm is
+    // safeMode/preventExtension = true -> pause = false (when arm is fully retracted) -> preventExtension = false (when arm is
     // moved to right position)
-    double[] vec =
-        SorMath.cartesianToPolar(intendedPosition.getFirst(), intendedPosition.getSecond());
-    // if (retractCascade) {
-    //   jointA.set(ControlMode.VELOCITY, 0);
-    //   cascade.set(ControlMode.POSITION, 0);
-    //   if (cascade.outputPosition() < Constants.Arm.ARM_CASCADE_TOLERANCE) { // code to check if the arm is fully retracted
-    //     retractCascade = false;
-    //   }
-    //   intentMechanism.update(0, 0);
-    // } else if (preventExtension) {
-    //   jointA.set(ControlMode.POSITION, Math.toDegrees(vec[1]));
-    //   cascade.set(ControlMode.POSITION, 0);
-    //   if (Math.abs(jointA.outputPosition() - SorMath.degreesToTicks(Math.toDegrees(vec[1]), 4096))
-    //       % 4096 < Constants.Arm.ARM_JOINT_TOLERANCE) { // checks if joint is in the right position
-    //     preventExtension = false;
-    //   }
-    //   intentMechanism.update(Math.toDegrees(vec[1]), 0);
-    // } else if (intendedPosition != null) {
-    //   // Running a predictive program to check whether collision is imminent in the near future
-    //   double estimatedLength = cascadeTicksToFeet(cascade.outputPosition()
-    //       + (cascade.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN)); // 1/4 seconds should give us enough time to respond
-    //   double estimatedAngle =
-    //       SorMath
-    //           .degreesToTicks(
-    //               (jointA.outputPosition()
-    //                   + jointA.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN) % 360,
-    //               4096);
-    //   double[] cartesian = SorMath.polarToCartesian(estimatedLength, estimatedAngle);
-
-    //   if (cartesian[1] <= Constants.Arm.ARM_HEIGHT_FROM_BASE) { // inside box bound
-    //     if (between(estimatedAngle, Constants.Arm.ARM_MIN_ANGLE_COLLISION_A,
-    //         Constants.Arm.ARM_MAX_ANGLE_COLLISION_A)
-    //         || between(estimatedAngle, Constants.Arm.ARM_MIN_ANGLE_COLLISION_B,
-    //             Constants.Arm.ARM_MAX_ANGLE_COLLISION_B))
-    //       retractCascade = true;
-    //     preventExtension = true;
-    //   } else if (cartesian[1] <= Constants.Arm.ARM_HEIGHT_FROM_GROUND) { // lower than ground
-    //     retractCascade = true;
-    //     preventExtension = true;
-    //   } else { // All good to go!
-    //     jointA.set(ControlMode.POSITION, Math.toDegrees(vec[1]));
-    //     cascade.set(ControlMode.POSITION, vec[0]);
-    //     intentMechanism.update(Math.toDegrees(vec[1]), vec[0]);
-    //   }
-    // }
-
+    refreshArmGoal();
+    
     currentMechanism.update(jointA.outputPosition(), getManipulatorPosition().getFirst());
-
     aLogger.recordOutput("Arm/IntendedPosition", intentMechanism.asMechanism());
     aLogger.recordOutput("Arm/CurrentPosition", currentMechanism.asMechanism());
   }
 
   private void refreshArmGoal() {
-    double[] desiredPosition =
-        SorMath.cartesianToPolar(intendedPosition.getFirst(), intendedPosition.getSecond());
-    if (!isArmReady()) {
-      cascade.set(ControlMode.POSITION, desiredPosition[0]);
-      jointA.set(ControlMode.POSITION, desiredPosition[1]);
+    if (isArmSafe() && !safeMode) {
+      // NO CHANGE
+    }
+    else if (!isArmSafe() && !safeMode) {
+      safeMode = true;
+      preventExtension = true;
+      retractCascade = true;
+      stop();
+    }
+    else if (retractCascade) {
+      // set the arm to 0 and angle to current
+      Rotation2d position = new Rotation2d(getManipulatorPosition().getFirst(), getManipulatorPosition().getSecond());
+      goalAngle = new TrapezoidProfile.State(SorMath.degreesToTicks(position.getDegrees(), 4096), 0);
+      goalArmLength = new TrapezoidProfile.State(0, 0);
+
+      if (isArmRetracted()) {
+        retractCascade = false;
+      }
+    }
+    else if (preventExtension) {
+      goalArmLength = new TrapezoidProfile.State(0, 0);
+      
+      if (between(jointA.outputPosition(), goalAngle.position + Constants.Arm.ARM_JOINT_TOLERANCE, goalAngle.position - Constants.Arm.ARM_JOINT_TOLERANCE)) {
+        safeMode = false;
+        preventExtension = false;
+      }
     }
 
+    currentAngle = new TrapezoidProfile.State(jointA.outputPosition(), jointA.outputVelocity());
+    var profileAngle = new TrapezoidProfile(constraintsAngle, goalAngle, currentAngle);
+    var neededStateAngle = profileAngle.calculate(Constants.ROBOT_PERIOD);
+
+    currentArmLength = new TrapezoidProfile.State(cascade.outputPosition(), cascade.outputVelocity());
+    var profileArmLength = new TrapezoidProfile(constraintsArmLength, goalArmLength, currentArmLength);
+    var neededArmLength = profileArmLength.calculate(Constants.ROBOT_PERIOD);
+    
+    double feedForward = calcFeedForward();
+    cascade.set(ControlMode.POSITION, neededArmLength.position);
+    jointA.set(ControlMode.POSITION, neededStateAngle.position);
   }
 
-  private boolean isArmReady() {
+  private boolean isArmSafe() {
     double estimatedLength = cascadeTicksToFeet(cascade.outputPosition()
         + (cascade.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN)); // 1/4 seconds should give us enough time to respond
     double estimatedAngle = SorMath.degreesToTicks(
@@ -210,19 +226,23 @@ public class ArmSubsystem extends SubsystemBase {
         4096);
     double[] cartesian = SorMath.polarToCartesian(estimatedLength, estimatedAngle);
 
-    return isCascadeSafe(cartesian) && isArmPositionSafe(estimatedAngle);
+    return isSafeFromGroundCollision(cartesian) && isAngleSafe(estimatedAngle);
   }
 
 
-  private boolean isCascadeSafe(double[] cartesian) {
-    return cartesian[1] < Constants.Arm.ARM_HEIGHT_FROM_BASE;
+  private boolean isSafeFromGroundCollision(double[] cartesian) {
+    return cartesian[1] > Constants.Arm.ARM_HEIGHT_FROM_BASE;
   }
 
-  private boolean isArmPositionSafe(double estimatedAngle) {
-    return between(estimatedAngle,
+  private boolean isAngleSafe(double estimatedAngle) {
+    return !(between(estimatedAngle,
     Math.toRadians(Constants.Arm.ARM_MIN_ANGLE_COLLISION_A), Math.toRadians(Constants.Arm.ARM_MAX_ANGLE_COLLISION_A))
     || between(estimatedAngle, Math.toRadians(Constants.Arm.ARM_MIN_ANGLE_COLLISION_B),
-    Math.toRadians(Constants.Arm.ARM_MAX_ANGLE_COLLISION_B)); 
+    Math.toRadians(Constants.Arm.ARM_MAX_ANGLE_COLLISION_B))); 
+  }
+
+  private boolean isArmRetracted() {
+    return cascade.outputPosition() < Constants.Arm.ARM_CASCADE_TOLERANCE;
   }
 
   @Override
