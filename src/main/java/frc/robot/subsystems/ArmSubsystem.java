@@ -213,8 +213,8 @@ public class ArmSubsystem extends SubsystemBase {
     var neededArmLength = profileArmLength.calculate(Constants.ROBOT_PERIOD);
     
     double feedForward = calcFeedForward();
-    cascade.set(ControlMode.POSITION, neededArmLength.position);
-    jointA.set(ControlMode.POSITION, neededStateAngle.position);
+    cascade.set(ControlMode.POSITION, neededArmLength.position, feedForward);
+    jointA.set(ControlMode.POSITION, neededStateAngle.position, feedForward);
   }
 
   private boolean isArmSafe() {
