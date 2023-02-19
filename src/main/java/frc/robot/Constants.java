@@ -139,8 +139,9 @@ public final class Constants {
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
     }
     public static final class Auto {
+        private static final double SWERVE_AUTO_SPEED_MULTIPLIER = 0.6;
         public static final TrapezoidProfile.Constraints SWERVE_STRAFE_PID_CONSTRAINTS =
-            new TrapezoidProfile.Constraints(Swerve.SWERVE_MAX_SPEED, Swerve.SWERVE_MAX_ACCELERATION);
+            new TrapezoidProfile.Constraints(Swerve.SWERVE_MAX_SPEED*SWERVE_AUTO_SPEED_MULTIPLIER, Swerve.SWERVE_MAX_ACCELERATION);
         public static final TrapezoidProfile.Constraints SWERVE_ROTATION_PID_CONSTRAINTS =
             new TrapezoidProfile.Constraints(Swerve.SWERVE_ROTATION_MAX_SPEED, Swerve.SWERVE_ROTATION_MAX_ACCELERATION);
         public static final ProfiledPIDController PROFILED_ROT_PID_CONTROLLER = new ProfiledPIDController(0, 0, 0, Constants.Auto.SWERVE_ROTATION_PID_CONSTRAINTS);

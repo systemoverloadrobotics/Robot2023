@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.commands.autos.AutoPaths;
+import frc.robot.commands.autos.AutoSelector;
 import frc.robot.subsystems.Swerve;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -25,11 +26,8 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private Swerve swerve = new Swerve(); 
-  private final SendableChooser<Command> chooseAuto = new SendableChooser<>();
-  private final SequentialCommandGroup onePiece = new SequentialCommandGroup(
-    AutoPaths.getPathCommand(swerve, "Piece")
-    // blah blah blah
-  );
+  private AutoSelector autoSelector = new AutoSelector(swerve);
+ 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -56,6 +54,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return null;
+    return autoSelector.getAuto();
   }
 }

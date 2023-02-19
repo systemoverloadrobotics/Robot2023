@@ -43,14 +43,14 @@ public class AutoPaths {
         autoCommandGroup.addCommands(); // TODO: arm command for score
         switch (piece) {
             case ONE:
-                autoCommandGroup.addCommands(getPathCommand(swerve, basePathFileName + "one_taxi"));
+                autoCommandGroup.addCommands(getPathCommand(swerve, basePathFileName + "taxi"));
                 if (balance) {
                     autoCommandGroup.addCommands(getPathCommand(swerve, "auto_balance_prep_" + alliance));
                     autoCommandGroup.addCommands(); // TODO: Balance command
                 }
                 break;
             case TWO:
-                autoCommandGroup.addCommands(getPathCommand(swerve, basePathFileName + "two_pickup"));
+                autoCommandGroup.addCommands(getPathCommand(swerve, basePathFileName + "taxi"));
                 autoCommandGroup.addCommands(); // TODO: arm command for pickup
                 autoCommandGroup.addCommands(getPathCommand(swerve, basePathFileName + "two_dropoff"));
                 autoCommandGroup.addCommands(); // TODO: arm command for score
@@ -63,7 +63,7 @@ public class AutoPaths {
             case 1:
                 return "left";
             case 2:
-                return "middle";
+                return "middle"; 
             case 3:
                 return "right";
             default:
@@ -71,7 +71,7 @@ public class AutoPaths {
         }
     }
 public enum PathName {
-    
+
 }
     public enum PieceCount {
         ONE("one"),
