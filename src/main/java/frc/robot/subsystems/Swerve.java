@@ -92,16 +92,6 @@ public class Swerve extends SubsystemBase {
     return Rotation2d.fromDegrees(gyro.getYaw());
   }
 
- 
-  public SwerveModulePosition[] getModulePositions() {
-		return new SwerveModulePosition[] {
-			frontLeft.getPosition(),
-			frontRight.getPosition(),
-			backLeft.getPosition(),
-			backRight.getPosition()
-		};
-	}
-
   @Override
   public void periodic() {
     odometry.update(gyro.getRotation2d(), new SwerveModulePosition[] {
