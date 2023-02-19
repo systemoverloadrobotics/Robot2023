@@ -137,8 +137,8 @@ public final class Constants {
     }
 
     public static final class Input {
-        public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(1, 0);
-        public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(1, 1);
+        public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(0, 4);
+        public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(0, 5);
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
     }
      public static final class PoseEstimation {
