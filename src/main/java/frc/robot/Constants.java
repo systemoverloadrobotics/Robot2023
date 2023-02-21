@@ -15,6 +15,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.sorutil.ConstantAxis;
+import frc.sorutil.ConstantButton;
 import frc.sorutil.motor.PidProfile;
 
 /**
@@ -140,6 +141,9 @@ public final class Constants {
         public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(0, 5);
         public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(0, 4);
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
+        
+        public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0,0);
+        public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0,0);
     }
      public static final class PoseEstimation {
         public static final Matrix<N3, N1> POSE_GYRO_STD = VecBuilder.fill(0.1, 0.1, 0.1);
