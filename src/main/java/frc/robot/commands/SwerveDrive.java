@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -14,7 +15,7 @@ import frc.sorutil.SorMath;
 
 public class SwerveDrive extends CommandBase {
   private final Swerve swerve;
-  private DoubleSupplier xSupplier, ySupplier, rotationSupplier;
+  private final DoubleSupplier xSupplier, ySupplier, rotationSupplier;
   private SlewRateLimiter xLimiter, yLimiter, rotationLimiter;
 
 
@@ -50,10 +51,13 @@ public class SwerveDrive extends CommandBase {
         Constants.Swerve.SWERVE_MAX_SPEED);
     double rotationSpeed = cleanAndScaleInput(rotationSupplier.getAsDouble(), rotationLimiter,
         Constants.Swerve.SWERVE_ROTATION_MAX_SPEED);
+    Logger.getInstance().recordOutput("SwerveDrive/xSpeed", xSpeed);
+    Logger.getInstance().recordOutput("SwerveDrive/ySpeed", ySpeed);
     SmartDashboard.putNumber("rspeed", rotationSpeed);
     SmartDashboard.putNumber("rotation 2d", swerve.getRotation2d().getDegrees());
     ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed,
         rotationSpeed, swerve.getRotation2d());
+    Logger.getInstance().recordOutput("SwerveDrive/rotation", swerve.getRotation2d().getDegrees());
     // Calculate swerve module states using the desired state of the robot chassis.
     SwerveModuleState[] moduleStates =
         Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);

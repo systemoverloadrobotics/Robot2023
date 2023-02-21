@@ -48,10 +48,10 @@ public final class Constants {
 
         public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(4) * Math.PI;
         public static final SwerveDriveKinematics SWERVE_DRIVE_KINEMATICS = new SwerveDriveKinematics(
-                new Translation2d(-RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2),
-                new Translation2d(-RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2),
+                new Translation2d(RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2),
                 new Translation2d(RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2),
-                new Translation2d(RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2));
+                new Translation2d(-RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2),
+                new Translation2d(-RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2));
     }
 
     public static final class Drive {
@@ -96,20 +96,20 @@ public final class Constants {
         public static final int ARM_JOINT_FOLLOWER_INDEX = 1;
         public static final int ARM_CASCADE_INDEX = 20;
 
-        public static final int SWERVE_FRONT_LEFT_POWER = 1;
-        public static final int SWERVE_FRONT_LEFT_STEER = 2;
+        public static final int SWERVE_FRONT_LEFT_POWER = 3;
+        public static final int SWERVE_FRONT_LEFT_STEER = 4;
 
-        public static final int SWERVE_FRONT_RIGHT_POWER = 3;
-        public static final int SWERVE_FRONT_RIGHT_STEER = 4;
+        public static final int SWERVE_FRONT_RIGHT_POWER = 7;
+        public static final int SWERVE_FRONT_RIGHT_STEER = 8;
 
-        public static final int SWERVE_BACK_LEFT_POWER = 5;
-        public static final int SWERVE_BACK_LEFT_STEER = 6;
+        public static final int SWERVE_BACK_LEFT_POWER = 1;
+        public static final int SWERVE_BACK_LEFT_STEER = 2;
 
-        public static final int SWERVE_BACK_RIGHT_POWER = 7;
-        public static final int SWERVE_BACK_RIGHT_STEER = 8;
+        public static final int SWERVE_BACK_RIGHT_POWER = 5;
+        public static final int SWERVE_BACK_RIGHT_STEER = 6;
 
-        public static final int ROLLER_LEFT = 5;
-        public static final int ROLLER_RIGHT = 6;
+        public static final int ROLLER_LEFT = 9;
+        public static final int ROLLER_RIGHT = 10;
     }
 
     public static final class Pneumatics {
@@ -138,8 +138,8 @@ public final class Constants {
     }
 
     public static final class Input {
-        public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(1, 0);
-        public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(1, 1);
+        public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(0, 5);
+        public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(0, 4);
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
         
         public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0,0);
