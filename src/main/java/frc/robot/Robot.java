@@ -47,7 +47,7 @@ public class Robot extends LoggedRobot {
 
     javaLogger.info("Robot started");
 
-    // configureAdvantageKit();
+    configureAdvantageKit();
   }
 
   @SuppressWarnings("resource")
