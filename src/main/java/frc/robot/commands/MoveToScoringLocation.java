@@ -6,8 +6,9 @@ package frc.robot.commands;
 
 
 import frc.robot.Constants;
+import frc.robot.GridSelector;
 import frc.robot.GridSelector.GridLocation;
-import frc.robot.RobotContainer.ScoringLocations;
+import frc.robot.subsystems.IntelligentScoring.ScoringLocations;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Claw;
@@ -79,13 +80,16 @@ public class MoveToScoringLocation extends CommandBase {
         offsetLeft = Constants.Scoring.LEFT_GRID_LEFT_NODE_OFFSET;
         offsetRight = Constants.Scoring.LEFT_GRID_RIGHT_NODE_OFFSET;
     }
+    //sets a new pose given the current node selected.
     switch((scoringLocation.ordinal()+1) % 3) {
+      //left node
       case 0:
         ScoringLocationPose = new Pose2d(currentPose.getX() + offsetLeft, currentPose.getY(), currentPose.getRotation());
+      //right node
       case 1:
         ScoringLocationPose = new Pose2d(currentPose.getX() + offsetRight, currentPose.getY(), currentPose.getRotation());
     }
-    if(currentPose != ScoringLocationPose) {
+    if(!GridSelector.comparePose(currentPose, ScoringLocationPose)) {
       futureTrajectory = AsyncTrajectory.generateTrajectory(currentPose, ScoringLocationPose, new ArrayList<>(), Constants.Scoring.SCORING_TRAJECTORY_CONFIG);
     }
   }

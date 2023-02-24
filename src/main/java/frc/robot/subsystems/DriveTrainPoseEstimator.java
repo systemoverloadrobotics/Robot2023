@@ -21,9 +21,12 @@ public class DriveTrainPoseEstimator extends SubsystemBase {
   private Vision vision;
   private SwerveDrivePoseEstimator poseEstimator;
   private final org.littletonrobotics.junction.Logger aLogger;
+  private Pose2d prevPose2d;
+  private Pose2d visionPose2d;
   public DriveTrainPoseEstimator() {
     logger = Logger.getLogger(DriveTrainPoseEstimator.class.getName());
     aLogger = org.littletonrobotics.junction.Logger.getInstance();
+    prevPose2d = poseEstimator.getEstimatedPosition();
     poseEstimator =
       new SwerveDrivePoseEstimator(
         Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS,
@@ -57,7 +60,10 @@ public class DriveTrainPoseEstimator extends SubsystemBase {
       swerve.getRotation2d(),
       swerve.getModulePositions()
     );
+    vision.getEstimatedGlobalPose(prevPose2d);
+    prevPose2d = vision.getVisionPose2d();
     aLogger.recordOutput("PoseEstimator/position", getEstimatedPose());
+    aLogger.recordOutput("Vision/rawPosition", prevPose2d);
   }
 
   @Override

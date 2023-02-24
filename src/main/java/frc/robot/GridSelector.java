@@ -9,7 +9,10 @@ import frc.robot.subsystems.Vision;
 
 public class GridSelector {
     private static int SELECTED_GRID_ID;
-    // gives closest apriltag with respect to your alliance
+    
+    /**
+     * @return closest april tag with respect to alliance
+     **/
     public static int getClosestId(Vision vision, DriveTrainPoseEstimator poseEstimator) {
         Pose2d currentPose = poseEstimator.getEstimatedPose();
         double closestDistance = -1;
@@ -23,15 +26,20 @@ public class GridSelector {
             }
         }
 
-        // checks if the closest apriltag if within the minimum distance
+        /* 
+         * checks if the closest apriltag if within the minimum distance  
+         */
         Pose2d targetTagPose = getTagPose2d(closestId);
-        if (currentPose.getTranslation().getDistance(targetTagPose.getTranslation()) > Constants.Scoring.MIN_AUTOMOVE_DISTANCE) {
+        if (currentPose.getTranslation().getDistance(targetTagPose.getTranslation()) > Constants.Scoring.MAX_AUTOMOVE_DISTANCE) {
             return -1;
         }
         SELECTED_GRID_ID = closestId;
         return closestId;
     }
     
+    /**
+     * Orientation from the center of the field facing grids
+     **/
     public static GridLocation getGridLocation(int id) {
         switch (id % 5) {
             case 1:
@@ -57,5 +65,14 @@ public class GridSelector {
 
     public static GridLocation getSelectedGrid() {
         return getGridLocation(SELECTED_GRID_ID);
+    }
+
+    /**
+     * checks if two poses are the same
+     **/
+    public static boolean comparePose(Pose2d firstPose, Pose2d secondPose) {
+        return ((firstPose.getX() == secondPose.getX()) &&
+                (firstPose.getY() == secondPose.getY()) &&
+                (firstPose.getRotation().getRadians() == secondPose.getRotation().getRadians()));
     }
 }

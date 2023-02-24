@@ -7,14 +7,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.Arm;
-import frc.robot.GridSelector.GridLocation;
 import frc.robot.commands.MoveToGrid;
 import frc.robot.commands.MoveToHumanPlayer;
 import frc.robot.commands.MoveToScoringLocation;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.IntelligentScoring.ScoringLocations;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
@@ -70,12 +69,6 @@ public class RobotContainer {
     Constants.Input.HYBRID_LEFT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.HYBRID_LEFT));
     Constants.Input.HYBRID_MIDDLE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.HYBRID_MIDDLE));
     Constants.Input.HYBRID_RIGHT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.HYBRID_RIGHT));
-  }
-
-  public enum ScoringLocations {
-    UPPER_LEFT_CONE, UPPER_MIDDLE_CUBE, UPPER_RIGHT_CONE,
-    MIDDLE_LEFT_CONE, MIDDLE_MIDDLE_CUBE, MIDDLE_RIGHT_CONE,
-    HYBRID_LEFT, HYBRID_MIDDLE, HYBRID_RIGHT;
   }
 
   /**

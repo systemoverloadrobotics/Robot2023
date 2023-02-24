@@ -85,7 +85,7 @@ public class MoveToGrid extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(currentPose == nextToTagPose) {
+    if(GridSelector.comparePose(currentPose, nextToTagPose)) {
       isBotAtGrid = true;
     }
   }
