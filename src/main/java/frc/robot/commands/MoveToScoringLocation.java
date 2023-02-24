@@ -26,7 +26,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-/** An example command that uses an example subsystem. */
+/** Moves bot to the desired scoring location. */
 public class MoveToScoringLocation extends CommandBase {
   private final Logger logger;
   private final org.littletonrobotics.junction.Logger alogger;
@@ -47,9 +47,7 @@ public class MoveToScoringLocation extends CommandBase {
   
 
   /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
+   * Creates a new MoveToScoringLocation Command.
    */
   public MoveToScoringLocation(DriveTrainPoseEstimator poseEstimator, Swerve swerve, Vision vision, ArmSubsystem arm, Claw claw, GridLocation selectedGridLocation, ScoringLocations scoringLocation) {
     logger = Logger.getLogger(MoveToScoringLocation.class.getName());
@@ -112,7 +110,6 @@ public class MoveToScoringLocation extends CommandBase {
     ChassisSpeeds chassisSpeeds = controller.calculate(currentPose, goal, ScoringLocationPose.getRotation());
     SwerveModuleState[] moduleStates = Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
     swerve.setModuleStates(moduleStates);
-    scoreOnGrid(scoringLocation);
   }
 
   // Called once the command ends or is interrupted.
@@ -123,24 +120,5 @@ public class MoveToScoringLocation extends CommandBase {
   @Override
   public boolean isFinished() {
     return false;
-  }
-
-  public void scoreOnGrid(ScoringLocations scoringLocation) {
-    switch (scoringLocation) {
-      case UPPER_LEFT_CONE, UPPER_RIGHT_CONE:
-        height = ArmHeight.HIGH_CONE;
-      case UPPER_MIDDLE_CUBE:
-        height = ArmHeight.HIGH_CUBE;
-      case MIDDLE_LEFT_CONE, MIDDLE_RIGHT_CONE:
-        height = ArmHeight.MID_CONE;
-      case MIDDLE_MIDDLE_CUBE:
-        height = ArmHeight.MID_CUBE;
-      case HYBRID_LEFT, HYBRID_MIDDLE, HYBRID_RIGHT:
-        height = ArmHeight.LOW;
-    }
-    arm.setPosition(height.getCoordinates());
-    if(ArmSubsystem.withinRange(arm.getManipulatorPosition(), height.getCoordinates(), 0.25, 0.25)) {
-      claw.outtake();
-    }
   }
 }

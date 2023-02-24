@@ -20,7 +20,7 @@ import frc.robot.subsystems.DriveTrainPoseEstimator;
 import frc.robot.subsystems.Swerve;
 import frc.sorutil.path.AsyncTrajectory;
 
-/** An example command that uses an example subsystem. */
+/** Moves Bot to designated human player station */
 public class MoveToHumanPlayer extends CommandBase {
   private final Logger logger;
   private final org.littletonrobotics.junction.Logger aLogger;
@@ -34,9 +34,7 @@ public class MoveToHumanPlayer extends CommandBase {
   private boolean isTrajectoryGenerated;
 
   /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
+   * Creates a new MoveToHumanPlayer Command.
    */
   public MoveToHumanPlayer(Swerve swerve, DriveTrainPoseEstimator poseEstimator) {
     logger = Logger.getLogger(MoveToHumanPlayer.class.getName());

@@ -20,7 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-/** An example command that uses an example subsystem. */
+/** Moves Bot to desired Grid */
 public class MoveToGrid extends CommandBase {
   private final java.util.logging.Logger logger;
   private final org.littletonrobotics.junction.Logger aLogger;
@@ -38,9 +38,7 @@ public class MoveToGrid extends CommandBase {
   private boolean isTrajectoryGenerated;
 
   /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
+   * Creates a new MoveToGrid Command.
    */
   public MoveToGrid(DriveTrainPoseEstimator poseEstimator, Swerve swerve, Vision vision) {
     logger = java.util.logging.Logger.getLogger(MoveToGrid.class.getName());
