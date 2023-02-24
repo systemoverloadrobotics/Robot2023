@@ -37,4 +37,10 @@ public class IntelligentScoring extends SubsystemBase {
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
+
+  public enum ScoringLocations {
+    UPPER_LEFT_CONE, UPPER_MIDDLE_CUBE, UPPER_RIGHT_CONE,
+    MIDDLE_LEFT_CONE, MIDDLE_MIDDLE_CUBE, MIDDLE_RIGHT_CONE,
+    HYBRID_LEFT, HYBRID_MIDDLE, HYBRID_RIGHT;
+  }
 }

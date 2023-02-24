@@ -30,7 +30,7 @@ public class MoveToHumanPlayer extends CommandBase {
   private Future<Trajectory> futureTrajectory;
   private Trajectory trajectory;
   private Pose2d currentPose;
-  private Pose2d HumanPlayerTagPose;
+  private Pose2d humanPlayerTagPose;
   private boolean isTrajectoryGenerated;
 
   /**
@@ -52,8 +52,9 @@ public class MoveToHumanPlayer extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    HumanPlayerTagPose = GridSelector.getTagPose2d(getHumanPlayerTag());
-    futureTrajectory = AsyncTrajectory.generateTrajectory(currentPose, HumanPlayerTagPose, new ArrayList<>(), Constants.Scoring.SCORING_TRAJECTORY_CONFIG);
+    humanPlayerTagPose = GridSelector.getTagPose2d(getHumanPlayerTag());
+    humanPlayerTagPose = new Pose2d(humanPlayerTagPose.getX(), humanPlayerTagPose.getY() + Constants.Scoring.NEXT_TO_TAG_OFFSET, humanPlayerTagPose.getRotation());
+    futureTrajectory = AsyncTrajectory.generateTrajectory(currentPose, humanPlayerTagPose, new ArrayList<>(), Constants.Scoring.SCORING_TRAJECTORY_CONFIG);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -69,10 +70,10 @@ public class MoveToHumanPlayer extends CommandBase {
           throw new RuntimeException("MoveToHumanPlayer unreachable block");
         }
       }
-      Trajectory.State goal = trajectory.sample(Constants.Scoring.TRAJECTORY_SAMPLE_TIME);
-      ChassisSpeeds chassisSpeeds = controller.calculate(currentPose, goal, HumanPlayerTagPose.getRotation());
-      SwerveModuleState[] moduleStates = Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
-      swerve.setModuleStates(moduleStates);
+    Trajectory.State goal = trajectory.sample(Constants.Scoring.TRAJECTORY_SAMPLE_TIME);
+    ChassisSpeeds chassisSpeeds = controller.calculate(currentPose, goal, humanPlayerTagPose.getRotation());
+    SwerveModuleState[] moduleStates = Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+    swerve.setModuleStates(moduleStates);
   }
 
   // Called once the command ends or is interrupted.

@@ -26,6 +26,7 @@ public class Vision extends SubsystemBase {
 
   private final PhotonCamera camera;
   private final RobotPoseEstimator robotPoseEstimator;
+  private Pose2d visonPose2d;
 
   private PhotonPipelineResult results;
 
@@ -72,11 +73,16 @@ public class Vision extends SubsystemBase {
     double currentTime = Timer.getFPGATimestamp(); 
     var result = robotPoseEstimator.update();
     if (result.isPresent()) {
-      var pose = result.get().getFirst().toPose2d();
+      Pose2d pose = result.get().getFirst().toPose2d();
+      visonPose2d = pose;
       var deltaTms = currentTime - result.get().getSecond();
       return new Pair<Pose2d, Double>(pose, deltaTms);
     } 
     return null; 
+  }
+
+  public Pose2d getVisionPose2d() {
+    return visonPose2d;
   }
 
   
