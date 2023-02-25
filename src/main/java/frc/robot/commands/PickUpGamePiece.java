@@ -29,8 +29,8 @@ public class PickUpGamePiece extends CommandBase {
   // Called at 50hz while the command is scheduled.
   @Override
   public void execute() {
-    arm.setPosition(height.getCoordinates());
-    if (arm.withinRange(height.getCoordinates(), 0.25, 0.25)) {
+    arm.setPosition(height);
+    if (arm.withinRange()) {
       claw.intake();
     }
   }
