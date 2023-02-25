@@ -64,15 +64,16 @@ public class MoveToGrid extends CommandBase {
   @Override
   public void execute() {
     selectedGridId = GridSelector.getClosestId(vision, poseEstimator);
-    if(futureTrajectory.isDone() && !isTrajectoryGenerated) {
-      try{
-        trajectory = futureTrajectory.get();
-        isTrajectoryGenerated = true;
-        aLogger.recordOutput("Scoring/MoveToGridTrajectory", trajectory);
-      }
-      catch(Exception Exception) {
-        throw new RuntimeException("MoveToGrid unreachable block");
-      }
+    if(!(futureTrajectory.isDone() && !isTrajectoryGenerated)) {
+      return;
+    }
+    try {
+      trajectory = futureTrajectory.get();
+      isTrajectoryGenerated = true;
+      aLogger.recordOutput("Scoring/MoveToGridTrajectory", trajectory);
+    }
+    catch(Exception Exception) {
+      throw new RuntimeException("MoveToGrid unreachable block");
     }
     Trajectory.State goal = trajectory.sample(Constants.Scoring.TRAJECTORY_SAMPLE_TIME);
     ChassisSpeeds chassisSpeeds = controller.calculate(currentPose, goal, nextToTagPose.getRotation());

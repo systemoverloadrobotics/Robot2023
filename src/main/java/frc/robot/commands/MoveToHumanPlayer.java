@@ -58,16 +58,17 @@ public class MoveToHumanPlayer extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(futureTrajectory.isDone() && !isTrajectoryGenerated) {
-        try{
-          trajectory = futureTrajectory.get();
-          isTrajectoryGenerated = true;
-          aLogger.recordOutput("Scoring/MoveToHumanPlayerTrajectory", trajectory);
-        }
-        catch(Exception Exception) {
-          throw new RuntimeException("MoveToHumanPlayer unreachable block");
-        }
-      }
+    if(!(futureTrajectory.isDone() && !isTrajectoryGenerated)) {
+      return;
+    }
+    try {
+      trajectory = futureTrajectory.get();
+      isTrajectoryGenerated = true;
+      aLogger.recordOutput("Scoring/MoveToHumanPlayerTrajectory", trajectory);
+    }
+    catch(Exception Exception) {
+      throw new RuntimeException("MoveToHumanPlayer unreachable block");
+    }
     Trajectory.State goal = trajectory.sample(Constants.Scoring.TRAJECTORY_SAMPLE_TIME);
     ChassisSpeeds chassisSpeeds = controller.calculate(currentPose, goal, humanPlayerTagPose.getRotation());
     SwerveModuleState[] moduleStates = Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);

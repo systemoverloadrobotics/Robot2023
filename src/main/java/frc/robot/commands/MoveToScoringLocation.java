@@ -96,15 +96,16 @@ public class MoveToScoringLocation extends CommandBase {
   @Override
   public void execute() {
     //move to the correct node given the grid
-    if(futureTrajectory.isDone() && !isTrajectoryGenerated) {
-      try{
-        trajectory = futureTrajectory.get();
-        isTrajectoryGenerated = true;
-        alogger.recordOutput("Scoring/MoveToScoringLocationTrajectory", trajectory);
-      }
-      catch(Exception Exception) {
-        throw new RuntimeException("MoveToScoringLocation unreachable block");
-      }
+    if(!(futureTrajectory.isDone() && !isTrajectoryGenerated)) {
+      return;
+    }
+    try {
+      trajectory = futureTrajectory.get();
+      isTrajectoryGenerated = true;
+      alogger.recordOutput("Scoring/MoveToScoringLocationTrajectory", trajectory);
+    }
+    catch(Exception Exception) {
+      throw new RuntimeException("MoveToScoringLocation unreachable block");
     }
     Trajectory.State goal = trajectory.sample(Constants.Scoring.TRAJECTORY_SAMPLE_TIME);
     ChassisSpeeds chassisSpeeds = controller.calculate(currentPose, goal, ScoringLocationPose.getRotation());
