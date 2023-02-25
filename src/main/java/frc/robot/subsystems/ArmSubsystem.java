@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.util.Color;
@@ -32,6 +33,7 @@ public class ArmSubsystem extends SubsystemBase {
   private SuTalonFx jointA;
   private SuTalonFx jointB;
   private SuSparkMax cascade;
+  private DigitalInput limitSwitch;
   private Pair<Double, Double> intendedPosition;
   private boolean safeMode;
   private boolean retractCascade;
@@ -111,6 +113,8 @@ public class ArmSubsystem extends SubsystemBase {
         new SuSparkMax(new CANSparkMax(Constants.Motor.ARM_CASCADE_INDEX, MotorType.kBrushless),
             "Cascade Motor", cascadeMotorConfig, cascadeSensorConfiguration);
 
+    limitSwitch = new DigitalInput(Constants.Arm.ARM_LIMIT_SWITCH_PORT);
+
     retractCascade = false;
 
     stop();
@@ -121,6 +125,24 @@ public class ArmSubsystem extends SubsystemBase {
     currentArmLength = new TrapezoidProfile.State(cascade.outputPosition(), cascade.outputVelocity());
 
     logger.info("Arm Initialized.");
+  }
+
+  public void zeroElevator() {
+    while (true) {
+      try {
+        Thread.sleep(20);
+      }
+      catch (Exception e) {
+        e.printStackTrace();
+      }
+
+      cascade.set(ControlMode.VELOCITY, Constants.Arm.ARM_ZEROING_SPEED);
+      if (limitSwitch.get()) {
+        cascade.set(ControlMode.VELOCITY, 0);
+        cascade.setSensorPosition(Constants.Arm.ARM_DEGREE_DISTANCE_FROM_ZERO_TO_LIMIT_SWITCH);
+        cascade.set(ControlMode.POSITION, 0);
+      }
+    }
   }
 
   /*

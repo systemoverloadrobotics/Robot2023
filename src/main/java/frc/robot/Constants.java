@@ -76,6 +76,9 @@ public final class Constants {
     }
     
     public static final class Arm {
+        public static final int ARM_LIMIT_SWITCH_PORT = 0;
+        public static final double ARM_DEGREE_DISTANCE_FROM_ZERO_TO_LIMIT_SWITCH = 36; // PLACEHOLDER degrees
+        public static final double ARM_ZEROING_SPEED = 30; // PLACEHOLDER rotations/min
         public static final PidProfile ARM_PID_PROFILE = new PidProfile(0, 0, 0);
         public static final PidProfile CASCADE_PID_PROFILE = new PidProfile(0, 0, 0);
         public static final double ARM_JOINT_CURRENT_LIMIT = 20;
@@ -110,8 +113,6 @@ public final class Constants {
         public static final double ARM_PIVOT_X = Units.inchesToMeters(11);
         public static final double ARM_PIVOT_Y = Units.inchesToMeters(32.5);
         public static final double MIN_ARM_LENGTH = Units.inchesToMeters(18);
-
-        // Preset Heights
     }
 
     public static final class Claw {

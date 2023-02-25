@@ -52,6 +52,9 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+
+    // Configure arm zero
+    configureArm();
   }
 
   private final Command ledCommandPurple = new RunCommand(() -> {
@@ -75,7 +78,9 @@ public class RobotContainer {
       Constants.Input.LED_TRIGGER_YELLOW.get().whenHeld(ledCommandYellow);
   }
 
-
+  private void configureArm() {
+    arm.zeroElevator();
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
