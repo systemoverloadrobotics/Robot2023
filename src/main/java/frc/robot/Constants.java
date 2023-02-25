@@ -182,7 +182,7 @@ public final class Constants {
             blueTargets.add(7);
             blueTargets.add(8);
             TARGETS_PER_ALLIANCE.put(Alliance.Red, redTargets);
-            TARGETS_PER_ALLIANCE.put(Alliance.Red, blueTargets);
+            TARGETS_PER_ALLIANCE.put(Alliance.Blue, blueTargets);
         }
 
         public static final PIDController X_CONTROLLER = new PIDController(0, 0, 0);
@@ -259,9 +259,6 @@ public final class Constants {
         public static final ConstantButton HYBRID_LEFT = new ConstantButton(1, 6);
         public static final ConstantButton HYBRID_MIDDLE = new ConstantButton(1, 7);
         public static final ConstantButton HYBRID_RIGHT = new ConstantButton(1, 8);
-        public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(0, 5);
-        public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(0, 4);
-        public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
         
         public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0,0);
         public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0,0);

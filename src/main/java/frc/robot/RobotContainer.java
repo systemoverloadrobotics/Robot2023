@@ -84,10 +84,8 @@ public class RobotContainer {
     Constants.Input.HYBRID_MIDDLE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.HYBRID_MIDDLE));
     Constants.Input.HYBRID_RIGHT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.HYBRID_RIGHT));
 
-        () -> Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), Constants.Input.SWERVE_ROTATION_INPUT.get()));
-
-      Constants.Input.LED_TRIGGER_PURPLE.get().whenHeld(ledCommandPurple);
-      Constants.Input.LED_TRIGGER_YELLOW.get().whenHeld(ledCommandYellow);
+      Constants.Input.LED_TRIGGER_PURPLE.get().whileTrue(ledCommandPurple);
+      Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);
   }
 
 

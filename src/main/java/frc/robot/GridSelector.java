@@ -8,12 +8,12 @@ import frc.robot.subsystems.DriveTrainPoseEstimator;
 import frc.robot.subsystems.Vision;
 
 public class GridSelector {
-    private static int SELECTED_GRID_ID;
+    private int SELECTED_GRID_ID;
     
     /**
      * @return closest april tag with respect to alliance
      **/
-    public static int getClosestId(Vision vision, DriveTrainPoseEstimator poseEstimator) {
+    public int getClosestId(Vision vision, DriveTrainPoseEstimator poseEstimator) {
         Pose2d currentPose = poseEstimator.getEstimatedPose();
         double closestDistance = -1;
         int closestId = 0;
@@ -40,7 +40,7 @@ public class GridSelector {
     /**
      * Orientation from the center of the field facing grids
      **/
-    public static GridLocation getGridLocation(int id) {
+    public GridLocation getGridLocation(int id) {
         switch (id % 5) {
             case 1:
                 return GridLocation.RIGHT;
@@ -53,24 +53,24 @@ public class GridSelector {
         }
     }
 
-    public static enum GridLocation {
+    public enum GridLocation {
         RIGHT, MIDDLE, LEFT;
     }
 
     
-    public static Pose2d getTagPose2d(int id) {
+    public Pose2d getTagPose2d(int id) {
         Pose3d temPose3d = (Constants.Vision.TAG_FIELD_LAYOUT.getTagPose(id).get());
         return new Pose2d(temPose3d.getX(), temPose3d.getY(), new Rotation2d(temPose3d.getRotation().getX(), temPose3d.getRotation().getY()));
     }
 
-    public static GridLocation getSelectedGrid() {
+    public GridLocation getSelectedGrid() {
         return getGridLocation(SELECTED_GRID_ID);
     }
 
     /**
      * checks if two poses are the same
      **/
-    public static boolean comparePose(Pose2d firstPose, Pose2d secondPose) {
+    public boolean comparePose(Pose2d firstPose, Pose2d secondPose) {
         return ((firstPose.getX() == secondPose.getX()) &&
                 (firstPose.getY() == secondPose.getY()) &&
                 (firstPose.getRotation().getRadians() == secondPose.getRotation().getRadians()));
