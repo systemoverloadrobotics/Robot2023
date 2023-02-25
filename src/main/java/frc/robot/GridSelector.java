@@ -8,8 +8,6 @@ import frc.robot.subsystems.DriveTrainPoseEstimator;
 import frc.robot.subsystems.Vision;
 
 public class GridSelector {
-    private static int SELECTED_GRID_ID;
-    
     /**
      * @return closest april tag with respect to alliance
      **/
@@ -33,7 +31,6 @@ public class GridSelector {
         if (currentPose.getTranslation().getDistance(targetTagPose.getTranslation()) > Constants.Scoring.MAX_AUTOMOVE_DISTANCE) {
             return -1;
         }
-        SELECTED_GRID_ID = closestId;
         return closestId;
     }
     
@@ -61,10 +58,6 @@ public class GridSelector {
     public static Pose2d getTagPose2d(int id) {
         Pose3d temPose3d = (Constants.Vision.TAG_FIELD_LAYOUT.getTagPose(id).get());
         return new Pose2d(temPose3d.getX(), temPose3d.getY(), new Rotation2d(temPose3d.getRotation().getX(), temPose3d.getRotation().getY()));
-    }
-
-    public static GridLocation getSelectedGrid() {
-        return getGridLocation(SELECTED_GRID_ID);
     }
 
     /**

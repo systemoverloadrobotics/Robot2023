@@ -73,18 +73,18 @@ public class RobotContainer {
     Constants.Input.POSITION_TO_CLOSEST_GRID.get().onTrue(new MoveToGrid(poseEstimator, swerve, vision));
     Constants.Input.POSITION_TO_HUMAN_PLAYER.get().onTrue(new MoveToHumanPlayer(swerve, poseEstimator));
 
-    Constants.Input.UPPER_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.UPPER_LEFT_CONE));
-    Constants.Input.UPPER_MIDDLE_CUBE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.UPPER_MIDDLE_CUBE));
-    Constants.Input.UPPER_RIGHT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.UPPER_RIGHT_CONE));
-    Constants.Input.MIDDLE_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.MIDDLE_LEFT_CONE));
-    Constants.Input.MIDDLE_MIDDLE_CUBE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.MIDDLE_MIDDLE_CUBE));
-    Constants.Input.MIDDLE_RIGHT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.MIDDLE_RIGHT_CONE));
-    Constants.Input.HYBRID_LEFT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.HYBRID_LEFT));
-    Constants.Input.HYBRID_MIDDLE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.HYBRID_MIDDLE));
-    Constants.Input.HYBRID_RIGHT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.HYBRID_RIGHT));
+    Constants.Input.UPPER_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.UPPER_LEFT_CONE));
+    Constants.Input.UPPER_MIDDLE_CUBE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.UPPER_MIDDLE_CUBE));
+    Constants.Input.UPPER_RIGHT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.UPPER_RIGHT_CONE));
+    Constants.Input.MIDDLE_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.MIDDLE_LEFT_CONE));
+    Constants.Input.MIDDLE_MIDDLE_CUBE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.MIDDLE_MIDDLE_CUBE));
+    Constants.Input.MIDDLE_RIGHT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.MIDDLE_RIGHT_CONE));
+    Constants.Input.HYBRID_LEFT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.HYBRID_LEFT));
+    Constants.Input.HYBRID_MIDDLE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.HYBRID_MIDDLE));
+    Constants.Input.HYBRID_RIGHT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.HYBRID_RIGHT));
 
-      Constants.Input.LED_TRIGGER_PURPLE.get().whileTrue(ledCommandPurple);
-      Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);
+    Constants.Input.LED_TRIGGER_PURPLE.get().whileTrue(ledCommandPurple);
+    Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);
   }
 
 

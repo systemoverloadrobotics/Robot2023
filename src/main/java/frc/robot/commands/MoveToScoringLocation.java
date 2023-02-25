@@ -36,7 +36,7 @@ public class MoveToScoringLocation extends CommandBase {
   private final ArmSubsystem arm;
   private final Claw claw;
   private Pose2d currentPose, ScoringLocationPose;
-  private final GridLocation selectedGridLocation;
+  private GridLocation selectedGridLocation;
   private double offsetRight, offsetLeft;
   private final ScoringLocations scoringLocation;
   private Future<Trajectory> futureTrajectory;
@@ -49,7 +49,7 @@ public class MoveToScoringLocation extends CommandBase {
   /**
    * Creates a new MoveToScoringLocation Command.
    */
-  public MoveToScoringLocation(DriveTrainPoseEstimator poseEstimator, Swerve swerve, Vision vision, ArmSubsystem arm, Claw claw, GridLocation selectedGridLocation, ScoringLocations scoringLocation) {
+  public MoveToScoringLocation(DriveTrainPoseEstimator poseEstimator, Swerve swerve, Vision vision, ArmSubsystem arm, Claw claw, ScoringLocations scoringLocation) {
     logger = Logger.getLogger(MoveToScoringLocation.class.getName());
     alogger = org.littletonrobotics.junction.Logger.getInstance();
     this.poseEstimator = poseEstimator;
@@ -57,7 +57,6 @@ public class MoveToScoringLocation extends CommandBase {
     this.vision = vision;
     this.arm = arm;
     this.claw = claw;
-    this.selectedGridLocation = selectedGridLocation;
     this.scoringLocation = scoringLocation;
     controller = new HolonomicDriveController(Constants.Scoring.X_CONTROLLER, Constants.Scoring.Y_CONTROLLER, Constants.Scoring.THETA_CONTROLLER);
     currentPose = poseEstimator.getEstimatedPose();
@@ -67,6 +66,7 @@ public class MoveToScoringLocation extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    this.selectedGridLocation = GridSelector.getGridLocation(GridSelector.getClosestId(vision, poseEstimator));
     switch(selectedGridLocation) {
       case RIGHT:
         offsetLeft = Constants.Scoring.RIGHT_GRID_LEFT_NODE_OFFSET;
@@ -78,13 +78,13 @@ public class MoveToScoringLocation extends CommandBase {
         offsetLeft = Constants.Scoring.LEFT_GRID_LEFT_NODE_OFFSET;
         offsetRight = Constants.Scoring.LEFT_GRID_RIGHT_NODE_OFFSET;
     }
-    //sets a new pose given the current node selected.
-    switch((scoringLocation.ordinal()+1) % 3) {
+    // changes pose given the current scoring location selected.
+    switch((scoringLocation.ordinal() + 1) % 3) {
       //left node
       case 0:
         ScoringLocationPose = new Pose2d(currentPose.getX() + offsetLeft, currentPose.getY(), currentPose.getRotation());
       //right node
-      case 1:
+      case 2:
         ScoringLocationPose = new Pose2d(currentPose.getX() + offsetRight, currentPose.getY(), currentPose.getRotation());
     }
     if(!GridSelector.comparePose(currentPose, ScoringLocationPose)) {
@@ -96,7 +96,7 @@ public class MoveToScoringLocation extends CommandBase {
   @Override
   public void execute() {
     //move to the correct node given the grid
-    if(!(futureTrajectory.isDone() && !isTrajectoryGenerated)) {
+    if (!(futureTrajectory.isDone() && !isTrajectoryGenerated)) {
       return;
     }
     try {
