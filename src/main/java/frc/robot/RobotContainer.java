@@ -7,8 +7,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.SwerveDrive;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Swerve;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -22,6 +25,33 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private Swerve swerve = new Swerve(); 
+  private ArmSubsystem arm = new ArmSubsystem(); 
+  private Claw claw = new Claw(); 
+  
+  private Command pickUpGamePieceLow = new FunctionalCommand(() -> {}, () -> {
+    arm.setPosition(ArmSubsystem.ArmHeight.LOW);
+    if (arm.withinRange()) {
+      claw.intake();
+    }
+  }, (a) -> {arm.stop(); claw.stop();}, () -> false, arm, claw);
+  private Command pickUpGamePieceTray = new FunctionalCommand(() -> {}, () -> {
+    arm.setPosition(ArmSubsystem.ArmHeight.TRAY);
+    if (arm.withinRange()) {
+      claw.intake();
+    }
+  }, (a) -> {arm.stop(); claw.stop();}, () -> false, arm, claw);
+  private Command depositGamePieceMid = new FunctionalCommand(() -> {}, () -> {
+    arm.setPosition(ArmSubsystem.ArmHeight.MID);
+    if (arm.withinRange()) {
+      claw.outtake();
+    }
+  }, (a) -> {arm.stop(); claw.stop();}, () -> false, arm, claw);
+  private Command depositGamePieceHigh = new FunctionalCommand(() -> {}, () -> {
+    arm.setPosition(ArmSubsystem.ArmHeight.HIGH);
+    if (arm.withinRange()) {
+      claw.outtake();
+    }
+  }, (a) -> {arm.stop(); claw.stop();}, () -> false, arm, claw);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
