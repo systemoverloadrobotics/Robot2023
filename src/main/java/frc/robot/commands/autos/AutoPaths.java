@@ -40,7 +40,7 @@ public class AutoPaths {
         String basePathFileName = "auto_" + alliance + "_" + startingPos + "_";
         // Do arm stuff here for config from ScoringPosition
         SequentialCommandGroup autoCommandGroup = new SequentialCommandGroup();
-        autoCommandGroup.addCommands(); // TODO: arm command for score
+        autoCommandGroup.addCommands(); // TODO: arm command for score  
         switch (piece) {
             case ONE:
                 autoCommandGroup.addCommands(getPathCommand(swerve, basePathFileName + "taxi"));
