@@ -17,6 +17,9 @@ import frc.robot.subsystems.IntelligentScoring.ScoringLocations;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.subsystems.Led;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,6 +37,8 @@ public class RobotContainer {
   private Vision vision;
   private ArmSubsystem arm;
   private Claw claw;
+  private Led led;
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -42,9 +47,18 @@ public class RobotContainer {
     vision = new Vision();
     arm = new ArmSubsystem();
     claw = new Claw();
+    led = new Led();
+    swerve = new Swerve();
     // Configure the button bindings
     configureButtonBindings();
   }
+
+  private final Command ledCommandPurple = new RunCommand(() -> {
+    led.setLEDColor(true);
+  }, led);
+  private final Command ledCommandYellow = new RunCommand(() -> {
+    led.setLEDColor(false);
+  }, led);
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -69,7 +83,14 @@ public class RobotContainer {
     Constants.Input.HYBRID_LEFT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.HYBRID_LEFT));
     Constants.Input.HYBRID_MIDDLE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.HYBRID_MIDDLE));
     Constants.Input.HYBRID_RIGHT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, GridSelector.getSelectedGrid(), ScoringLocations.HYBRID_RIGHT));
+
+        () -> Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), Constants.Input.SWERVE_ROTATION_INPUT.get()));
+
+      Constants.Input.LED_TRIGGER_PURPLE.get().whenHeld(ledCommandPurple);
+      Constants.Input.LED_TRIGGER_YELLOW.get().whenHeld(ledCommandYellow);
   }
+
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

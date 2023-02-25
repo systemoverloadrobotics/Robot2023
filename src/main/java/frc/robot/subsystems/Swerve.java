@@ -69,6 +69,15 @@ public class Swerve extends SubsystemBase {
     };
   }
 
+  public SwerveModulePosition[] getModulePositions() {
+    return new SwerveModulePosition[] {
+        frontLeft.getPosition(),
+        frontRight.getPosition(),
+        backLeft.getPosition(),
+        backRight.getPosition()
+    };
+  }
+
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     lastIntendedStates = desiredStates;
 
@@ -81,16 +90,6 @@ public class Swerve extends SubsystemBase {
   public Rotation2d getRotation2d() {
     return Rotation2d.fromDegrees(gyro.getYaw());
   }
-
- 
-  public SwerveModulePosition[] getModulePositions() {
-		return new SwerveModulePosition[] {
-			frontLeft.getPosition(),
-			frontRight.getPosition(),
-			backLeft.getPosition(),
-			backRight.getPosition()
-		};
-	}
 
   @Override
   public void periodic() {

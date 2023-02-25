@@ -10,12 +10,16 @@ import java.util.HashSet;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -49,12 +53,11 @@ public final class Constants {
         public static final double LENGTH = Units.inchesToMeters(26);
 
         public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(4) * Math.PI;
-        public static final SwerveDriveKinematics SWERVE_DRIVE_KINEMATICS =
-                new SwerveDriveKinematics(
-                        new Translation2d(-RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2),
-                        new Translation2d(-RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2),
-                        new Translation2d(RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2),
-                        new Translation2d(RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2));
+        public static final SwerveDriveKinematics SWERVE_DRIVE_KINEMATICS = new SwerveDriveKinematics(
+                new Translation2d(RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2),
+                new Translation2d(RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2),
+                new Translation2d(-RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2),
+                new Translation2d(-RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2));
     }
 
     public static final class Drive {
@@ -195,22 +198,20 @@ public final class Constants {
         public static final int ARM_JOINT_FOLLOWER_INDEX = 1;
         public static final int ARM_CASCADE_INDEX = 20;
 
-        public static final int SWERVE_FRONT_LEFT_POWER = 1;
-        public static final int SWERVE_FRONT_LEFT_STEER = 2;
+        public static final int SWERVE_FRONT_LEFT_POWER = 3;
+        public static final int SWERVE_FRONT_LEFT_STEER = 4;
 
-        public static final int SWERVE_FRONT_RIGHT_POWER = 3;
-        public static final int SWERVE_FRONT_RIGHT_STEER = 4;
+        public static final int SWERVE_FRONT_RIGHT_POWER = 7;
+        public static final int SWERVE_FRONT_RIGHT_STEER = 8;
 
-        public static final int SWERVE_BACK_LEFT_POWER = 5;
-        public static final int SWERVE_BACK_LEFT_STEER = 6;
+        public static final int SWERVE_BACK_LEFT_POWER = 1;
+        public static final int SWERVE_BACK_LEFT_STEER = 2;
 
-        public static final int SWERVE_BACK_RIGHT_POWER = 7;
-        public static final int SWERVE_BACK_RIGHT_STEER = 8;
-
-        public static final int ROLLER_LEFT = 5;
-        public static final int ROLLER_RIGHT = 6;
-
-        public static final double CLAW_VOLTAGE = 0;
+        public static final int SWERVE_BACK_RIGHT_POWER = 5;
+        public static final int SWERVE_BACK_RIGHT_STEER = 6;
+        
+        public static final int ROLLER_LEFT = 9;
+        public static final int ROLLER_RIGHT = 10;
     }
 
     public static final class Pneumatics {
@@ -258,5 +259,15 @@ public final class Constants {
         public static final ConstantButton HYBRID_LEFT = new ConstantButton(1, 6);
         public static final ConstantButton HYBRID_MIDDLE = new ConstantButton(1, 7);
         public static final ConstantButton HYBRID_RIGHT = new ConstantButton(1, 8);
+        public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(0, 5);
+        public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(0, 4);
+        public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
+        
+        public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0,0);
+        public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0,0);
     }
+     public static final class PoseEstimation {
+        public static final Matrix<N3, N1> POSE_GYRO_STD = VecBuilder.fill(0.1, 0.1, 0.1);
+        public static final Matrix<N3, N1> POSE_VISION_STD = VecBuilder.fill(0.1, 0.1, 0.1);
+     }
 }
