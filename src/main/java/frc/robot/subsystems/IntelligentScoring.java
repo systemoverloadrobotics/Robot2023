@@ -21,6 +21,7 @@ public class IntelligentScoring extends SubsystemBase {
     poseEstimator = new DriveTrainPoseEstimator();
     logger = Logger.getLogger(IntelligentScoring.class.getName());
     aLogger = org.littletonrobotics.junction.Logger.getInstance();
+    
   }
 
   @Override
