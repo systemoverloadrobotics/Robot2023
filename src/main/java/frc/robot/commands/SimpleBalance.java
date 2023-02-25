@@ -45,6 +45,6 @@ public class SimpleBalance extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return Math.abs(swerve.getPitch()) < 2;
+    return false;
   }
 }

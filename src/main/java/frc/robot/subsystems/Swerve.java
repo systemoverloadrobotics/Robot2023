@@ -70,14 +70,14 @@ public class Swerve extends SubsystemBase {
     };
   }
 
-  public void setModuleStates(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldOriented) {
+  public void setDrivebaseWheelVectors(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldOriented) {
     ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, fieldOriented ? getRotation2d() : new Rotation2d());
     SwerveModuleState[] moduleStates = Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.Swerve.SWERVE_MAX_SPEED);
     setModuleStates(moduleStates);
   }
 
-  public void setModuleStates(SwerveModuleState[] desiredStates) {
+  private void setModuleStates(SwerveModuleState[] desiredStates) {
     lastIntendedStates = desiredStates;
 
     frontLeft.setState(desiredStates[0]);
