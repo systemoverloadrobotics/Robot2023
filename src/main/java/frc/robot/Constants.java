@@ -159,6 +159,8 @@ public final class Constants {
         public static final double NEO_MAX_SPEED = 5600; // RPM
         public static final double MAX_WHEEL_SPEED = ((NEO_MAX_SPEED/60) * DISTANCE_PER_REV) / 6.75;
         public static final double SWERVE_MAX_SPEED = 0.9 * MAX_WHEEL_SPEED; // m/s
+        public static final double SWERVE_MAX_AUTO_SPEED = 0.2 * MAX_WHEEL_SPEED; // m/s
+        public static final double SWERVE_MAX_PRECISION_SPEED = 0.1 * MAX_WHEEL_SPEED; // m/s
         public static final double SWERVE_MAX_ACCELERATION = 3; // m/s^2
         public static final double SWERVE_ROTATION_MAX_SPEED = 3; // rad/s
         public static final double SWERVE_ROTATION_MAX_ACCELERATION = Math.PI; // rads/s^2
