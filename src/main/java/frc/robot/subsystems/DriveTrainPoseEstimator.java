@@ -33,20 +33,13 @@ public class DriveTrainPoseEstimator extends SubsystemBase {
         swerve.getRotation2d(),
         swerve.getModulePositions(),
         new Pose2d(),
-        new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.1),
-        new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.1)
+        Constants.PoseEstimation.POSE_GYRO_STD,
+        Constants.PoseEstimation.POSE_VISION_STD
       );
   }
 
-  public void addVisionMeasurement(
-    Pose2d visionMeasurement,
-    double timestampSeconds
-  ) {
-    poseEstimator.addVisionMeasurement(
-      visionMeasurement,
-      timestampSeconds,
-      VecBuilder.fill(0, 0, 0) //TODO: Add vision measurement covariance
-    );
+  public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds) {
+    poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds, Constants.PoseEstimation.POSE_VISION_STD);
   }
 
   public Pose2d getEstimatedPose() {
@@ -55,11 +48,9 @@ public class DriveTrainPoseEstimator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    poseEstimator.updateWithTime(
-      Timer.getFPGATimestamp(),
-      swerve.getRotation2d(),
-      swerve.getModulePositions()
-    );
+    poseEstimator.updateWithTime(Timer.getFPGATimestamp(), swerve.getRotation2d(), swerve.getModulePositions());
+    var visionPose = vision.getEstimatedGlobalPose(getEstimatedPose());
+    poseEstimator.addVisionMeasurement(visionPose.getFirst(), Timer.getFPGATimestamp() - visionPose.getSecond()); // changes time to match time that photo is taken
   }
 
   @Override
