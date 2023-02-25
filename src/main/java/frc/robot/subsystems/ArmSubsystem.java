@@ -7,12 +7,15 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.util.Color;
@@ -34,6 +37,7 @@ public class ArmSubsystem extends SubsystemBase {
   private SuTalonFx jointB;
   private SuSparkMax cascade;
   private DigitalInput limitSwitch;
+  private DutyCycleEncoder jointAbsoluteEncoder;
   private Pair<Double, Double> intendedPosition;
   private boolean safeMode;
   private boolean retractCascade;
@@ -114,6 +118,10 @@ public class ArmSubsystem extends SubsystemBase {
             "Cascade Motor", cascadeMotorConfig, cascadeSensorConfiguration);
 
     limitSwitch = new DigitalInput(Constants.Arm.ARM_LIMIT_SWITCH_PORT);
+    jointAbsoluteEncoder = new DutyCycleEncoder(1);
+    // Absolute Encoder is 8192 / rot 
+    jointA.setSensorPosition(SorMath.ticksToDegrees(jointAbsoluteEncoder.getAbsolutePosition(), 8192));
+    jointB.setSensorPosition(SorMath.ticksToDegrees(jointAbsoluteEncoder.getAbsolutePosition(), 8192));
 
     retractCascade = false;
 
@@ -182,7 +190,11 @@ public class ArmSubsystem extends SubsystemBase {
     return ((feet - Constants.Arm.ARM_CASCADE_STARTING_HEIGHT) * Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
   }
 
-  public double calcFeedForward() {
+  public double calcFeedForwardJoint() {
+    return 0.35;
+  }
+
+  public double calcFeedForwardCascade() {
     return 0;
   }
 
@@ -243,9 +255,8 @@ public class ArmSubsystem extends SubsystemBase {
     var profileArmLength = new TrapezoidProfile(constraintsArmLength, goalArmLength, currentArmLength);
     var neededArmLength = profileArmLength.calculate(Constants.ROBOT_PERIOD);
     
-    double feedForward = calcFeedForward();
-    cascade.set(ControlMode.POSITION, neededArmLength.position, feedForward);
-    jointA.set(ControlMode.POSITION, neededStateAngle.position, feedForward);
+    cascade.set(ControlMode.POSITION, neededArmLength.position, calcFeedForwardCascade());
+    jointA.set(ControlMode.POSITION, neededStateAngle.position, calcFeedForwardJoint());
   }
 
   private boolean futureArmSafetyPrediction() {
