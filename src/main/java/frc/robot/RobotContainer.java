@@ -28,30 +28,20 @@ public class RobotContainer {
   private ArmSubsystem arm = new ArmSubsystem(); 
   private Claw claw = new Claw(); 
   
-  private Command pickUpGamePieceLow = new FunctionalCommand(() -> {}, () -> {
-    arm.setPosition(ArmSubsystem.ArmHeight.LOW);
-    if (arm.withinRange()) {
-      claw.intake();
-    }
-  }, (a) -> {arm.stop(); claw.stop();}, () -> false, arm, claw);
-  private Command pickUpGamePieceTray = new FunctionalCommand(() -> {}, () -> {
-    arm.setPosition(ArmSubsystem.ArmHeight.TRAY);
-    if (arm.withinRange()) {
-      claw.intake();
-    }
-  }, (a) -> {arm.stop(); claw.stop();}, () -> false, arm, claw);
-  private Command depositGamePieceMid = new FunctionalCommand(() -> {}, () -> {
-    arm.setPosition(ArmSubsystem.ArmHeight.MID);
-    if (arm.withinRange()) {
-      claw.outtake();
-    }
-  }, (a) -> {arm.stop(); claw.stop();}, () -> false, arm, claw);
-  private Command depositGamePieceHigh = new FunctionalCommand(() -> {}, () -> {
-    arm.setPosition(ArmSubsystem.ArmHeight.HIGH);
-    if (arm.withinRange()) {
-      claw.outtake();
-    }
-  }, (a) -> {arm.stop(); claw.stop();}, () -> false, arm, claw);
+  private Command pickUpGamePieceLow = new FunctionalCommand(() -> {}, () -> arm.setPosition(ArmSubsystem.ArmHeight.LOW), 
+    (a) -> arm.stop(), () -> arm.withinRange(), arm);
+  private Command pickUpGamePieceTray = new FunctionalCommand(() -> {}, () -> arm.setPosition(ArmSubsystem.ArmHeight.TRAY), 
+    (a) -> arm.stop(), () -> arm.withinRange(), arm);
+  private Command depositGamePieceMid = new FunctionalCommand(() -> {}, () -> arm.setPosition(ArmSubsystem.ArmHeight.MID), 
+    (a) -> arm.stop(), () -> arm.withinRange(), arm);
+  private Command depositGamePieceHigh = new FunctionalCommand(() -> {}, () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH), 
+    (a) -> arm.stop(), () -> arm.withinRange(), arm);
+  private Command intakeClaw = new FunctionalCommand(() -> {}, () -> claw.intake(), 
+    (a) -> claw.stop(), () -> arm.withinRange(), claw);
+  private Command outtakeClaw = new FunctionalCommand(() -> {}, () -> claw.outtake(), 
+    (a) -> claw.stop(), () -> arm.withinRange(), claw);
+  private Command stowArm = new FunctionalCommand(() -> {}, () -> arm.setPosition(ArmSubsystem.ArmHeight.STOW), 
+    (a) -> arm.stop(), () -> arm.withinRange(), claw);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
