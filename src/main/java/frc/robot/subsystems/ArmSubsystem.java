@@ -209,6 +209,10 @@ public class ArmSubsystem extends SubsystemBase {
       }
     }
 
+    setUpdatedArmState();
+  }
+
+  private void setUpdatedArmState() {
     currentAngle = new TrapezoidProfile.State(jointA.outputPosition(), jointA.outputVelocity());
     var profileAngle = new TrapezoidProfile(constraintsAngle, goalAngle, currentAngle);
     var neededStateAngle = profileAngle.calculate(Constants.ROBOT_PERIOD);
