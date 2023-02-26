@@ -6,9 +6,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.SwerveDrive;
+import frc.robot.commands.autos.AutoPaths;
+import frc.robot.commands.autos.AutoSelector;
 import frc.robot.subsystems.Swerve;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -22,11 +26,12 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private Swerve swerve = new Swerve(); 
+  private AutoSelector autoSelector = new AutoSelector(swerve);
+ 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     logger = java.util.logging.Logger.getLogger(RobotContainer.class.getName());
-
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -49,6 +54,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return null;
+    return autoSelector.getAuto();
   }
 }

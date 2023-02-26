@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -136,11 +138,15 @@ public final class Constants {
         public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(1, 1);
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
     }
-    public static final class Auto{
-        public static final double SWERVE_ROTATION_MAX_SPEED = 3; // rad/s
-        public static final double SWERVE_ROTATION_MAX_ACCELERATION = Math.PI; // rads/s^2
-         public static final TrapezoidProfile.Constraints SWERVE_PID_CONSTRAINTS =
-         new TrapezoidProfile.Constraints(SWERVE_ROTATION_MAX_SPEED,
-            SWERVE_ROTATION_MAX_ACCELERATION);
+    public static final class Auto {
+        private static final double SWERVE_AUTO_SPEED_MULTIPLIER = 0.6;
+        public static final TrapezoidProfile.Constraints SWERVE_STRAFE_PID_CONSTRAINTS =
+            new TrapezoidProfile.Constraints(Swerve.SWERVE_MAX_SPEED*SWERVE_AUTO_SPEED_MULTIPLIER, Swerve.SWERVE_MAX_ACCELERATION);
+        public static final TrapezoidProfile.Constraints SWERVE_ROTATION_PID_CONSTRAINTS =
+            new TrapezoidProfile.Constraints(Swerve.SWERVE_ROTATION_MAX_SPEED, Swerve.SWERVE_ROTATION_MAX_ACCELERATION);
+        public static final ProfiledPIDController PROFILED_ROT_PID_CONTROLLER = new ProfiledPIDController(0, 0, 0, Constants.Auto.SWERVE_ROTATION_PID_CONSTRAINTS);
+        public static final PIDController X_PID_CONTROLLER = new PIDController(0, 0, 0);
+        public static final PIDController Y_PID_CONTROLLER = new PIDController(0, 0, 0);
+        public static final PIDController ROT_PID_CONTROLLER = new PIDController(0, 0, 0);
     }
 }
