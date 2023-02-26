@@ -76,7 +76,7 @@ public class Swerve extends SubsystemBase {
     setModuleStates(moduleStates);
   }
 
-  private void setModuleStates(SwerveModuleState[] desiredStates) {
+  public void setModuleStates(SwerveModuleState[] desiredStates) {
     lastIntendedStates = desiredStates;
 
     frontLeft.setState(desiredStates[0]);

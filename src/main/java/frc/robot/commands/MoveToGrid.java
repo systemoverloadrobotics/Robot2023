@@ -16,6 +16,7 @@ import java.util.concurrent.Future;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -78,6 +79,7 @@ public class MoveToGrid extends CommandBase {
     Trajectory.State goal = trajectory.sample(Constants.Scoring.TRAJECTORY_SAMPLE_TIME);
     ChassisSpeeds chassisSpeeds = controller.calculate(currentPose, goal, nextToTagPose.getRotation());
     SwerveModuleState[] moduleStates = Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.Scoring.AUTO_SWERVE_MAX_VELOCITY);
     swerve.setModuleStates(moduleStates);
   }
 
