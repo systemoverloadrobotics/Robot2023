@@ -6,14 +6,19 @@ package frc.robot;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.sorutil.ConstantAxis;
+import frc.sorutil.ConstantButton;
 import frc.sorutil.motor.PidProfile;
 
 /**
@@ -37,6 +42,8 @@ public final class Constants {
     // Configure the power module used on the robot
     public static final ModuleType POWER_MODULE_TYPE = ModuleType.kRev;
 
+    public static final double NOMINAL_VOLTAGE = 12.0;
+
     public static final class RobotDimensions {
         // TODO: replace these with actual dimensions
         public static final double WIDTH = Units.inchesToMeters(28);
@@ -44,10 +51,10 @@ public final class Constants {
 
         public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(4) * Math.PI;
         public static final SwerveDriveKinematics SWERVE_DRIVE_KINEMATICS = new SwerveDriveKinematics(
-                new Translation2d(-RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2),
-                new Translation2d(-RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2),
+                new Translation2d(RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2),
                 new Translation2d(RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2),
-                new Translation2d(RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2));
+                new Translation2d(-RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2),
+                new Translation2d(-RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2));
     }
 
     public static final class Drive {
@@ -78,12 +85,41 @@ public final class Constants {
         public static final double ARM_CASCADE_CURRENT_LIMIT = 20;
         public static final int ARM_JOINT_ENCODER_RESOLUTION = 4096;
         public static final double ARM_CASCADE_TICKS_PER_FEET = 1200; // PLACEHOLDER
-        public static final double ARM_CASCADE_STARTING_HEIGHT = 1.5f;
+        public static final double ARM_CASCADE_STARTING_HEIGHT= 1.5; // feet
+        public static final double ARM_POSITION_TOLERANCE= 0.25; // feet
+        public static final int ARM_CASCADE_TOLERANCE = 8; // degrees
+        public static final double ARM_JOINT_TOLERANCE = 0.8; // degrees
+        public static final double ARM_PREDICTIVE_TIMESPAN = 0.25; // seconds
+        public static final double ARM_HEIGHT_FROM_GROUND = -1.5; // ft
+        public static final double ARM_HEIGHT_FROM_BASE = -1; // ft
+        public static final double ARM_MIN_ANGLE_COLLISION_A = 300; // degrees
+        public static final double ARM_MAX_ANGLE_COLLISION_A = 330; // degrees
+        public static final double ARM_MIN_ANGLE_COLLISION_B = 200; // degrees
+        public static final double ARM_MAX_ANGLE_COLLISION_B = 280; // degrees
+
+        // Placeholder
+        public static final double ARM_PRESET_LOW_X = 3; // ft
+        public static final double ARM_PRESET_LOW_Y = 1; // ft
+        public static final double ARM_PRESET_MID_X = 3; // ft
+        public static final double ARM_PRESET_MID_Y = 2; // ft
+        public static final double ARM_PRESET_HIGH_X = 3; // ft
+        public static final double ARM_PRESET_HIGH_Y = 3; // ft
+        public static final double ARM_PRESET_TRAY_X = 3; // ft
+        public static final double ARM_PRESET_TRAY_Y = 2; // ft
+        public static final double ARM_PRESET_STOW_X = 0; // ft
+        public static final double ARM_PRESET_STOW_Y = 1; // ft
 
         // Geometry
         public static final double ARM_PIVOT_X = Units.inchesToMeters(11);
         public static final double ARM_PIVOT_Y = Units.inchesToMeters(32.5);
         public static final double MIN_ARM_LENGTH = Units.inchesToMeters(18);
+
+        // Preset Heights
+    }
+
+    public static final class Claw {
+        public static final double CLAW_VELOCITY = 256; // degrees/sec
+        public static final double CLAW_CURRENT_LIMIT = 10.0; // Amps
     }
 
     public static final class Motor {
@@ -92,20 +128,20 @@ public final class Constants {
         public static final int ARM_JOINT_FOLLOWER_INDEX = 1;
         public static final int ARM_CASCADE_INDEX = 20;
 
-        public static final int SWERVE_FRONT_LEFT_POWER = 1;
-        public static final int SWERVE_FRONT_LEFT_STEER = 2;
+        public static final int SWERVE_FRONT_LEFT_POWER = 3;
+        public static final int SWERVE_FRONT_LEFT_STEER = 4;
 
-        public static final int SWERVE_FRONT_RIGHT_POWER = 3;
-        public static final int SWERVE_FRONT_RIGHT_STEER = 4;
+        public static final int SWERVE_FRONT_RIGHT_POWER = 7;
+        public static final int SWERVE_FRONT_RIGHT_STEER = 8;
 
-        public static final int SWERVE_BACK_LEFT_POWER = 5;
-        public static final int SWERVE_BACK_LEFT_STEER = 6;
+        public static final int SWERVE_BACK_LEFT_POWER = 1;
+        public static final int SWERVE_BACK_LEFT_STEER = 2;
 
-        public static final int SWERVE_BACK_RIGHT_POWER = 7;
-        public static final int SWERVE_BACK_RIGHT_STEER = 8;
+        public static final int SWERVE_BACK_RIGHT_POWER = 5;
+        public static final int SWERVE_BACK_RIGHT_STEER = 6;
 
-        public static final int ROLLER_LEFT = 5;
-        public static final int ROLLER_RIGHT = 6;
+        public static final int ROLLER_LEFT = 9;
+        public static final int ROLLER_RIGHT = 10;
     }
 
     public static final class Pneumatics {
@@ -126,6 +162,8 @@ public final class Constants {
         public static final double NEO_MAX_SPEED = 5600; // RPM
         public static final double MAX_WHEEL_SPEED = ((NEO_MAX_SPEED/60) * DISTANCE_PER_REV) / 6.75;
         public static final double SWERVE_MAX_SPEED = 0.9 * MAX_WHEEL_SPEED; // m/s
+        public static final double SWERVE_MAX_AUTO_SPEED = 0.2 * MAX_WHEEL_SPEED; // m/s
+        public static final double SWERVE_MAX_PRECISION_SPEED = 0.1 * MAX_WHEEL_SPEED; // m/s
         public static final double SWERVE_MAX_ACCELERATION = 3; // m/s^2
         public static final double SWERVE_ROTATION_MAX_SPEED = 3; // rad/s
         public static final double SWERVE_ROTATION_MAX_ACCELERATION = Math.PI; // rads/s^2
@@ -134,9 +172,12 @@ public final class Constants {
     }
 
     public static final class Input {
-        public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(1, 0);
-        public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(1, 1);
+        public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(0, 5);
+        public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(0, 4);
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
+        
+        public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0,0);
+        public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0,0);
     }
     public static final class Auto {
         private static final double SWERVE_AUTO_SPEED_MULTIPLIER = 0.6;
@@ -149,4 +190,8 @@ public final class Constants {
         public static final PIDController Y_PID_CONTROLLER = new PIDController(0, 0, 0);
         public static final PIDController ROT_PID_CONTROLLER = new PIDController(0, 0, 0);
     }
+     public static final class PoseEstimation {
+        public static final Matrix<N3, N1> POSE_GYRO_STD = VecBuilder.fill(0.1, 0.1, 0.1);
+        public static final Matrix<N3, N1> POSE_VISION_STD = VecBuilder.fill(0.1, 0.1, 0.1);
+     }
 }

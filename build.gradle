@@ -72,7 +72,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
     // Autolog annotation processing
-    annotationProcessor 'org.littletonrobotics.akit.junction:junction-autolog:2.0.0'
+    annotationProcessor 'org.littletonrobotics.akit.junction:junction-autolog:2.2.0'
 }
 
 test {
