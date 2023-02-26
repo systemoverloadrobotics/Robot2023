@@ -1,10 +1,18 @@
 package frc.robot.commands;
 
+
+import java.util.function.DoubleSupplier;
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.IntelligentScoring;
-import frc.robot.subsystems.ArmSubsystem.ArmHeight;
+import frc.robot.subsystems.Swerve;
+import frc.sorutil.SorMath;
 
 public class DepositGamePiece extends CommandBase {
   private ArmSubsystem arm;
@@ -36,8 +44,9 @@ public class DepositGamePiece extends CommandBase {
       case HYBRID_LEFT, HYBRID_MIDDLE, HYBRID_RIGHT:
         height = ArmHeight.LOW;
     }
-    arm.setPosition(height.getCoordinates());
-    if(arm.withinRange(height.getCoordinates(), 0.25, 0.25)) {
+    arm.setPosition(height);
+    if (arm.withinRange()) {
+
       claw.outtake();
     }
   }

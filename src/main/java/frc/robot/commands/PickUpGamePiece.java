@@ -1,8 +1,17 @@
 package frc.robot.commands;
 
+import java.util.function.DoubleSupplier;
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Swerve;
+import frc.sorutil.SorMath;
 
 public class PickUpGamePiece extends CommandBase {
   private ArmSubsystem arm;
@@ -20,8 +29,8 @@ public class PickUpGamePiece extends CommandBase {
   // Called at 50hz while the command is scheduled.
   @Override
   public void execute() {
-    arm.setPosition(height.getCoordinates());
-    if (arm.withinRange(height.getCoordinates(), 0.25, 0.25)) {
+    arm.setPosition(height);
+    if (arm.withinRange()) {
       claw.intake();
     }
   }

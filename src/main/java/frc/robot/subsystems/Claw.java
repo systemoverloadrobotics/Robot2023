@@ -29,12 +29,9 @@ public class Claw extends SubsystemBase {
   public Claw() {
     logger = java.util.logging.Logger.getLogger(Claw.class.getName());
     aLogger = Logger.getInstance();
-
     MotorConfiguration rollerControllerConfig = new MotorConfiguration();
-
-    rollerControllerConfig.setCurrentLimit(5.0);
+    rollerControllerConfig.setCurrentLimit(Constants.Claw.CLAW_CURRENT_LIMIT);
     rollerControllerConfig.setMaxOutput(0.8);
-    
     rollerMotorLeft = new SuSparkMax(new CANSparkMax(Constants.Motor.ROLLER_LEFT, MotorType.kBrushless), "Left Roller Motor", rollerControllerConfig, 
     null);
     rollerMotorRight = new SuSparkMax(new CANSparkMax(Constants.Motor.ROLLER_RIGHT, MotorType.kBrushless), "Right Roller Motor", rollerControllerConfig, 

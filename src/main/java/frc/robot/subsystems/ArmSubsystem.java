@@ -126,11 +126,18 @@ public class ArmSubsystem extends SubsystemBase {
   /*
    * Reference plane for 2d coordinate has origin at joint with plane parallel to side view x and y units are feet
    */
+  public void setPosition(ArmSubsystem.ArmHeight height) {
+    setPosition(height.getCoordinates());
+  }
+
+  /*
+   * Reference plane for 2d coordinate has origin at joint with plane parallel to side view x and y units are feet
+   */
   public void setPosition(Pair<Double, Double> pair) {
     intendedPosition = pair;
     Rotation2d position = new Rotation2d(pair.getFirst(), pair.getSecond());
-    goalAngle = new TrapezoidProfile.State(SorMath.degreesToTicks(position.getDegrees(), 4096), 0);
-    goalArmLength = new TrapezoidProfile.State(cascadeFeetToTicks(Math.hypot(pair.getFirst(), pair.getSecond())), 0);
+    goalAngle = new TrapezoidProfile.State(position.getDegrees(), 0);
+    goalArmLength = new TrapezoidProfile.State(cascadeFeetToDegrees(Math.hypot(pair.getFirst(), pair.getSecond())), 0);
   }
 
   public void stop() {
@@ -145,11 +152,11 @@ public class ArmSubsystem extends SubsystemBase {
     return position;
   }
 
-  public double cascadeTicksToFeet(double ticks) {
-    return Constants.Arm.ARM_CASCADE_STARTING_HEIGHT + (ticks / Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
+  private double cascadeDegreesToFeet(double feet) {
+    return Constants.Arm.ARM_CASCADE_STARTING_HEIGHT + (feet / Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
   }
 
-  public double cascadeFeetToTicks(double feet) {
+  private double cascadeFeetToDegrees(double feet) {
     return ((feet - Constants.Arm.ARM_CASCADE_STARTING_HEIGHT) * Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
   }
 
@@ -161,9 +168,6 @@ public class ArmSubsystem extends SubsystemBase {
   public void periodic() {
 
     // This method will be called once per scheduler run
-    // TODO: This should be changed to run a constant program that seeks the correct
-    // position while keeping the arm safe.
-
     // When the arm is detected to be in the forbidden zone, the variable state for pause and preventExtension typically
     // goes:
     // safeMode/preventExtension = true -> pause = false (when arm is fully retracted) -> preventExtension = false (when arm is
@@ -176,10 +180,10 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   private void refreshArmGoal() {
-    if (isArmSafe() && !safeMode) {
+    if (futureArmSafetyPrediction() && !safeMode) {
       // NO CHANGE
     }
-    else if (!isArmSafe() && !safeMode) {
+    else if (!futureArmSafetyPrediction() && !safeMode) {
       safeMode = true;
       preventExtension = true;
       retractCascade = true;
@@ -188,7 +192,7 @@ public class ArmSubsystem extends SubsystemBase {
     else if (retractCascade) {
       // set the arm to 0 and angle to current
       Rotation2d position = new Rotation2d(getManipulatorPosition().getFirst(), getManipulatorPosition().getSecond());
-      goalAngle = new TrapezoidProfile.State(SorMath.degreesToTicks(position.getDegrees(), 4096), 0);
+      goalAngle = new TrapezoidProfile.State(position.getDegrees(), 0);
       goalArmLength = new TrapezoidProfile.State(0, 0);
 
       if (isArmRetracted()) {
@@ -217,21 +221,17 @@ public class ArmSubsystem extends SubsystemBase {
     jointA.set(ControlMode.POSITION, neededStateAngle.position, feedForward);
   }
 
-  private boolean isArmSafe() {
-    double estimatedLength = cascadeTicksToFeet(cascade.outputPosition()
-        + (cascade.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN)); // 1/4 seconds should give us enough time to respond
-    double estimatedAngle = SorMath.degreesToTicks(
-        (jointA.outputPosition() + jointA.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN)
-            % 360,
-        4096);
+  private boolean futureArmSafetyPrediction() {
+    double estimatedLength = cascadeDegreesToFeet(cascade.outputPosition() + (cascade.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN)); // 1/4 seconds should give us enough time to respond
+    double estimatedAngle = jointA.outputPosition() + jointA.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN % 360;
     double[] cartesian = SorMath.polarToCartesian(estimatedLength, estimatedAngle);
 
-    return isSafeFromGroundCollision(cartesian) && isAngleSafe(estimatedAngle);
+    return isSafeFromGroundCollision(cartesian[1]) && isAngleSafe(estimatedAngle);
   }
 
 
-  private boolean isSafeFromGroundCollision(double[] cartesian) {
-    return cartesian[1] > Constants.Arm.ARM_HEIGHT_FROM_BASE;
+  private boolean isSafeFromGroundCollision(double length) {
+    return length > Constants.Arm.ARM_HEIGHT_FROM_BASE;
   }
 
   private boolean isAngleSafe(double estimatedAngle) {
@@ -250,12 +250,15 @@ public class ArmSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
-  public static boolean between(double in, double low, double high) {
+  private boolean between(double in, double low, double high) {
     return in > low && in < high;
   }
 
-  public boolean withinRange(Pair<Double, Double> goal, double xdiff, double ydiff) {
-    return between(getManipulatorPosition().getFirst(), goal.getFirst() - xdiff, goal.getFirst() + xdiff) && between(getManipulatorPosition().getSecond(), goal.getSecond() - ydiff, goal.getSecond() + ydiff);
+  public boolean withinRange() {
+    return between(
+      getManipulatorPosition().getFirst(), intendedPosition.getFirst() - Constants.Arm.ARM_POSITION_TOLERANCE, intendedPosition.getFirst() + Constants.Arm.ARM_POSITION_TOLERANCE) && 
+      between(getManipulatorPosition().getSecond(), intendedPosition.getSecond() - Constants.Arm.ARM_POSITION_TOLERANCE, intendedPosition.getSecond() + Constants.Arm.ARM_POSITION_TOLERANCE
+    );
   }
 
   public enum ArmHeight {
@@ -267,7 +270,7 @@ public class ArmSubsystem extends SubsystemBase {
     TRAY(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_TRAY_X, Constants.Arm.ARM_PRESET_TRAY_Y)),
     STOW(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_STOW_X, Constants.Arm.ARM_PRESET_STOW_Y));
 
-    private Pair<Double, Double> coordinates;
+    private final Pair<Double, Double> coordinates;
 
     ArmHeight(Pair<Double, Double> coordinates) {
       this.coordinates = coordinates;

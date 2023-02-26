@@ -101,9 +101,12 @@ public final class Constants {
         public static final double ARM_CASCADE_CURRENT_LIMIT = 20;
         public static final int ARM_JOINT_ENCODER_RESOLUTION = 4096;
         public static final double ARM_CASCADE_TICKS_PER_FEET = 1200; // PLACEHOLDER
-        public static final double ARM_CASCADE_STARTING_HEIGHT = 1.5; // feet
-        public static final int ARM_CASCADE_TOLERANCE = 8; // units
-        public static final int ARM_JOINT_TOLERANCE = 8; // units
+        
+        public static final double ARM_CASCADE_STARTING_HEIGHT= 1.5; // feet
+        public static final double ARM_POSITION_TOLERANCE= 0.25; // feet
+        public static final int ARM_CASCADE_TOLERANCE = 8; // degrees
+        public static final double ARM_JOINT_TOLERANCE = 0.8; // degrees
+
         public static final double ARM_PREDICTIVE_TIMESPAN = 0.25; // seconds
         public static final double ARM_HEIGHT_FROM_GROUND = -1.5; // ft
         public static final double ARM_HEIGHT_FROM_BASE = -1; // ft
@@ -124,6 +127,7 @@ public final class Constants {
         public static final double ARM_PRESET_HIGH_CONE_Y = 3; // ft
         public static final double ARM_PRESET_HIGH_CUBE_X = 3; // ft
         public static final double ARM_PRESET_HIGH_CUBE_Y = 3; // ft
+
         public static final double ARM_PRESET_TRAY_X = 3; // ft
         public static final double ARM_PRESET_TRAY_Y = 2; // ft
         public static final double ARM_PRESET_STOW_X = 0; // ft
@@ -138,7 +142,8 @@ public final class Constants {
     }
 
     public static final class Claw {
-        public static final double CLAW_VELOCITY = 1000; // units/sec
+        public static final double CLAW_VELOCITY = 256; // degrees/sec
+        public static final double CLAW_CURRENT_LIMIT = 10.0; // Amps
     }
 
     public static final class Scoring {
@@ -190,6 +195,7 @@ public final class Constants {
         public static final ProfiledPIDController THETA_CONTROLLER = new ProfiledPIDController(0, 0,
                 0, new Constraints(AUTO_SWERVE_MAX_VELOCITY, AUTO_SWERVE_MAX_ACCELERATION));
         public static final double TRAJECTORY_SAMPLE_TIME = 0; // seconds
+
     }
 
     public static final class Motor {
@@ -233,6 +239,8 @@ public final class Constants {
         public static final double MAX_WHEEL_SPEED =
                 ((NEO_MAX_SPEED / 60) * DISTANCE_PER_REV) / 6.75;
         public static final double SWERVE_MAX_SPEED = 0.9 * MAX_WHEEL_SPEED; // m/s
+        public static final double SWERVE_MAX_AUTO_SPEED = 0.2 * MAX_WHEEL_SPEED; // m/s
+        public static final double SWERVE_MAX_PRECISION_SPEED = 0.1 * MAX_WHEEL_SPEED; // m/s
         public static final double SWERVE_MAX_ACCELERATION = 3; // m/s^2
         public static final double SWERVE_ROTATION_MAX_SPEED = 3; // rad/s
         public static final double SWERVE_ROTATION_MAX_ACCELERATION = Math.PI; // rads/s^2
