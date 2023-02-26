@@ -47,7 +47,7 @@ public class RobotContainer {
   private Command stowArm = new FunctionalCommand(() -> {}, () -> arm.setPosition(ArmSubsystem.ArmHeight.STOW), 
     (a) -> arm.stop(), () -> arm.withinRange(), claw);
 
-  private Command finetuneArm = new FinetuneArm(arm, Constants.Input.ARM_MANUAL_MOVEMENT_UP_DOWN.get(), Constants.Input.ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD.get())
+  private Command finetuneArm = new FinetuneArm(arm, Constants.Input.ARM_MANUAL_MOVEMENT_UP_DOWN.get(), Constants.Input.ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD.get());
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
