@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.FinetuneArm;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Claw;
@@ -46,6 +47,8 @@ public class RobotContainer {
   private Command stowArm = new FunctionalCommand(() -> {}, () -> arm.setPosition(ArmSubsystem.ArmHeight.STOW), 
     (a) -> arm.stop(), () -> arm.withinRange(), claw);
 
+  private Command finetuneArm = new FinetuneArm(arm, Constants.Input.ARM_MANUAL_MOVEMENT_UP_DOWN.get(), Constants.Input.ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD.get())
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     logger = java.util.logging.Logger.getLogger(RobotContainer.class.getName());
@@ -74,8 +77,10 @@ public class RobotContainer {
     swerve.setDefaultCommand(new SwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
         () -> Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), Constants.Input.SWERVE_ROTATION_INPUT.get()));
 
-      Constants.Input.LED_TRIGGER_PURPLE.get().whenHeld(ledCommandPurple);
-      Constants.Input.LED_TRIGGER_YELLOW.get().whenHeld(ledCommandYellow);
+    arm.setDefaultCommand(finetuneArm);
+
+    Constants.Input.LED_TRIGGER_PURPLE.get().whenHeld(ledCommandPurple);
+    Constants.Input.LED_TRIGGER_YELLOW.get().whenHeld(ledCommandYellow);
   }
 
   private void configureArm() {

@@ -77,6 +77,7 @@ public final class Constants {
     
     public static final class Arm {
         public static final int ARM_LIMIT_SWITCH_PORT = 0;
+        public static final int ARM_ABSOLUTE_ENCODER_PORT = 1;
         public static final double ARM_DEGREE_DISTANCE_FROM_ZERO_TO_LIMIT_SWITCH = 36; // PLACEHOLDER degrees
         public static final double ARM_ZEROING_SPEED = 30; // PLACEHOLDER rotations/min
         public static final PidProfile ARM_PID_PROFILE = new PidProfile(0, 0, 0);
@@ -173,6 +174,9 @@ public final class Constants {
         public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(0, 5);
         public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(0, 4);
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
+
+        public static final ConstantAxis ARM_MANUAL_MOVEMENT_UP_DOWN = new ConstantAxis(2, 1);
+        public static final ConstantAxis ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD = new ConstantAxis(2, 5);
         
         public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0,0);
         public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0,0);

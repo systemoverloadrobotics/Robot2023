@@ -118,7 +118,7 @@ public class ArmSubsystem extends SubsystemBase {
             "Cascade Motor", cascadeMotorConfig, cascadeSensorConfiguration);
 
     limitSwitch = new DigitalInput(Constants.Arm.ARM_LIMIT_SWITCH_PORT);
-    jointAbsoluteEncoder = new DutyCycleEncoder(1);
+    jointAbsoluteEncoder = new DutyCycleEncoder(Constants.Arm.ARM_ABSOLUTE_ENCODER_PORT);
     // Absolute Encoder is 8192 / rot 
     jointA.setSensorPosition(SorMath.ticksToDegrees(jointAbsoluteEncoder.getAbsolutePosition(), 8192));
     jointB.setSensorPosition(SorMath.ticksToDegrees(jointAbsoluteEncoder.getAbsolutePosition(), 8192));
@@ -170,6 +170,10 @@ public class ArmSubsystem extends SubsystemBase {
     goalArmLength = new TrapezoidProfile.State(cascadeFeetToDegrees(Math.hypot(pair.getFirst(), pair.getSecond())), 0);
   }
 
+  public Pair<Double, Double> getIntendedPosition() {
+    return intendedPosition;
+  }
+  
   public void stop() {
     setPosition(getManipulatorPosition());
   }
@@ -182,16 +186,20 @@ public class ArmSubsystem extends SubsystemBase {
     return position;
   }
 
-  private double cascadeDegreesToFeet(double feet) {
-    return Constants.Arm.ARM_CASCADE_STARTING_HEIGHT + (feet / Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
+  private double cascadeDegreesToFeet(double degrees) {
+    return Constants.Arm.ARM_CASCADE_STARTING_HEIGHT + (degrees / Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
   }
 
   private double cascadeFeetToDegrees(double feet) {
     return ((feet - Constants.Arm.ARM_CASCADE_STARTING_HEIGHT) * Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
   }
 
-  public double calcFeedForwardJoint() {
-    return 0.35;
+  // extension - inches
+  // angle - degrees
+  public double calcFeedForwardJoint(double angle, double extension) {
+    double sinAngle = Math.sin(Math.toRadians(angle));
+    double torque = (-1.72 * 16.53 * sinAngle) + (3.19 * extension * sinAngle) + (9.33 * 44.02 * sinAngle) + (5.33 * (extension + 19.53) * sinAngle);
+    return (torque / 290) * 0.35d;
   }
 
   public double calcFeedForwardCascade() {
@@ -256,7 +264,7 @@ public class ArmSubsystem extends SubsystemBase {
     var neededArmLength = profileArmLength.calculate(Constants.ROBOT_PERIOD);
     
     cascade.set(ControlMode.POSITION, neededArmLength.position, calcFeedForwardCascade());
-    jointA.set(ControlMode.POSITION, neededStateAngle.position, calcFeedForwardJoint());
+    jointA.set(ControlMode.POSITION, neededStateAngle.position, calcFeedForwardJoint(jointA.outputPosition(), cascadeDegreesToFeet(cascade.outputPosition())));
   }
 
   private boolean futureArmSafetyPrediction() {
