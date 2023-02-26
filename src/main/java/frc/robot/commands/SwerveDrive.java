@@ -56,7 +56,7 @@ public class SwerveDrive extends CommandBase {
     SmartDashboard.putNumber("rspeed", rotationSpeed);
     SmartDashboard.putNumber("rotation 2d", swerve.getRotation2d().getDegrees());
     Logger.getInstance().recordOutput("SwerveDrive/rotation", swerve.getRotation2d().getDegrees());
-    swerve.setModuleStates(xSpeed, ySpeed, rotationSpeed, true);
+    swerve.setDrivebaseWheelVectors(xSpeed, ySpeed, rotationSpeed, true);
   }
 
   // Called once when the command ends or is interrupted.
