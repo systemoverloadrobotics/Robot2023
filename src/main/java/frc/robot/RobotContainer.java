@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.commands.autos.AutoPaths;
 import frc.robot.commands.autos.AutoSelector;
@@ -40,10 +42,10 @@ public class RobotContainer {
   }
 
   private final Command ledCommandPurple = new RunCommand(() -> {
-    led.setLEDColor(true);
+    led.setLEDColor(Color.kAquamarine);
   }, led);
   private final Command ledCommandYellow = new RunCommand(() -> {
-    led.setLEDColor(false);
+    led.setLEDColor(Color.kYellow);
   }, led);
 
   /**
@@ -59,7 +61,6 @@ public class RobotContainer {
       Constants.Input.LED_TRIGGER_PURPLE.get().whenHeld(ledCommandPurple);
       Constants.Input.LED_TRIGGER_YELLOW.get().whenHeld(ledCommandYellow);
   }
-
 
 
   /**

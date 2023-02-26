@@ -22,7 +22,7 @@ public class Balance extends CommandBase {
     // A bit janky
     // ROBOT NEEDS TO BE HEADED TO RAMP!!!!!!!!!!
     if (!onRamp) {
-      swerve.setModuleStates(0, 0.5, 0, false);
+      swerve.setDrivebaseWheelVectors(0, 0.5, 0, false);
       if (Math.abs(swerve.getPitch()) > 8) { // arbitrary, make into const
         onRamp = true;
       }
@@ -31,7 +31,7 @@ public class Balance extends CommandBase {
       if (Math.abs(swerve.getPitch()) < 2) { // arbitrary, make into const
         swerve.lock();
       } else {
-        swerve.setModuleStates(0, out, 0, false);
+        swerve.setDrivebaseWheelVectors(0, out, 0, false);
       }
     }
   }
