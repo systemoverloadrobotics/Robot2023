@@ -42,6 +42,7 @@ public class ArmSubsystem extends SubsystemBase {
   private boolean safeMode;
   private boolean retractCascade;
   private boolean preventExtension;
+  private boolean flag;
 
   private static class ArmModel {
     private final Mechanism2d mech = new Mechanism2d(2, 2);
@@ -82,13 +83,15 @@ public class ArmSubsystem extends SubsystemBase {
   private ArmModel intentMechanism = new ArmModel("ArmIntent");
   private ArmModel currentMechanism = new ArmModel("ArmCurrent");
 
-    private final TrapezoidProfile.Constraints constraintsAngle = new TrapezoidProfile.Constraints(175, 75);  // Units/s, Units/s^2
-    private TrapezoidProfile.State goalAngle;
-    private TrapezoidProfile.State currentAngle;
+  private final TrapezoidProfile.Constraints constraintsAngle =
+      new TrapezoidProfile.Constraints(175, 75); // Units/s, Units/s^2
+  private TrapezoidProfile.State goalAngle;
+  private TrapezoidProfile.State currentAngle;
 
-    private final TrapezoidProfile.Constraints constraintsArmLength = new TrapezoidProfile.Constraints(175, 75);  // Units/s, Units/s^2
-    private TrapezoidProfile.State goalArmLength;
-    private TrapezoidProfile.State currentArmLength;
+  private final TrapezoidProfile.Constraints constraintsArmLength =
+      new TrapezoidProfile.Constraints(175, 75); // Units/s, Units/s^2
+  private TrapezoidProfile.State goalArmLength;
+  private TrapezoidProfile.State currentArmLength;
 
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
@@ -119,9 +122,11 @@ public class ArmSubsystem extends SubsystemBase {
 
     limitSwitch = new DigitalInput(Constants.Arm.ARM_LIMIT_SWITCH_PORT);
     jointAbsoluteEncoder = new DutyCycleEncoder(Constants.Arm.ARM_ABSOLUTE_ENCODER_PORT);
-    // Absolute Encoder is 8192 / rot 
-    jointA.setSensorPosition(SorMath.ticksToDegrees(jointAbsoluteEncoder.getAbsolutePosition(), 8192));
-    jointB.setSensorPosition(SorMath.ticksToDegrees(jointAbsoluteEncoder.getAbsolutePosition(), 8192));
+    // Absolute Encoder is 8192 / rot
+    jointA.setSensorPosition(
+        SorMath.ticksToDegrees(jointAbsoluteEncoder.getAbsolutePosition(), 8192));
+    jointB.setSensorPosition(
+        SorMath.ticksToDegrees(jointAbsoluteEncoder.getAbsolutePosition(), 8192));
 
     retractCascade = false;
 
@@ -130,28 +135,29 @@ public class ArmSubsystem extends SubsystemBase {
     currentAngle = new TrapezoidProfile.State(jointA.outputPosition(), jointA.outputVelocity());
 
     goalArmLength = new TrapezoidProfile.State(cascade.outputPosition(), 0);
-    currentArmLength = new TrapezoidProfile.State(cascade.outputPosition(), cascade.outputVelocity());
+    currentArmLength =
+        new TrapezoidProfile.State(cascade.outputPosition(), cascade.outputVelocity());
 
     logger.info("Arm Initialized.");
   }
 
-  public void zeroElevator() {
-    while (true) {
-      try {
-        Thread.sleep(20);
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-      }
+  // public void zeroElevator() {
+  // while (true) {
+  // try {
+  // Thread.sleep(20);
+  // }
+  // catch (Exception e) {
+  // e.printStackTrace();
+  // }
 
-      cascade.set(ControlMode.VELOCITY, Constants.Arm.ARM_ZEROING_SPEED);
-      if (limitSwitch.get()) {
-        cascade.set(ControlMode.VELOCITY, 0);
-        cascade.setSensorPosition(Constants.Arm.ARM_DEGREE_DISTANCE_FROM_ZERO_TO_LIMIT_SWITCH);
-        cascade.set(ControlMode.POSITION, 0);
-      }
-    }
-  }
+  // cascade.set(ControlMode.VELOCITY, Constants.Arm.ARM_ZEROING_SPEED);
+  // if (limitSwitch.get()) {
+  // cascade.set(ControlMode.VELOCITY, 0);
+  // cascade.setSensorPosition(Constants.Arm.ARM_DEGREE_DISTANCE_FROM_ZERO_TO_LIMIT_SWITCH);
+  // cascade.set(ControlMode.POSITION, 0);
+  // }
+  // }
+  // }
 
   /*
    * Reference plane for 2d coordinate has origin at joint with plane parallel to side view x and y units are feet
@@ -167,13 +173,14 @@ public class ArmSubsystem extends SubsystemBase {
     intendedPosition = pair;
     Rotation2d position = new Rotation2d(pair.getFirst(), pair.getSecond());
     goalAngle = new TrapezoidProfile.State(position.getDegrees(), 0);
-    goalArmLength = new TrapezoidProfile.State(cascadeFeetToDegrees(Math.hypot(pair.getFirst(), pair.getSecond())), 0);
+    goalArmLength = new TrapezoidProfile.State(
+        cascadeFeetToDegrees(Math.hypot(pair.getFirst(), pair.getSecond())), 0);
   }
 
   public Pair<Double, Double> getIntendedPosition() {
     return intendedPosition;
   }
-  
+
   public void stop() {
     setPosition(getManipulatorPosition());
   }
@@ -187,18 +194,21 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   private double cascadeDegreesToFeet(double degrees) {
-    return Constants.Arm.ARM_CASCADE_STARTING_HEIGHT + (degrees / Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
+    return Constants.Arm.ARM_CASCADE_STARTING_HEIGHT
+        + (degrees / Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
   }
 
   private double cascadeFeetToDegrees(double feet) {
-    return ((feet - Constants.Arm.ARM_CASCADE_STARTING_HEIGHT) * Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
+    return ((feet - Constants.Arm.ARM_CASCADE_STARTING_HEIGHT)
+        * Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
   }
 
   // extension - inches
   // angle - degrees
   public double calcFeedForwardJoint(double angle, double extension) {
     double sinAngle = Math.sin(Math.toRadians(angle));
-    double torque = (-1.72 * 16.53 * sinAngle) + (3.19 * extension * sinAngle) + (9.33 * 44.02 * sinAngle) + (5.33 * (extension + 19.53) * sinAngle);
+    double torque = (-1.72 * 16.53 * sinAngle) + (3.19 * extension * sinAngle)
+        + (9.33 * 44.02 * sinAngle) + (5.33 * (extension + 19.53) * sinAngle);
     return (torque / 290) * 0.35d;
   }
 
@@ -208,15 +218,24 @@ public class ArmSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-
+    
+    if (flag) {
+      cascade.set(ControlMode.VELOCITY, Constants.Arm.ARM_ZEROING_SPEED);
+      if (limitSwitch.get()) {
+        cascade.set(ControlMode.VELOCITY, 0);
+        cascade.setSensorPosition(Constants.Arm.ARM_DEGREE_DISTANCE_FROM_ZERO_TO_LIMIT_SWITCH);
+        flag = false;
+      }
+    }
     // This method will be called once per scheduler run
 
     // When the arm is detected to be in the forbidden zone, the variable state for pause and preventExtension typically
     // goes:
-    // safeMode/preventExtension = true -> pause = false (when arm is fully retracted) -> preventExtension = false (when arm is
+    // safeMode/preventExtension = true -> pause = false (when arm is fully retracted) -> preventExtension = false (when arm
+    // is
     // moved to right position)
     refreshArmGoal();
-    
+
     currentMechanism.update(jointA.outputPosition(), getManipulatorPosition().getFirst());
     aLogger.recordOutput("Arm/IntendedPosition", intentMechanism.asMechanism());
     aLogger.recordOutput("Arm/CurrentPosition", currentMechanism.asMechanism());
@@ -225,27 +244,26 @@ public class ArmSubsystem extends SubsystemBase {
   private void refreshArmGoal() {
     if (futureArmSafetyPrediction() && !safeMode) {
       // NO CHANGE
-    }
-    else if (!futureArmSafetyPrediction() && !safeMode) {
+    } else if (!futureArmSafetyPrediction() && !safeMode) {
       safeMode = true;
       preventExtension = true;
       retractCascade = true;
       stop();
-    }
-    else if (retractCascade) {
+    } else if (retractCascade) {
       // set the arm to 0 and angle to current
-      Rotation2d position = new Rotation2d(getManipulatorPosition().getFirst(), getManipulatorPosition().getSecond());
+      Rotation2d position =
+          new Rotation2d(getManipulatorPosition().getFirst(), getManipulatorPosition().getSecond());
       goalAngle = new TrapezoidProfile.State(position.getDegrees(), 0);
       goalArmLength = new TrapezoidProfile.State(0, 0);
 
       if (isArmRetracted()) {
         retractCascade = false;
       }
-    }
-    else if (preventExtension) {
+    } else if (preventExtension) {
       goalArmLength = new TrapezoidProfile.State(0, 0);
-      
-      if (between(jointA.outputPosition(), goalAngle.position + Constants.Arm.ARM_JOINT_TOLERANCE, goalAngle.position - Constants.Arm.ARM_JOINT_TOLERANCE)) {
+
+      if (between(jointA.outputPosition(), goalAngle.position + Constants.Arm.ARM_JOINT_TOLERANCE,
+          goalAngle.position - Constants.Arm.ARM_JOINT_TOLERANCE)) {
         safeMode = false;
         preventExtension = false;
       }
@@ -259,17 +277,22 @@ public class ArmSubsystem extends SubsystemBase {
     var profileAngle = new TrapezoidProfile(constraintsAngle, goalAngle, currentAngle);
     var neededStateAngle = profileAngle.calculate(Constants.ROBOT_PERIOD);
 
-    currentArmLength = new TrapezoidProfile.State(cascade.outputPosition(), cascade.outputVelocity());
-    var profileArmLength = new TrapezoidProfile(constraintsArmLength, goalArmLength, currentArmLength);
+    currentArmLength =
+        new TrapezoidProfile.State(cascade.outputPosition(), cascade.outputVelocity());
+    var profileArmLength =
+        new TrapezoidProfile(constraintsArmLength, goalArmLength, currentArmLength);
     var neededArmLength = profileArmLength.calculate(Constants.ROBOT_PERIOD);
-    
+
     cascade.set(ControlMode.POSITION, neededArmLength.position, calcFeedForwardCascade());
-    jointA.set(ControlMode.POSITION, neededStateAngle.position, calcFeedForwardJoint(jointA.outputPosition(), cascadeDegreesToFeet(cascade.outputPosition())));
+    jointA.set(ControlMode.POSITION, neededStateAngle.position, calcFeedForwardJoint(
+        jointA.outputPosition(), cascadeDegreesToFeet(cascade.outputPosition())));
   }
 
   private boolean futureArmSafetyPrediction() {
-    double estimatedLength = cascadeDegreesToFeet(cascade.outputPosition() + (cascade.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN)); // 1/4 seconds should give us enough time to respond
-    double estimatedAngle = jointA.outputPosition() + jointA.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN % 360;
+    double estimatedLength = cascadeDegreesToFeet(cascade.outputPosition()
+        + (cascade.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN)); // 1/4 seconds should give us enough time to respond
+    double estimatedAngle = jointA.outputPosition()
+        + jointA.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN % 360;
     double[] cartesian = SorMath.polarToCartesian(estimatedLength, estimatedAngle);
 
     return isSafeFromGroundCollision(cartesian[1]) && isAngleSafe(estimatedAngle);
@@ -281,10 +304,10 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   private boolean isAngleSafe(double estimatedAngle) {
-    return !(between(estimatedAngle,
-    Math.toRadians(Constants.Arm.ARM_MIN_ANGLE_COLLISION_A), Math.toRadians(Constants.Arm.ARM_MAX_ANGLE_COLLISION_A))
-    || between(estimatedAngle, Math.toRadians(Constants.Arm.ARM_MIN_ANGLE_COLLISION_B),
-    Math.toRadians(Constants.Arm.ARM_MAX_ANGLE_COLLISION_B))); 
+    return !(between(estimatedAngle, Math.toRadians(Constants.Arm.ARM_MIN_ANGLE_COLLISION_A),
+        Math.toRadians(Constants.Arm.ARM_MAX_ANGLE_COLLISION_A))
+        || between(estimatedAngle, Math.toRadians(Constants.Arm.ARM_MIN_ANGLE_COLLISION_B),
+            Math.toRadians(Constants.Arm.ARM_MAX_ANGLE_COLLISION_B)));
   }
 
   private boolean isArmRetracted() {
@@ -301,18 +324,20 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean withinRange() {
-    return between(
-      getManipulatorPosition().getFirst(), intendedPosition.getFirst() - Constants.Arm.ARM_POSITION_TOLERANCE, intendedPosition.getFirst() + Constants.Arm.ARM_POSITION_TOLERANCE) && 
-      between(getManipulatorPosition().getSecond(), intendedPosition.getSecond() - Constants.Arm.ARM_POSITION_TOLERANCE, intendedPosition.getSecond() + Constants.Arm.ARM_POSITION_TOLERANCE
-    );
+    return between(getManipulatorPosition().getFirst(),
+        intendedPosition.getFirst() - Constants.Arm.ARM_POSITION_TOLERANCE,
+        intendedPosition.getFirst() + Constants.Arm.ARM_POSITION_TOLERANCE)
+        && between(getManipulatorPosition().getSecond(),
+            intendedPosition.getSecond() - Constants.Arm.ARM_POSITION_TOLERANCE,
+            intendedPosition.getSecond() + Constants.Arm.ARM_POSITION_TOLERANCE);
   }
 
   public enum ArmHeight {
-    LOW(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_LOW_X, Constants.Arm.ARM_PRESET_LOW_Y)), 
-    MID(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_MID_X, Constants.Arm.ARM_PRESET_MID_Y)), 
-    HIGH(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_HIGH_X, Constants.Arm.ARM_PRESET_HIGH_Y)), 
-    TRAY(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_TRAY_X, Constants.Arm.ARM_PRESET_TRAY_Y)),
-    STOW(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_STOW_X, Constants.Arm.ARM_PRESET_STOW_Y));
+    LOW(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_LOW_X,Constants.Arm.ARM_PRESET_LOW_Y)), 
+    MID(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_MID_X,Constants.Arm.ARM_PRESET_MID_Y)), 
+    HIGH(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_HIGH_X,Constants.Arm.ARM_PRESET_HIGH_Y)), 
+    TRAY(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_TRAY_X,Constants.Arm.ARM_PRESET_TRAY_Y)), 
+    STOW(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_STOW_X,Constants.Arm.ARM_PRESET_STOW_Y));
 
     private final Pair<Double, Double> coordinates;
 
@@ -321,7 +346,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public Pair<Double, Double> getCoordinates() {
-        return coordinates;
+      return coordinates;
     }
   }
 }
