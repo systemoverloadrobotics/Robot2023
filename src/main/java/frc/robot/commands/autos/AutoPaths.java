@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.Swerve;
 
 /**
@@ -22,7 +23,7 @@ import frc.robot.subsystems.Swerve;
 public class AutoPaths {
     public static PPSwerveControllerCommand getPathCommand(Swerve swerve, PathName path) {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(path.toString(),
-                Constants.Swerve.SWERVE_MAX_SPEED, Constants.Swerve.SWERVE_MAX_ACCELERATION);
+                Constants.Swerve.SWERVE_MAX_AUTO_SPEED, Constants.Swerve.SWERVE_MAX_ACCELERATION);
         PPSwerveControllerCommand command = new PPSwerveControllerCommand(trajectory,
                 swerve::getOdometryPose, Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS,
                 Constants.Auto.X_PID_CONTROLLER, Constants.Auto.Y_PID_CONTROLLER,
@@ -31,7 +32,7 @@ public class AutoPaths {
     }
 
     public static Command createAutoCommand(Swerve swerve, ScoringPosition goal, PieceCount piece, boolean balance, StartingPosition startingPos) {
-        String alliance = DriverStation.getAlliance().equals(Alliance.Red) ? "red" : "blue";
+       
         // Do arm stuff here for config from ScoringPosition
         SequentialCommandGroup autoCommandGroup = new SequentialCommandGroup();
         autoCommandGroup.addCommands(); // TODO: arm command for score
@@ -53,7 +54,7 @@ public class AutoPaths {
     }
 
     private static PathName getBalancePrepPath() {
-         if(DriverStation.getAlliance().equals(Alliance.Red)){
+         if(Robot.getAllianceColor().equals(Alliance.Red)){
             return PathName.AUTO_BALANCE_PREP_RED;
          }
          return PathName.AUTO_BALANCE_PREP_BLUE;
@@ -62,17 +63,17 @@ public class AutoPaths {
     private static PathName getPickupPath( StartingPosition startingPos) {
         switch(startingPos){
             case LEFT:
-            if(DriverStation.getAlliance().equals(Alliance.Red)){
+            if(Robot.getAllianceColor().equals(Alliance.Red)){
                 return PathName.AUTO_RED_LEFT_TAXI;
             }
             return PathName.AUTO_BLUE_LEFT_TAXI;
             case MIDDLE:
-            if(DriverStation.getAlliance().equals(Alliance.Red)){
+            if(Robot.getAllianceColor().equals(Alliance.Red)){
                 return PathName.AUTO_RED_MIDDLE_TAXI;
             }
             return PathName.AUTO_BLUE_MIDDLE_TAXI;
             case RIGHT:
-            if(DriverStation.getAlliance().equals(Alliance.Red)){
+            if(Robot.getAllianceColor().equals(Alliance.Red)){
                 return PathName.AUTO_RED_RIGHT_TAXI;
             }
             return PathName.AUTO_BLUE_RIGHT_TAXI;
@@ -83,17 +84,17 @@ public class AutoPaths {
     private static PathName getDropoffPath(StartingPosition startingPos) {
         switch(startingPos){
             case LEFT:
-            if(DriverStation.getAlliance().equals(Alliance.Red)){
+            if(Robot.getAllianceColor().equals(Alliance.Red)){
                 return PathName.AUTO_RED_LEFT_TWO_PIECE;
             }
             return PathName.AUTO_BLUE_LEFT_TWO_PIECE;
             case MIDDLE:
-            if(DriverStation.getAlliance().equals(Alliance.Red)){
+            if(Robot.getAllianceColor().equals(Alliance.Red)){
                 return PathName.AUTO_RED_MIDDLE_TWO_PIECE;
             }
             return PathName.AUTO_BLUE_MIDDLE_TWO_PIECE;
             case RIGHT:
-            if(DriverStation.getAlliance().equals(Alliance.Red)){
+            if(Robot.getAllianceColor().equals(Alliance.Red)){
                 return PathName.AUTO_RED_RIGHT_TWO_PIECE;
             }
             return PathName.AUTO_BLUE_RIGHT_TWO_PIECE;
@@ -104,7 +105,7 @@ public class AutoPaths {
     public enum StartingPosition {
         LEFT("left"), MIDDLE("middle"), RIGHT("right");
 
-        String pos;
+       private String pos;
 
         StartingPosition(String pos) {
             this.pos = pos;
@@ -118,7 +119,7 @@ public class AutoPaths {
     public enum PieceCount {
         ONE("one"), TWO("two");
 
-        String id;
+        private String id;
 
         PieceCount(String str) {
             id = str;
@@ -149,7 +150,7 @@ public class AutoPaths {
 
 
 
-        String path;
+        private String path;
 
         PathName(String path) {
             this.path = path;
@@ -164,7 +165,7 @@ public class AutoPaths {
     public enum ScoringPosition {
         HIGH("high"), MID("mid");
 
-        String id;
+        private String id;
 
         ScoringPosition(String str) {
             id = str;
