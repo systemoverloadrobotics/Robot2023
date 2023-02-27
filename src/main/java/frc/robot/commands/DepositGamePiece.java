@@ -22,9 +22,9 @@ public class DepositGamePiece extends CommandBase {
     addRequirements(arm, claw);
   }
 
-  // Called at 50hz while the command is scheduled.
+  // Called when the command is initially scheduled.
   @Override
-  public void execute() {
+  public void initialize() {
     switch (scoringLocation) {
       case UPPER_LEFT_CONE, UPPER_RIGHT_CONE:
         height = ArmHeight.HIGH_CONE;
@@ -37,6 +37,12 @@ public class DepositGamePiece extends CommandBase {
       case HYBRID_LEFT, HYBRID_MIDDLE, HYBRID_RIGHT:
         height = ArmHeight.LOW;
     }
+  }
+
+
+  // Called at 50hz while the command is scheduled.
+  @Override
+  public void execute() {
     arm.setPosition(height);
     if (arm.withinRange()) {
 

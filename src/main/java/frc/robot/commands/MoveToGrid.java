@@ -9,6 +9,7 @@ import frc.robot.Constants;
 import frc.robot.GridSelector;
 import frc.robot.GridSelector.GridLocation;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
+import frc.robot.subsystems.IntelligentScoring;
 import frc.robot.subsystems.Vision;
 import frc.sorutil.path.AsyncTrajectory;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class MoveToGrid extends CommandBase {
   private final Swerve swerve;
   private final DriveTrainPoseEstimator poseEstimator;
   private final Vision vision;
+  private final IntelligentScoring intelligentScoring;
   private Pose2d currentPose;
   private Pose2d tagPose;
   private Pose2d nextToTagPose;
@@ -41,12 +43,13 @@ public class MoveToGrid extends CommandBase {
   /**
    * Creates a new MoveToGrid Command.
    */
-  public MoveToGrid(DriveTrainPoseEstimator poseEstimator, Swerve swerve, Vision vision) {
+  public MoveToGrid(DriveTrainPoseEstimator poseEstimator, Swerve swerve, Vision vision, IntelligentScoring intelligentScoring) {
     logger = java.util.logging.Logger.getLogger(MoveToGrid.class.getName());
     aLogger = org.littletonrobotics.junction.Logger.getInstance();
     this.poseEstimator = poseEstimator;
     this.swerve = swerve;
     this.vision = vision;
+    this.intelligentScoring = intelligentScoring;
     controller = new HolonomicDriveController(Constants.Scoring.X_CONTROLLER, Constants.Scoring.Y_CONTROLLER, Constants.Scoring.THETA_CONTROLLER);
     currentPose = poseEstimator.getEstimatedPose();
     addRequirements(poseEstimator, vision, swerve);
@@ -55,7 +58,7 @@ public class MoveToGrid extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    selectedGridId = GridSelector.getClosestId(vision, poseEstimator);
+    selectedGridId = intelligentScoring.getClosestId();
     tagPose = GridSelector.getTagPose2d(selectedGridId);
     nextToTagPose = new Pose2d(tagPose.getX(), tagPose.getY() + Constants.Scoring.NEXT_TO_TAG_OFFSET, tagPose.getRotation());
     futureTrajectory = AsyncTrajectory.generateTrajectory(currentPose, nextToTagPose, new ArrayList<>(), Constants.Scoring.SCORING_TRAJECTORY_CONFIG);    
@@ -64,13 +67,16 @@ public class MoveToGrid extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    selectedGridId = GridSelector.getClosestId(vision, poseEstimator);
+    currentPose = poseEstimator.getEstimatedPose();
+    selectedGridId = intelligentScoring.getClosestId();
     if(!(futureTrajectory.isDone() && !isTrajectoryGenerated)) {
       return;
     }
     try {
-      trajectory = futureTrajectory.get();
-      isTrajectoryGenerated = true;
+      if(!isTrajectoryGenerated) {
+        trajectory = futureTrajectory.get();
+        isTrajectoryGenerated = true;
+      }
       aLogger.recordOutput("Scoring/MoveToGridTrajectory", trajectory);
     }
     catch(Exception Exception) {
@@ -78,9 +84,7 @@ public class MoveToGrid extends CommandBase {
     }
     Trajectory.State goal = trajectory.sample(Constants.Scoring.TRAJECTORY_SAMPLE_TIME);
     ChassisSpeeds chassisSpeeds = controller.calculate(currentPose, goal, nextToTagPose.getRotation());
-    SwerveModuleState[] moduleStates = Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.Scoring.AUTO_SWERVE_MAX_VELOCITY);
-    swerve.setModuleStates(moduleStates);
+    swerve.setDrivebaseWheelVectors(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond, true, true);
   }
 
   // Called once the command ends or is interrupted.

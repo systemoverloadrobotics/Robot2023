@@ -159,8 +159,6 @@ public final class Constants {
         
         public static final double LEFT_GRID_LEFT_NODE_OFFSET = 0; 
         public static final double LEFT_GRID_RIGHT_NODE_OFFSET = 0; 
-        public static final double MIDDLE_GRID_LEFT_NODE_OFFSET = 0; 
-        public static final double MIDDLE_GRID_RIGHT_NODE_OFFSET = 0; 
         public static final double RIGHT_GRID_LEFT_NODE_OFFSET = 0; 
         public static final double RIGHT_GRID_RIGHT_NODE_OFFSET = 0;
         

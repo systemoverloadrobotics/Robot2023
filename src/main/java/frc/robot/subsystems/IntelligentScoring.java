@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.GridSelector;
+import frc.robot.GridSelector.GridLocation;
+
 
 public class IntelligentScoring extends SubsystemBase {
   private final Logger logger;
@@ -16,9 +18,9 @@ public class IntelligentScoring extends SubsystemBase {
   private final DriveTrainPoseEstimator poseEstimator;
 
   /** Creates a new ExampleSubsystem. */
-  public IntelligentScoring() {
-    vision = new Vision();
-    poseEstimator = new DriveTrainPoseEstimator();
+  public IntelligentScoring(Vision vision, DriveTrainPoseEstimator poseEstimator) {
+    this.vision = vision;
+    this.poseEstimator = poseEstimator;
     logger = Logger.getLogger(IntelligentScoring.class.getName());
     aLogger = org.littletonrobotics.junction.Logger.getInstance();
     
@@ -34,6 +36,10 @@ public class IntelligentScoring extends SubsystemBase {
     return closestId;
   }
 
+  public GridLocation getGridLocation() {
+    return GridSelector.getGridLocation(GridSelector.getClosestId(vision, poseEstimator));
+  }
+
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
@@ -43,5 +49,25 @@ public class IntelligentScoring extends SubsystemBase {
     UPPER_LEFT_CONE, UPPER_MIDDLE_CUBE, UPPER_RIGHT_CONE,
     MIDDLE_LEFT_CONE, MIDDLE_MIDDLE_CUBE, MIDDLE_RIGHT_CONE,
     HYBRID_LEFT, HYBRID_MIDDLE, HYBRID_RIGHT;
+  }
+
+  public static enum GridOffset {
+    LEFT, CENTER, RIGHT;
+  }
+
+  /**
+   * 
+   * @param scoringLocation
+   * @return offset to move either right to left based on selected scoring location
+   */
+  public GridOffset getGridOffset(ScoringLocations scoringLocation) {
+    int location = scoringLocation.ordinal() + 1;
+    if(location % 3 == 0) {
+      return GridOffset.LEFT;
+    }
+    if(location % 3 == 2) {
+      return GridOffset.RIGHT;
+    }
+    return GridOffset.CENTER;
   }
 }

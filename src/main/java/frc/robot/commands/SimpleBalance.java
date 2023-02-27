@@ -20,16 +20,16 @@ public class SimpleBalance extends CommandBase {
     // A bit janky
     // ROBOT NEEDS TO BE HEADED TO RAMP!!!!!!!!!!
     if (!onRamp) {
-      swerve.setDrivebaseWheelVectors(0, Constants.Swerve.SWERVE_MAX_AUTO_SPEED, 0, false);
+      swerve.setDrivebaseWheelVectors(0, Constants.Swerve.SWERVE_MAX_AUTO_SPEED, 0, false, false);
       if (Math.abs(swerve.getPitch()) > 8) { // arbitrary, make into const
         onRamp = true;
       }
     } else {
       if (swerve.getPitch() > 2) { // arbitrary, make into const
-        swerve.setDrivebaseWheelVectors(0, Constants.Swerve.SWERVE_MAX_PRECISION_SPEED, 0, false);
+        swerve.setDrivebaseWheelVectors(0, Constants.Swerve.SWERVE_MAX_PRECISION_SPEED, 0, false, false);
       }
       else if (swerve.getPitch() < 2) { // arbitrary, make into const
-        swerve.setDrivebaseWheelVectors(0, -Constants.Swerve.SWERVE_MAX_PRECISION_SPEED, 0, false);
+        swerve.setDrivebaseWheelVectors(0, -Constants.Swerve.SWERVE_MAX_PRECISION_SPEED, 0, false, false);
       }
       else {
         swerve.lock();

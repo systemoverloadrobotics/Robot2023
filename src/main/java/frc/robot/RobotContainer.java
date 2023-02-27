@@ -17,6 +17,7 @@ import frc.robot.subsystems.IntelligentScoring.ScoringLocations;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
+import frc.robot.subsystems.IntelligentScoring;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.subsystems.Led;
 
@@ -31,12 +32,13 @@ public class RobotContainer {
   private final java.util.logging.Logger logger;
 
   // The robot's subsystems and commands are defined here...
-  private Swerve swerve; 
-  private DriveTrainPoseEstimator poseEstimator;
-  private Vision vision;
-  private ArmSubsystem arm;
-  private Claw claw;
-  private Led led;
+  private final Swerve swerve; 
+  private final DriveTrainPoseEstimator poseEstimator;
+  private final Vision vision;
+  private final ArmSubsystem arm;
+  private final Claw claw;
+  private final Led led;
+  private final IntelligentScoring intelligentScoring;
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -48,6 +50,7 @@ public class RobotContainer {
     claw = new Claw();
     led = new Led();
     swerve = new Swerve();
+    intelligentScoring = new IntelligentScoring(vision, poseEstimator);
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -70,18 +73,18 @@ public class RobotContainer {
         () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), Constants.Input.SWERVE_ROTATION_INPUT.get()));
 
     //scoring
-    Constants.Input.POSITION_TO_CLOSEST_GRID.get().onTrue(new MoveToGrid(poseEstimator, swerve, vision));
+    Constants.Input.POSITION_TO_CLOSEST_GRID.get().onTrue(new MoveToGrid(poseEstimator, swerve, vision, intelligentScoring));
     Constants.Input.POSITION_TO_HUMAN_PLAYER.get().onTrue(new MoveToHumanPlayer(swerve, poseEstimator));
 
-    Constants.Input.UPPER_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.UPPER_LEFT_CONE));
-    Constants.Input.UPPER_MIDDLE_CUBE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.UPPER_MIDDLE_CUBE));
-    Constants.Input.UPPER_RIGHT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.UPPER_RIGHT_CONE));
-    Constants.Input.MIDDLE_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.MIDDLE_LEFT_CONE));
-    Constants.Input.MIDDLE_MIDDLE_CUBE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.MIDDLE_MIDDLE_CUBE));
-    Constants.Input.MIDDLE_RIGHT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.MIDDLE_RIGHT_CONE));
-    Constants.Input.HYBRID_LEFT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.HYBRID_LEFT));
-    Constants.Input.HYBRID_MIDDLE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.HYBRID_MIDDLE));
-    Constants.Input.HYBRID_RIGHT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, ScoringLocations.HYBRID_RIGHT));
+    Constants.Input.UPPER_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.UPPER_LEFT_CONE));
+    Constants.Input.UPPER_MIDDLE_CUBE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.UPPER_MIDDLE_CUBE));
+    Constants.Input.UPPER_RIGHT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.UPPER_RIGHT_CONE));
+    Constants.Input.MIDDLE_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.MIDDLE_LEFT_CONE));
+    Constants.Input.MIDDLE_MIDDLE_CUBE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.MIDDLE_MIDDLE_CUBE));
+    Constants.Input.MIDDLE_RIGHT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.MIDDLE_RIGHT_CONE));
+    Constants.Input.HYBRID_LEFT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.HYBRID_LEFT));
+    Constants.Input.HYBRID_MIDDLE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.HYBRID_MIDDLE));
+    Constants.Input.HYBRID_RIGHT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.HYBRID_RIGHT));
 
     Constants.Input.LED_TRIGGER_PURPLE.get().whileTrue(ledCommandPurple);
     Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);
