@@ -36,9 +36,9 @@ public class Led extends SubsystemBase {
   private void led(Color8Bit color8Bit) {
   }
   
-  public void setLEDColor(Color color8Bit){
+  public void setLEDColor(Color color){
       for(var i = 0; i<ledBuffer.getLength(); i++ ){
-        led(new Color8Bit(color8Bit));
+        led(new Color8Bit(color));
           // ledBuffer.setRGB(i, red, green, blue);
       }
 

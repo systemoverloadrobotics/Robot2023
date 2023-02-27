@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.MoveToGrid;
 import frc.robot.commands.MoveToHumanPlayer;
 import frc.robot.commands.MoveToScoringLocation;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
+
 import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Vision;
@@ -56,10 +59,10 @@ public class RobotContainer {
   }
 
   private final Command ledCommandPurple = new RunCommand(() -> {
-    led.setLEDColor(true);
+    led.setLEDColor(Color.kAquamarine);
   }, led);
   private final Command ledCommandYellow = new RunCommand(() -> {
-    led.setLEDColor(false);
+    led.setLEDColor(Color.kYellow);
   }, led);
 
   /**
@@ -89,7 +92,6 @@ public class RobotContainer {
     Constants.Input.LED_TRIGGER_PURPLE.get().whileTrue(ledCommandPurple);
     Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);
   }
-
 
 
   /**
