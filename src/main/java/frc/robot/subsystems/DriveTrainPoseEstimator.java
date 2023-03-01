@@ -9,14 +9,10 @@ import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import java.util.logging.Logger;
-import org.photonvision.PhotonCamera;
 
 public class DriveTrainPoseEstimator extends SubsystemBase {
 
@@ -24,9 +20,13 @@ public class DriveTrainPoseEstimator extends SubsystemBase {
   private Swerve swerve;
   private Vision vision;
   private SwerveDrivePoseEstimator poseEstimator;
-
+  private final org.littletonrobotics.junction.Logger aLogger;
+  private Pose2d prevPose2d;
+  private Pose2d visionPose2d;
   public DriveTrainPoseEstimator() {
     logger = Logger.getLogger(DriveTrainPoseEstimator.class.getName());
+    aLogger = org.littletonrobotics.junction.Logger.getInstance();
+    prevPose2d = poseEstimator.getEstimatedPosition();
     poseEstimator =
       new SwerveDrivePoseEstimator(
         Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS,
@@ -51,6 +51,9 @@ public class DriveTrainPoseEstimator extends SubsystemBase {
     poseEstimator.updateWithTime(Timer.getFPGATimestamp(), swerve.getRotation2d(), swerve.getModulePositions());
     var visionPose = vision.getEstimatedGlobalPose(getEstimatedPose());
     poseEstimator.addVisionMeasurement(visionPose.getFirst(), Timer.getFPGATimestamp() - visionPose.getSecond()); // changes time to match time that photo is taken
+    prevPose2d = vision.getVisionPose2d();
+    aLogger.recordOutput("PoseEstimator/position", getEstimatedPose());
+    aLogger.recordOutput("Vision/rawPosition", prevPose2d);
   }
 
   @Override

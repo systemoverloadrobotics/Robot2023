@@ -6,11 +6,21 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.MoveToGrid;
+import frc.robot.commands.MoveToHumanPlayer;
+import frc.robot.commands.MoveToScoringLocation;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+
 import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.Swerve;
-import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.IntelligentScoring.ScoringLocations;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.DriveTrainPoseEstimator;
+import frc.robot.subsystems.IntelligentScoring;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.subsystems.Led;
 
@@ -25,13 +35,25 @@ public class RobotContainer {
   private final java.util.logging.Logger logger;
 
   // The robot's subsystems and commands are defined here...
-  private Swerve swerve = new Swerve(); 
-  private Led led = new Led();
+  private final Swerve swerve; 
+  private final DriveTrainPoseEstimator poseEstimator;
+  private final Vision vision;
+  private final ArmSubsystem arm;
+  private final Claw claw;
+  private final Led led;
+  private final IntelligentScoring intelligentScoring;
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     logger = java.util.logging.Logger.getLogger(RobotContainer.class.getName());
-
+    poseEstimator = new DriveTrainPoseEstimator();
+    vision = new Vision();
+    arm = new ArmSubsystem();
+    claw = new Claw();
+    led = new Led();
+    swerve = new Swerve();
+    intelligentScoring = new IntelligentScoring(vision, poseEstimator);
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -51,10 +73,24 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     swerve.setDefaultCommand(new SwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
-        () -> Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), Constants.Input.SWERVE_ROTATION_INPUT.get()));
+        () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), Constants.Input.SWERVE_ROTATION_INPUT.get()));
 
-      Constants.Input.LED_TRIGGER_PURPLE.get().whenHeld(ledCommandPurple);
-      Constants.Input.LED_TRIGGER_YELLOW.get().whenHeld(ledCommandYellow);
+    //scoring
+    Constants.Input.POSITION_TO_CLOSEST_GRID.get().onTrue(new MoveToGrid(poseEstimator, swerve, vision, intelligentScoring));
+    Constants.Input.POSITION_TO_HUMAN_PLAYER.get().onTrue(new MoveToHumanPlayer(swerve, poseEstimator));
+
+    Constants.Input.UPPER_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.UPPER_LEFT_CONE));
+    Constants.Input.UPPER_MIDDLE_CUBE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.UPPER_MIDDLE_CUBE));
+    Constants.Input.UPPER_RIGHT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.UPPER_RIGHT_CONE));
+    Constants.Input.MIDDLE_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.MIDDLE_LEFT_CONE));
+    Constants.Input.MIDDLE_MIDDLE_CUBE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.MIDDLE_MIDDLE_CUBE));
+    Constants.Input.MIDDLE_RIGHT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.MIDDLE_RIGHT_CONE));
+    Constants.Input.HYBRID_LEFT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.HYBRID_LEFT));
+    Constants.Input.HYBRID_MIDDLE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.HYBRID_MIDDLE));
+    Constants.Input.HYBRID_RIGHT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw, intelligentScoring, ScoringLocations.HYBRID_RIGHT));
+
+    Constants.Input.LED_TRIGGER_PURPLE.get().whileTrue(ledCommandPurple);
+    Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);
   }
 
 

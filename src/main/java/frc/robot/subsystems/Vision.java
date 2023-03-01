@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 import java.util.List;
-import java.io.IOException;
 import java.util.ArrayList; 
 import edu.wpi.first.math.Pair;
 
@@ -14,7 +13,6 @@ import org.photonvision.RobotPoseEstimator;
 import org.photonvision.RobotPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Timer;
@@ -27,22 +25,21 @@ public class Vision extends SubsystemBase {
   private final Logger aLogger;
 
   private final PhotonCamera camera;
-  private final AprilTagFieldLayout aprilTagFieldLayout; 
   private final RobotPoseEstimator robotPoseEstimator;
+  private Pose2d visonPose2d;
 
   private PhotonPipelineResult results;
 
-  public Vision() throws IOException { //IOException is thrown when the file for April Tag field layout isn't found
+  public Vision() { //IOException is thrown when the file for April Tag field layout isn't found
     logger = java.util.logging.Logger.getLogger(Vision.class.getName());
     aLogger = Logger.getInstance();
 
     Transform3d robotCam = new Transform3d(Constants.Vision.CAMERA_POSITION, Constants.Vision.CAMERA_ROTATION);
     camera = new PhotonCamera("Camera");
     results = camera.getLatestResult();
-    aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource("/edu/wpi/first/apriltag/2023-chargedup.json");
     var cameraList = new ArrayList<Pair<PhotonCamera,  Transform3d>>();
     cameraList.add(new Pair<PhotonCamera, Transform3d>(camera, robotCam)); 
-    robotPoseEstimator = new RobotPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cameraList);
+    robotPoseEstimator = new RobotPoseEstimator(Constants.Vision.TAG_FIELD_LAYOUT, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cameraList);
 
     logger.info("Vision Initialized.");
   } 
@@ -63,6 +60,7 @@ public class Vision extends SubsystemBase {
     return camera.isConnected() ? results.getTargets() : null;  
   }
 
+
   /**
    * Returns the estimated pose from the camera based on at least one AprilTag
    * being visible. In the case where no target is visible, this returns null.
@@ -75,11 +73,16 @@ public class Vision extends SubsystemBase {
     double currentTime = Timer.getFPGATimestamp(); 
     var result = robotPoseEstimator.update();
     if (result.isPresent()) {
-      var pose = result.get().getFirst().toPose2d();
+      Pose2d pose = result.get().getFirst().toPose2d();
+      visonPose2d = pose;
       var deltaTms = currentTime - result.get().getSecond();
       return new Pair<Pose2d, Double>(pose, deltaTms);
     } 
     return null; 
+  }
+
+  public Pose2d getVisionPose2d() {
+    return visonPose2d;
   }
 
   
