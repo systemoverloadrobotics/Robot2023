@@ -141,24 +141,6 @@ public class ArmSubsystem extends SubsystemBase {
     logger.info("Arm Initialized.");
   }
 
-  // public void zeroElevator() {
-  // while (true) {
-  // try {
-  // Thread.sleep(20);
-  // }
-  // catch (Exception e) {
-  // e.printStackTrace();
-  // }
-
-  // cascade.set(ControlMode.VELOCITY, Constants.Arm.ARM_ZEROING_SPEED);
-  // if (limitSwitch.get()) {
-  // cascade.set(ControlMode.VELOCITY, 0);
-  // cascade.setSensorPosition(Constants.Arm.ARM_DEGREE_DISTANCE_FROM_ZERO_TO_LIMIT_SWITCH);
-  // cascade.set(ControlMode.POSITION, 0);
-  // }
-  // }
-  // }
-
   /*
    * Reference plane for 2d coordinate has origin at joint with plane parallel to side view x and y units are feet
    */
@@ -226,6 +208,7 @@ public class ArmSubsystem extends SubsystemBase {
         cascade.setSensorPosition(Constants.Arm.ARM_DEGREE_DISTANCE_FROM_ZERO_TO_LIMIT_SWITCH);
         flag = false;
       }
+      return;
     }
     // This method will be called once per scheduler run
 

@@ -84,7 +84,7 @@ public class RobotContainer {
   }
 
   private void configureArm() {
-    arm.zeroElevator();
+    
   }
 
   /**
