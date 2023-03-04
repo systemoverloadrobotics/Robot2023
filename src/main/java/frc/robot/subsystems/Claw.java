@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.sorutil.motor.MotorConfiguration;
+import frc.sorutil.motor.SensorConfiguration;
 import frc.sorutil.motor.SuSparkMax;
 import frc.sorutil.motor.SuController.ControlMode;
 import frc.robot.Constants;
@@ -34,11 +35,12 @@ public class Claw extends SubsystemBase {
 
     rollerControllerConfig.setCurrentLimit(Constants.Claw.CLAW_CURRENT_LIMIT);
     rollerControllerConfig.setMaxOutput(0.8);
+    SensorConfiguration sensorConfiguration = new SensorConfiguration(new SensorConfiguration.IntegratedSensorSource(1));
     
     rollerMotorLeft = new SuSparkMax(new CANSparkMax(Constants.Motor.ROLLER_LEFT, MotorType.kBrushless), "Left Roller Motor", rollerControllerConfig, 
-    null);
+    sensorConfiguration);
     rollerMotorRight = new SuSparkMax(new CANSparkMax(Constants.Motor.ROLLER_RIGHT, MotorType.kBrushless), "Right Roller Motor", rollerControllerConfig, 
-    null);
+    sensorConfiguration);
 
     logger.info("Claw Initialized.");
   }

@@ -78,7 +78,7 @@ public final class Constants {
     public static final class Arm {
         public static final int ARM_LIMIT_SWITCH_PORT = 0;
         public static final int ARM_ABSOLUTE_ENCODER_PORT = 1;
-        public static final double ARM_DEGREE_DISTANCE_FROM_ZERO_TO_LIMIT_SWITCH = 36; // PLACEHOLDER degrees
+        public static final double ARM_DEGREE_DISTANCE_FROM_ZERO_TO_LIMIT_SWITCH = 36; // PLACEHOLDER degrees // 40mm
         public static final double ARM_ZEROING_SPEED = 30; // PLACEHOLDER rotations/min
         public static final PidProfile ARM_PID_PROFILE = new PidProfile(0, 0, 0);
         public static final PidProfile CASCADE_PID_PROFILE = new PidProfile(0, 0, 0);
@@ -123,9 +123,9 @@ public final class Constants {
 
     public static final class Motor {
         // Motor indexes + configs here
-        public static final int ARM_JOINT_INDEX = 0;
-        public static final int ARM_JOINT_FOLLOWER_INDEX = 1;
-        public static final int ARM_CASCADE_INDEX = 20;
+        public static final int ARM_JOINT_INDEX = 12;
+        public static final int ARM_JOINT_FOLLOWER_INDEX = 13;
+        public static final int ARM_CASCADE_INDEX = 11;
 
         public static final int SWERVE_FRONT_LEFT_POWER = 3;
         public static final int SWERVE_FRONT_LEFT_STEER = 4;

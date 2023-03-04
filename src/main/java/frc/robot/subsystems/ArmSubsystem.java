@@ -103,7 +103,8 @@ public class ArmSubsystem extends SubsystemBase {
     jointMotorConfig.setPidProfile(Constants.Arm.ARM_PID_PROFILE);
     jointMotorConfig.setCurrentLimit(Constants.Arm.ARM_JOINT_CURRENT_LIMIT);
     SensorConfiguration jointSensorConfiguration =
-        new SensorConfiguration(new SensorConfiguration.IntegratedSensorSource(1));
+        new SensorConfiguration(new SensorConfiguration.IntegratedSensorSource(95));
+    jointMotorConfig.setMaxOutput(0.1);
     jointA = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_INDEX), "Joint Motor A",
         jointMotorConfig, jointSensorConfiguration);
     jointB = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_FOLLOWER_INDEX),
@@ -113,6 +114,7 @@ public class ArmSubsystem extends SubsystemBase {
     MotorConfiguration cascadeMotorConfig = new MotorConfiguration();
     cascadeMotorConfig.setPidProfile(Constants.Arm.CASCADE_PID_PROFILE);
     cascadeMotorConfig.setCurrentLimit(Constants.Arm.ARM_CASCADE_CURRENT_LIMIT);
+    cascadeMotorConfig.setMaxOutput(0.1);
     SensorConfiguration cascadeSensorConfiguration =
         new SensorConfiguration(new SensorConfiguration.IntegratedSensorSource(1));
 
@@ -129,10 +131,11 @@ public class ArmSubsystem extends SubsystemBase {
         SorMath.ticksToDegrees(jointAbsoluteEncoder.getAbsolutePosition(), 8192));
 
     retractCascade = false;
+    Pair<Double, Double> pairtemp = new Pair<Double, Double>(0d, 0d);
 
-    stop();
-    goalAngle = new TrapezoidProfile.State(jointA.outputPosition(), 0);
-    currentAngle = new TrapezoidProfile.State(jointA.outputPosition(), jointA.outputVelocity());
+    setPosition(pairtemp);
+    goalAngle = new TrapezoidProfile.State(getDegreesJoint(), 0);
+    currentAngle = new TrapezoidProfile.State(getDegreesJoint(), jointA.outputVelocity());
 
     goalArmLength = new TrapezoidProfile.State(cascade.outputPosition(), 0);
     currentArmLength =
@@ -152,6 +155,8 @@ public class ArmSubsystem extends SubsystemBase {
    * Reference plane for 2d coordinate has origin at joint with plane parallel to side view x and y units are feet
    */
   public void setPosition(Pair<Double, Double> pair) {
+    System.out.println("CHANGED TO " + pair.getFirst() + ", " + pair.getSecond());
+    System.out.println(Thread.currentThread().getStackTrace());
     intendedPosition = pair;
     Rotation2d position = new Rotation2d(pair.getFirst(), pair.getSecond());
     goalAngle = new TrapezoidProfile.State(position.getDegrees(), 0);
@@ -169,8 +174,8 @@ public class ArmSubsystem extends SubsystemBase {
 
   // TODO: Fix this, callers should not be expected to convert from polar coordinates.
   public Pair<Double, Double> getManipulatorPosition() {
-    double r = 0.0444754 / 2;
-    double theta = Math.toRadians(jointA.outputPosition());
+    double r = cascadeDegreesToFeet(cascade.outputPosition());
+    double theta = Math.toRadians(getDegreesJoint());
     Pair<Double, Double> position = new Pair<>(r, theta);
     return position;
   }
@@ -198,18 +203,22 @@ public class ArmSubsystem extends SubsystemBase {
     return 0;
   }
 
+  private double getDegreesJoint() {
+    return SorMath.ticksToDegrees(((WPI_TalonFX) jointA.rawController()).getSelectedSensorPosition(), 2048) / 95;
+  }
+
   @Override
   public void periodic() {
     
-    if (flag) {
-      cascade.set(ControlMode.VELOCITY, Constants.Arm.ARM_ZEROING_SPEED);
-      if (limitSwitch.get()) {
-        cascade.set(ControlMode.VELOCITY, 0);
-        cascade.setSensorPosition(Constants.Arm.ARM_DEGREE_DISTANCE_FROM_ZERO_TO_LIMIT_SWITCH);
-        flag = false;
-      }
-      return;
-    }
+    // if (flag) {
+    //   cascade.set(ControlMode.VELOCITY, Constants.Arm.ARM_ZEROING_SPEED);
+    //   if (limitSwitch.get()) {
+    //     cascade.set(ControlMode.VELOCITY, 0);
+    //     cascade.setSensorPosition(Constants.Arm.ARM_DEGREE_DISTANCE_FROM_ZERO_TO_LIMIT_SWITCH);
+    //     flag = false;
+    //   }
+    //   return;
+    // }
     // This method will be called once per scheduler run
 
     // When the arm is detected to be in the forbidden zone, the variable state for pause and preventExtension typically
@@ -219,9 +228,13 @@ public class ArmSubsystem extends SubsystemBase {
     // moved to right position)
     refreshArmGoal();
 
-    currentMechanism.update(jointA.outputPosition(), getManipulatorPosition().getFirst());
-    aLogger.recordOutput("Arm/IntendedPosition", intentMechanism.asMechanism());
-    aLogger.recordOutput("Arm/CurrentPosition", currentMechanism.asMechanism());
+    currentMechanism.update(getDegreesJoint(), getManipulatorPosition().getFirst());
+    aLogger.recordOutput("Arm/IntendedPosition", intendedPosition.getSecond());
+    aLogger.recordOutput("Arm/CurrentPosition", getManipulatorPosition().getSecond());
+
+    aLogger.recordOutput("Arm/CurrentAngle", getDegreesJoint());
+    aLogger.recordOutput("Arm/CurrentAngleVelocity", jointA.outputVelocity() / 8192);
+    aLogger.recordOutput("Arm/CurrentCascade", cascade.outputPosition());
   }
 
   private void refreshArmGoal() {
@@ -245,7 +258,7 @@ public class ArmSubsystem extends SubsystemBase {
     } else if (preventExtension) {
       goalArmLength = new TrapezoidProfile.State(0, 0);
 
-      if (between(jointA.outputPosition(), goalAngle.position + Constants.Arm.ARM_JOINT_TOLERANCE,
+      if (between(getDegreesJoint(), goalAngle.position + Constants.Arm.ARM_JOINT_TOLERANCE,
           goalAngle.position - Constants.Arm.ARM_JOINT_TOLERANCE)) {
         safeMode = false;
         preventExtension = false;
@@ -256,7 +269,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   private void setUpdatedArmState() {
-    currentAngle = new TrapezoidProfile.State(jointA.outputPosition(), jointA.outputVelocity());
+    currentAngle = new TrapezoidProfile.State(getDegreesJoint(), jointA.outputVelocity());
     var profileAngle = new TrapezoidProfile(constraintsAngle, goalAngle, currentAngle);
     var neededStateAngle = profileAngle.calculate(Constants.ROBOT_PERIOD);
 
@@ -268,13 +281,13 @@ public class ArmSubsystem extends SubsystemBase {
 
     cascade.set(ControlMode.POSITION, neededArmLength.position, calcFeedForwardCascade());
     jointA.set(ControlMode.POSITION, neededStateAngle.position, calcFeedForwardJoint(
-        jointA.outputPosition(), cascadeDegreesToFeet(cascade.outputPosition())));
+        getDegreesJoint(), cascadeDegreesToFeet(cascade.outputPosition())));
   }
 
   private boolean futureArmSafetyPrediction() {
     double estimatedLength = cascadeDegreesToFeet(cascade.outputPosition()
         + (cascade.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN)); // 1/4 seconds should give us enough time to respond
-    double estimatedAngle = jointA.outputPosition()
+    double estimatedAngle = getDegreesJoint()
         + jointA.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN % 360;
     double[] cartesian = SorMath.polarToCartesian(estimatedLength, estimatedAngle);
 

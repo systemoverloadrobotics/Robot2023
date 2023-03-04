@@ -60,12 +60,12 @@ public class RobotContainer {
     configureArm();
   }
 
-  private final Command ledCommandPurple = new RunCommand(() -> {
-    led.setLEDColor(true);
-  }, led);
-  private final Command ledCommandYellow = new RunCommand(() -> {
-    led.setLEDColor(false);
-  }, led);
+  // private final Command ledCommandPurple = new RunCommand(() -> {
+  //   led.setLEDColor(true);
+  // }, led);
+  // private final Command ledCommandYellow = new RunCommand(() -> {
+  //   led.setLEDColor(false);
+  // }, led);
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -79,8 +79,8 @@ public class RobotContainer {
 
     arm.setDefaultCommand(finetuneArm);
 
-    Constants.Input.LED_TRIGGER_PURPLE.get().whenHeld(ledCommandPurple);
-    Constants.Input.LED_TRIGGER_YELLOW.get().whenHeld(ledCommandYellow);
+    // Constants.Input.LED_TRIGGER_PURPLE.get().whenHeld(ledCommandPurple);
+    // Constants.Input.LED_TRIGGER_YELLOW.get().whenHeld(ledCommandYellow);
   }
 
   private void configureArm() {
