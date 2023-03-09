@@ -26,6 +26,7 @@ import frc.sorutil.motor.SuSparkMax;
 import frc.sorutil.motor.SuTalonFx;
 
 public class ArmSubsystem extends SubsystemBase {
+
   private final java.util.logging.Logger logger;
   private final Logger aLogger;
 

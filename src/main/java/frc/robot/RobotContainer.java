@@ -6,21 +6,31 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.MoveToGrid;
 import frc.robot.commands.MoveToHumanPlayer;
-import frc.robot.commands.MoveToScoringLocation;
+
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 import frc.robot.commands.SwerveDrive;
+import frc.robot.commands.autos.AutoPaths;
+import frc.robot.commands.autos.AutoSelector;
 import frc.robot.subsystems.Swerve;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.IntelligentScoring.ScoringLocations;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
 import frc.robot.subsystems.IntelligentScoring;
+
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.subsystems.Led;
 
@@ -35,7 +45,11 @@ public class RobotContainer {
   private final java.util.logging.Logger logger;
 
   // The robot's subsystems and commands are defined here...
+
+  
+
   private final Swerve swerve; 
+  private final AutoSelector autoSelector;
   private final DriveTrainPoseEstimator poseEstimator;
   private final Vision vision;
   private final ArmSubsystem arm;
@@ -47,6 +61,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     logger = java.util.logging.Logger.getLogger(RobotContainer.class.getName());
+
     poseEstimator = new DriveTrainPoseEstimator();
     vision = new Vision();
     arm = new ArmSubsystem();
@@ -54,6 +69,8 @@ public class RobotContainer {
     led = new Led();
     swerve = new Swerve();
     intelligentScoring = new IntelligentScoring(vision, poseEstimator);
+    autoSelector = new AutoSelector(swerve);
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -101,6 +118,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return null;
+    return autoSelector.getAuto();
   }
 }

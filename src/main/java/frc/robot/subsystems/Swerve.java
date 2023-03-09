@@ -104,6 +104,9 @@ public class Swerve extends SubsystemBase {
   public Rotation2d getRotation2d() {
     return Rotation2d.fromDegrees(gyro.getYaw());
   }
+  public Pose2d getOdometryPose() {
+    return odometry.getPoseMeters();
+  }
 
   public double getPitch() {
     return gyro.getPitch();
