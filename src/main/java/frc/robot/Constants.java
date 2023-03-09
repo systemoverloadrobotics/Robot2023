@@ -85,8 +85,8 @@ public final class Constants {
         public static final double ARM_JOINT_CURRENT_LIMIT = 20;
         public static final double ARM_CASCADE_CURRENT_LIMIT = 20;
         public static final int ARM_JOINT_ENCODER_RESOLUTION = 4096;
-        public static final double ARM_CASCADE_TICKS_PER_FEET = 1200; // PLACEHOLDER
-        public static final double ARM_CASCADE_STARTING_HEIGHT= 1.5; // feet
+        public static final double ARM_CASCADE_RADIUS = 0.02408; // ft
+        public static final double ARM_CASCADE_STARTING_HEIGHT= 1.17; // feet
         public static final double ARM_POSITION_TOLERANCE= 0.25; // feet
         public static final int ARM_CASCADE_TOLERANCE = 8; // degrees
         public static final double ARM_JOINT_TOLERANCE = 0.8; // degrees
@@ -117,8 +117,9 @@ public final class Constants {
     }
 
     public static final class Claw {
-        public static final double CLAW_VELOCITY = 256; // degrees/sec
-        public static final double CLAW_CURRENT_LIMIT = 10.0; // Amps
+        public static final double CLAW_VELOCITY = 360; // degrees/sec
+        public static final double CLAW_VELOCITY_OUT = 3600; // degrees/sec
+        public static final double CLAW_CURRENT_LIMIT = 3.0; // Amps
     }
 
     public static final class Motor {
@@ -176,8 +177,10 @@ public final class Constants {
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
 
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_UP_DOWN = new ConstantAxis(2, 1);
-        public static final ConstantAxis ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD = new ConstantAxis(2, 5);
+        public static final ConstantAxis ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD = new ConstantAxis(2, 0);
         
+        public static final ConstantButton CLAW_IN = new ConstantButton(0,1);
+        public static final ConstantButton CLAW_OUT = new ConstantButton(0,2);
         public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0,0);
         public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0,0);
     }

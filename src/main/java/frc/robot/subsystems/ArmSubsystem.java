@@ -160,8 +160,7 @@ public class ArmSubsystem extends SubsystemBase {
     intendedPosition = pair;
     Rotation2d position = new Rotation2d(pair.getFirst(), pair.getSecond());
     goalAngle = new TrapezoidProfile.State(position.getDegrees(), 0);
-    goalArmLength = new TrapezoidProfile.State(
-        cascadeFeetToDegrees(Math.hypot(pair.getFirst(), pair.getSecond())), 0);
+    goalArmLength = new TrapezoidProfile.State(cascadeFeetToDegrees(Math.hypot(pair.getFirst(), pair.getSecond())), 0);
   }
 
   public Pair<Double, Double> getIntendedPosition() {
@@ -181,13 +180,12 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   private double cascadeDegreesToFeet(double degrees) {
-    return Constants.Arm.ARM_CASCADE_STARTING_HEIGHT
-        + (degrees / Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
+    return Constants.Arm.ARM_CASCADE_STARTING_HEIGHT + (Math.toRadians(degrees) * Constants.Arm.ARM_CASCADE_RADIUS);
   }
 
   private double cascadeFeetToDegrees(double feet) {
-    return ((feet - Constants.Arm.ARM_CASCADE_STARTING_HEIGHT)
-        * Constants.Arm.ARM_CASCADE_TICKS_PER_FEET);
+    return Math.toDegrees((feet - Constants.Arm.ARM_CASCADE_STARTING_HEIGHT)
+        / Constants.Arm.ARM_CASCADE_RADIUS);
   }
 
   // extension - inches
@@ -204,7 +202,8 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   private double getDegreesJoint() {
-    return SorMath.ticksToDegrees(((WPI_TalonFX) jointA.rawController()).getSelectedSensorPosition(), 2048) / 95;
+    return jointA.outputPosition() * 95 / 4;
+    // return SorMath.ticksToDegrees(((WPI_TalonFX) jointA.rawController()).getSelectedSensorPosition(), 2048) / 95;
   }
 
   @Override
@@ -234,7 +233,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     aLogger.recordOutput("Arm/CurrentAngle", getDegreesJoint());
     aLogger.recordOutput("Arm/CurrentAngleVelocity", jointA.outputVelocity() / 8192);
-    aLogger.recordOutput("Arm/CurrentCascade", cascade.outputPosition());
+    aLogger.recordOutput("Arm/CurrentCascade", cascadeDegreesToFeet(cascade.outputPosition()));
   }
 
   private void refreshArmGoal() {
@@ -279,9 +278,9 @@ public class ArmSubsystem extends SubsystemBase {
         new TrapezoidProfile(constraintsArmLength, goalArmLength, currentArmLength);
     var neededArmLength = profileArmLength.calculate(Constants.ROBOT_PERIOD);
 
-    cascade.set(ControlMode.POSITION, neededArmLength.position, calcFeedForwardCascade());
-    jointA.set(ControlMode.POSITION, neededStateAngle.position, calcFeedForwardJoint(
-        getDegreesJoint(), cascadeDegreesToFeet(cascade.outputPosition())));
+    // cascade.set(ControlMode.POSITION, neededArmLength.position, calcFeedForwardCascade());
+    // jointA.set(ControlMode.POSITION, neededStateAngle.position, calcFeedForwardJoint(
+    //     getDegreesJoint(), cascadeDegreesToFeet(cascade.outputPosition())));
   }
 
   private boolean futureArmSafetyPrediction() {
