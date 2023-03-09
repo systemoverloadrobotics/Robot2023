@@ -43,7 +43,9 @@ public class GridSelector {
                 return GridLocation.RIGHT;
             case 2:
                 return GridLocation.MIDDLE;
-            case 3: 
+
+            case 3:
+
                 return GridLocation.LEFT;
             default:
                 return null;
