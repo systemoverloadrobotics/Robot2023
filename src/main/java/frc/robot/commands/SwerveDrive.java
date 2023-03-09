@@ -40,6 +40,18 @@ public class SwerveDrive extends CommandBase {
 
     return input;
   }
+/* 
+  private double cleanAndScaleInput(double input, SlewRateLimiter limiter, double speedScaling){ 
+    input = (Math.abs(input) > Constants.Swerve.SWERVE_DEADBAND) ? input : 0;
+    input = limiter.calculate(input);
+    input = SorMath.signedCube(input;
+    input *= speedScaling;
+
+    return input; 
+  }
+// TODO: Determine whether we want to use squared or cubed function
+*/
+
 
   // Called at 50hz while the command is scheduled.
   @Override

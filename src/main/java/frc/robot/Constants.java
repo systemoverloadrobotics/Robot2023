@@ -166,6 +166,9 @@ public final class Constants {
         public static final double SWERVE_ROTATION_MAX_ACCELERATION = Math.PI; // rads/s^2
 
         public static final double SWERVE_DEADBAND = 0.05;
+        // public static final double SWERVE_DEADBAND= 0.09;
+        // public static final double SWERVE_DEADBAND= 0.15;
+        // TODO: We can use different deadband values as per our needs
     }
 
     public static final class Input {
