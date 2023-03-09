@@ -46,9 +46,10 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
 
-  private AutoSelector autoSelector = new AutoSelector(swerve);
+  
 
   private final Swerve swerve; 
+  private final AutoSelector autoSelector;
   private final DriveTrainPoseEstimator poseEstimator;
   private final Vision vision;
   private final ArmSubsystem arm;
@@ -68,6 +69,7 @@ public class RobotContainer {
     led = new Led();
     swerve = new Swerve();
     intelligentScoring = new IntelligentScoring(vision, poseEstimator);
+    autoSelector = new AutoSelector(swerve);
 
     // Configure the button bindings
     configureButtonBindings();
