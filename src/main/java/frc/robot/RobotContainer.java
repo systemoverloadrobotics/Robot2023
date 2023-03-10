@@ -7,8 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.FinetuneArm;
-import frc.robot.commands.IntakeClaw;
-import frc.robot.commands.OuttakeClaw;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Claw;
@@ -59,15 +57,13 @@ public class RobotContainer {
     private Command depositGamePieceHigh = new FunctionalCommand(() -> {},
             () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH), (a) -> arm.stop(), () -> arm.withinRange(), arm);
     private Command intakeClaw = new FunctionalCommand(() -> {},
-            () -> claw.intake(), (a) -> claw.stop(), () -> arm.withinRange(), claw);
+            () -> claw.intake(), (a) -> claw.stop(), () -> false, claw);
     private Command outtakeClaw = new FunctionalCommand(() -> {},
-            () -> claw.outtake(), (a) -> claw.stop(), () -> arm.withinRange(), claw);
+            () -> claw.outtake(), (a) -> claw.stop(), () -> false, claw);
     private Command stowArm = new FunctionalCommand(() -> {},
             () -> arm.setPosition(ArmSubsystem.ArmHeight.STOW), (a) -> arm.stop(), () -> arm.withinRange(), claw);
     //@formatter:on
 
-    private Command clawIn = new IntakeClaw(claw);
-    private Command clawOut = new OuttakeClaw(claw);
     private Command finetuneArm = new FinetuneArm(arm, Constants.Input.ARM_MANUAL_MOVEMENT_UP_DOWN.get(),
             Constants.Input.ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD.get());
 
@@ -109,11 +105,12 @@ public class RobotContainer {
                 Constants.Input.SWERVE_ROTATION_INPUT.get()));
 
         arm.setDefaultCommand(finetuneArm);
-        Constants.Input.CLAW_IN.get().onTrue(clawIn);
-        Constants.Input.CLAW_OUT.get().onTrue(clawOut);
+        Constants.Input.CLAW_IN.get().whileTrue(intakeClaw);
+        Constants.Input.CLAW_OUT.get().whileTrue(outtakeClaw);
 
-        // Constants.Input.LED_TRIGGER_PURPLE.get().whenHeld(ledCommandPurple);
-        // Constants.Input.LED_TRIGGER_YELLOW.get().whenHeld(ledCommandYellow);
+        Constants.Input.LED_TRIGGER_PURPLE.get().whileTrue(ledCommandPurple);
+        Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);
+
         // scoring
         Constants.Input.POSITION_TO_CLOSEST_GRID.get()
                 .onTrue(new MoveToGrid(poseEstimator, swerve, vision, intelligentScoring));
@@ -137,13 +134,10 @@ public class RobotContainer {
                 intelligentScoring, ScoringLocations.HYBRID_MIDDLE));
         Constants.Input.HYBRID_RIGHT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw,
                 intelligentScoring, ScoringLocations.HYBRID_RIGHT));
-
-        Constants.Input.LED_TRIGGER_PURPLE.get().whileTrue(ledCommandPurple);
-        Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);
     }
 
     private void configureArm() {
-
+        // TODO: setup arm offset
     }
 
     /**
