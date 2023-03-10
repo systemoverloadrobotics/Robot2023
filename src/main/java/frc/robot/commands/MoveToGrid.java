@@ -10,7 +10,6 @@ import frc.robot.GridSelector;
 import frc.robot.GridSelector.GridLocation;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
 import frc.robot.subsystems.IntelligentScoring;
-import frc.robot.subsystems.Vision;
 import frc.sorutil.path.AsyncTrajectory;
 import java.util.ArrayList;
 import java.util.concurrent.Future;
@@ -22,11 +21,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** Moves Bot to desired Grid */
 public class MoveToGrid extends CommandBase {
+    @SuppressWarnings("unused")
     private final java.util.logging.Logger logger;
     private final org.littletonrobotics.junction.Logger aLogger;
     private final Swerve swerve;
     private final DriveTrainPoseEstimator poseEstimator;
-    private final Vision vision;
     private final IntelligentScoring intelligentScoring;
     private Pose2d currentPose;
     private Pose2d tagPose;
@@ -41,18 +40,16 @@ public class MoveToGrid extends CommandBase {
     /**
      * Creates a new MoveToGrid Command.
      */
-    public MoveToGrid(DriveTrainPoseEstimator poseEstimator, Swerve swerve, Vision vision,
-            IntelligentScoring intelligentScoring) {
+    public MoveToGrid(DriveTrainPoseEstimator poseEstimator, Swerve swerve, IntelligentScoring intelligentScoring) {
         logger = java.util.logging.Logger.getLogger(MoveToGrid.class.getName());
         aLogger = org.littletonrobotics.junction.Logger.getInstance();
         this.poseEstimator = poseEstimator;
         this.swerve = swerve;
-        this.vision = vision;
         this.intelligentScoring = intelligentScoring;
         controller = new HolonomicDriveController(Constants.Scoring.X_CONTROLLER, Constants.Scoring.Y_CONTROLLER,
                 Constants.Scoring.THETA_CONTROLLER);
         currentPose = poseEstimator.getEstimatedPose();
-        addRequirements(poseEstimator, vision, swerve);
+        addRequirements(poseEstimator, swerve);
     }
 
     // Called when the command is initially scheduled.

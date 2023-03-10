@@ -4,9 +4,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.MatBuilder;
-import edu.wpi.first.math.Nat;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
@@ -15,14 +12,13 @@ import frc.robot.Constants;
 import java.util.logging.Logger;
 
 public class DriveTrainPoseEstimator extends SubsystemBase {
-
+    @SuppressWarnings("unused")
     private final Logger logger;
     private Swerve swerve;
     private Vision vision;
     private SwerveDrivePoseEstimator poseEstimator;
     private final org.littletonrobotics.junction.Logger aLogger;
     private Pose2d prevPose2d;
-    private Pose2d visionPose2d;
 
     public DriveTrainPoseEstimator() {
         logger = Logger.getLogger(DriveTrainPoseEstimator.class.getName());

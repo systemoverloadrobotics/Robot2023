@@ -11,7 +11,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.sorutil.Logging;
 
@@ -23,7 +22,6 @@ import frc.sorutil.Logging;
 public class Robot extends LoggedRobot {
     @SuppressWarnings("unused")
     private RobotContainer robotContainer;
-    private Command autonomousCommand;
     private java.util.logging.Logger javaLogger;
     private static Alliance allianceColor;
 
@@ -123,8 +121,6 @@ public class Robot extends LoggedRobot {
     public void autonomousInit() {
         javaLogger.info("Autonomous started");
         allianceColor = DriverStation.getAlliance();
-        autonomousCommand = robotContainer.getAutonomousCommand();
-
     }
 
     public static Alliance getAllianceColor() {

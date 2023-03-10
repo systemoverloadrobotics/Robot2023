@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public class Led extends SubsystemBase {
+    @SuppressWarnings("unused")
     private final Logger logger;
     public AddressableLEDBuffer ledBuffer;
     public AddressableLED led;
@@ -41,7 +42,6 @@ public class Led extends SubsystemBase {
             led(new Color8Bit(color));
             // ledBuffer.setRGB(i, red, green, blue);
         }
-
 
         led.setData(ledBuffer);
     }

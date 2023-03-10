@@ -21,6 +21,7 @@ import frc.sorutil.path.AsyncTrajectory;
 
 /** Moves Bot to designated human player station */
 public class MoveToHumanPlayer extends CommandBase {
+    @SuppressWarnings("unused")
     private final Logger logger;
     private final org.littletonrobotics.junction.Logger aLogger;
     private final Swerve swerve;

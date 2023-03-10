@@ -10,12 +10,8 @@ import frc.robot.GridSelector.GridLocation;
 import frc.robot.subsystems.IntelligentScoring.GridOffset;
 import frc.robot.subsystems.IntelligentScoring.ScoringLocations;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
 import frc.robot.subsystems.IntelligentScoring;
-import frc.robot.subsystems.Vision;
-import frc.robot.subsystems.ArmSubsystem.ArmHeight;
 import frc.sorutil.path.AsyncTrajectory;
 import java.util.ArrayList;
 import java.util.concurrent.Future;
@@ -28,13 +24,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** Moves bot to the desired scoring location. */
 public class MoveToScoringLocation extends CommandBase {
+    @SuppressWarnings("unused")
     private final Logger logger;
     private final org.littletonrobotics.junction.Logger alogger;
     private final Swerve swerve;
     private final DriveTrainPoseEstimator poseEstimator;
-    private final Vision vision;
-    private final ArmSubsystem arm;
-    private final Claw claw;
     private final IntelligentScoring intelligentScoring;
     private Pose2d currentPose, scoringLocationPose;
     private GridLocation selectedGridLocation;
@@ -44,27 +38,23 @@ public class MoveToScoringLocation extends CommandBase {
     private boolean isTrajectoryGenerated;
     private Trajectory trajectory;
     private HolonomicDriveController controller;
-    private ArmHeight height;
 
 
     /**
      * Creates a new MoveToScoringLocation Command.
      */
-    public MoveToScoringLocation(DriveTrainPoseEstimator poseEstimator, Swerve swerve, Vision vision, ArmSubsystem arm,
-            Claw claw, IntelligentScoring intelligentScoring, ScoringLocations scoringLocation) {
+    public MoveToScoringLocation(DriveTrainPoseEstimator poseEstimator, Swerve swerve,
+            IntelligentScoring intelligentScoring, ScoringLocations scoringLocation) {
         logger = Logger.getLogger(MoveToScoringLocation.class.getName());
         alogger = org.littletonrobotics.junction.Logger.getInstance();
         this.poseEstimator = poseEstimator;
         this.swerve = swerve;
-        this.vision = vision;
-        this.arm = arm;
-        this.claw = claw;
         this.scoringLocation = scoringLocation;
         this.intelligentScoring = intelligentScoring;
         controller = new HolonomicDriveController(Constants.Scoring.X_CONTROLLER, Constants.Scoring.Y_CONTROLLER,
                 Constants.Scoring.THETA_CONTROLLER);
         currentPose = poseEstimator.getEstimatedPose();
-        addRequirements(poseEstimator, vision, swerve, arm, claw, intelligentScoring);
+        addRequirements(poseEstimator, swerve, intelligentScoring);
     }
 
     // Called when the command is initially scheduled.

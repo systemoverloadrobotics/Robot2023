@@ -24,6 +24,8 @@ public class Claw extends SubsystemBase {
     private SuSparkMax rollerMotorLeft;
     private SuSparkMax rollerMotorRight;
 
+    private String lastState = "stop";
+
     public Claw() {
         logger = java.util.logging.Logger.getLogger(Claw.class.getName());
         aLogger = Logger.getInstance();
@@ -46,16 +48,27 @@ public class Claw extends SubsystemBase {
     public void intake() {
         rollerMotorLeft.set(ControlMode.VELOCITY, -Constants.Claw.CLAW_VELOCITY);
         rollerMotorRight.set(ControlMode.VELOCITY, Constants.Claw.CLAW_VELOCITY);
+
+        lastState = "intake";
     }
 
     public void outtake() {
         rollerMotorLeft.set(ControlMode.VELOCITY, Constants.Claw.CLAW_VELOCITY_OUT);
         rollerMotorRight.set(ControlMode.VELOCITY, -Constants.Claw.CLAW_VELOCITY_OUT);
+
+        lastState = "outtake";
     }
 
     public void stop() {
         rollerMotorLeft.set(ControlMode.VELOCITY, 0);
         rollerMotorRight.set(ControlMode.VELOCITY, 0);
+
+        lastState = "stop";
+    }
+
+    @Override
+    public void periodic() {
+        aLogger.recordOutput("Claw/LastState", lastState);
     }
 
     @Override

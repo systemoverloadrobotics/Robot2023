@@ -33,8 +33,8 @@ import frc.robot.subsystems.Led;
  * little robot logic should actually be handled in the {@link Robot} periodic methods (other than the scheduler calls).
  * Instead, the structure of the robot (including subsystems, commands, and button mappings) should be declared here.
  */
+@SuppressWarnings("unused")
 public class RobotContainer {
-    @SuppressWarnings("unused")
     private final java.util.logging.Logger logger;
 
     // The robot's subsystems and commands are defined here...
@@ -47,25 +47,36 @@ public class RobotContainer {
     private Claw claw;
     private Led led;
 
+    // ---------- Begin Simple Commands ----------
+
     //@formatter:off
-    private Command pickUpGamePieceLow = new FunctionalCommand(() -> {}, 
+    private final Command pickUpGamePieceLow = new FunctionalCommand(() -> {}, 
             () -> arm.setPosition(ArmSubsystem.ArmHeight.LOW), (a) -> arm.stop(), () -> arm.withinRange(), arm);
-    private Command pickUpGamePieceTray = new FunctionalCommand(() -> {},
+    private final Command pickUpGamePieceTray = new FunctionalCommand(() -> {},
             () -> arm.setPosition(ArmSubsystem.ArmHeight.TRAY), (a) -> arm.stop(), () -> arm.withinRange(), arm);
-    private Command depositGamePieceMid = new FunctionalCommand(() -> {},
+    private final Command depositGamePieceMid = new FunctionalCommand(() -> {},
             () -> arm.setPosition(ArmSubsystem.ArmHeight.MID), (a) -> arm.stop(), () -> arm.withinRange(), arm);
-    private Command depositGamePieceHigh = new FunctionalCommand(() -> {},
+    private final Command depositGamePieceHigh = new FunctionalCommand(() -> {},
             () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH), (a) -> arm.stop(), () -> arm.withinRange(), arm);
-    private Command intakeClaw = new FunctionalCommand(() -> {},
+    private final Command intakeClaw = new FunctionalCommand(() -> {},
             () -> claw.intake(), (a) -> claw.stop(), () -> false, claw);
-    private Command outtakeClaw = new FunctionalCommand(() -> {},
+    private final Command outtakeClaw = new FunctionalCommand(() -> {},
             () -> claw.outtake(), (a) -> claw.stop(), () -> false, claw);
-    private Command stowArm = new FunctionalCommand(() -> {},
+    private final Command stowArm = new FunctionalCommand(() -> {},
             () -> arm.setPosition(ArmSubsystem.ArmHeight.STOW), (a) -> arm.stop(), () -> arm.withinRange(), claw);
     //@formatter:on
 
     private Command finetuneArm = new FinetuneArm(arm, Constants.Input.ARM_MANUAL_MOVEMENT_UP_DOWN.get(),
             Constants.Input.ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD.get());
+
+    private final Command ledCommandPurple = new RunCommand(() -> {
+        led.setLEDColor(Color.kAquamarine);
+    }, led);
+    private final Command ledCommandYellow = new RunCommand(() -> {
+        led.setLEDColor(Color.kYellow);
+    }, led);
+
+    // ---------- End Simple Commands ----------
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -87,13 +98,6 @@ public class RobotContainer {
         configureArm();
     }
 
-    private final Command ledCommandPurple = new RunCommand(() -> {
-        led.setLEDColor(Color.kAquamarine);
-    }, led);
-    private final Command ledCommandYellow = new RunCommand(() -> {
-        led.setLEDColor(Color.kYellow);
-    }, led);
-
     /**
      * Use this method to define your button->command mappings. Buttons can be created by instantiating a
      * {@link GenericHID} or one of its subclasses ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}),
@@ -113,27 +117,23 @@ public class RobotContainer {
 
         // scoring
         Constants.Input.POSITION_TO_CLOSEST_GRID.get()
-                .onTrue(new MoveToGrid(poseEstimator, swerve, vision, intelligentScoring));
+                .onTrue(new MoveToGrid(poseEstimator, swerve, intelligentScoring));
+
         Constants.Input.POSITION_TO_HUMAN_PLAYER.get().onTrue(new MoveToHumanPlayer(swerve, poseEstimator));
 
-        Constants.Input.UPPER_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw,
-                intelligentScoring, ScoringLocations.UPPER_LEFT_CONE));
-        Constants.Input.UPPER_MIDDLE_CUBE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm,
-                claw, intelligentScoring, ScoringLocations.UPPER_MIDDLE_CUBE));
-        Constants.Input.UPPER_RIGHT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm,
-                claw, intelligentScoring, ScoringLocations.UPPER_RIGHT_CONE));
-        Constants.Input.MIDDLE_LEFT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm,
-                claw, intelligentScoring, ScoringLocations.MIDDLE_LEFT_CONE));
-        Constants.Input.MIDDLE_MIDDLE_CUBE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm,
-                claw, intelligentScoring, ScoringLocations.MIDDLE_MIDDLE_CUBE));
-        Constants.Input.MIDDLE_RIGHT_CONE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm,
-                claw, intelligentScoring, ScoringLocations.MIDDLE_RIGHT_CONE));
-        Constants.Input.HYBRID_LEFT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw,
-                intelligentScoring, ScoringLocations.HYBRID_LEFT));
-        Constants.Input.HYBRID_MIDDLE.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw,
-                intelligentScoring, ScoringLocations.HYBRID_MIDDLE));
-        Constants.Input.HYBRID_RIGHT.get().onTrue(new MoveToScoringLocation(poseEstimator, swerve, vision, arm, claw,
-                intelligentScoring, ScoringLocations.HYBRID_RIGHT));
+        Constants.Input.UPPER_LEFT_CONE.get().onTrue(createMoveCommand(ScoringLocations.UPPER_LEFT_CONE));
+        Constants.Input.UPPER_MIDDLE_CUBE.get().onTrue(createMoveCommand(ScoringLocations.UPPER_MIDDLE_CUBE));
+        Constants.Input.UPPER_RIGHT_CONE.get().onTrue(createMoveCommand(ScoringLocations.UPPER_RIGHT_CONE));
+        Constants.Input.MIDDLE_LEFT_CONE.get().onTrue(createMoveCommand(ScoringLocations.MIDDLE_LEFT_CONE));
+        Constants.Input.MIDDLE_MIDDLE_CUBE.get().onTrue(createMoveCommand(ScoringLocations.MIDDLE_MIDDLE_CUBE));
+        Constants.Input.MIDDLE_RIGHT_CONE.get().onTrue(createMoveCommand(ScoringLocations.MIDDLE_RIGHT_CONE));
+        Constants.Input.HYBRID_LEFT.get().onTrue(createMoveCommand(ScoringLocations.HYBRID_LEFT));
+        Constants.Input.HYBRID_MIDDLE.get().onTrue(createMoveCommand(ScoringLocations.HYBRID_MIDDLE));
+        Constants.Input.HYBRID_RIGHT.get().onTrue(createMoveCommand(ScoringLocations.HYBRID_RIGHT));
+    }
+
+    private Command createMoveCommand(ScoringLocations location) {
+        return new MoveToScoringLocation(poseEstimator, swerve, intelligentScoring, location);
     }
 
     private void configureArm() {

@@ -11,6 +11,7 @@ import frc.robot.GridSelector.GridLocation;
 
 
 public class IntelligentScoring extends SubsystemBase {
+    @SuppressWarnings("unused")
     private final Logger logger;
     private final org.littletonrobotics.junction.Logger aLogger;
     private int closestId;

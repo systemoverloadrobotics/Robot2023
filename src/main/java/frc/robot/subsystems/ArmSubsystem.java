@@ -34,12 +34,15 @@ public class ArmSubsystem extends SubsystemBase {
     private SuTalonFx jointA;
     private SuTalonFx jointB;
     private SuSparkMax cascade;
-    private DigitalInput limitSwitch;
     private DutyCycleEncoder jointAbsoluteEncoder;
     private Pair<Double, Double> intendedPosition;
     private boolean safeMode;
     private boolean retractCascade;
     private boolean preventExtension;
+
+    @SuppressWarnings("unused")
+    private DigitalInput limitSwitch;
+    @SuppressWarnings("unused")
     private boolean flag;
 
     private static class ArmModel {
@@ -281,16 +284,9 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     private boolean futureArmSafetyPrediction() {
+        // 1/4 seconds should give us enough time to respond
         double estimatedLength = cascadeDegreesToFeet(
-                cascade.outputPosition() + (cascade.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN)); // 1/4
-                                                                                                                // seconds
-                                                                                                                // should
-                                                                                                                // give
-                                                                                                                // us
-                                                                                                                // enough
-                                                                                                                // time
-                                                                                                                // to
-                                                                                                                // respond
+                cascade.outputPosition() + (cascade.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN)); 
         double estimatedAngle =
                 getDegreesJoint() + jointA.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN % 360;
         double[] cartesian = SorMath.polarToCartesian(estimatedLength, estimatedAngle);
