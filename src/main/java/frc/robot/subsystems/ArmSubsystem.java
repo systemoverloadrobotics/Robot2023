@@ -203,7 +203,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   private double getDegreesJoint() {
-    return jointA.outputPosition() * 4;
+    return jointA.outputPosition();
     // return SorMath.ticksToDegrees(((WPI_TalonFX) jointA.rawController()).getSelectedSensorPosition(), 2048) / 95;
   }
 
