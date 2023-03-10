@@ -46,9 +46,17 @@ public class IntelligentScoring extends SubsystemBase {
   }
 
   public enum ScoringLocations {
-    UPPER_LEFT_CONE, UPPER_MIDDLE_CUBE, UPPER_RIGHT_CONE,
-    MIDDLE_LEFT_CONE, MIDDLE_MIDDLE_CUBE, MIDDLE_RIGHT_CONE,
-    HYBRID_LEFT, HYBRID_MIDDLE, HYBRID_RIGHT;
+    //@formatter:off
+    UPPER_LEFT_CONE,
+    UPPER_MIDDLE_CUBE,
+    UPPER_RIGHT_CONE,
+    MIDDLE_LEFT_CONE,
+    MIDDLE_MIDDLE_CUBE,
+    MIDDLE_RIGHT_CONE,
+    HYBRID_LEFT,
+    HYBRID_MIDDLE,
+    HYBRID_RIGHT;
+    //@formatter:on
   }
 
   public static enum GridOffset {

@@ -332,11 +332,13 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public enum ArmHeight {
+    //@formatter:off
     LOW(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_LOW_X,Constants.Arm.ARM_PRESET_LOW_Y)), 
     MID(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_MID_CONE_X,Constants.Arm.ARM_PRESET_MID_CONE_Y)), 
     HIGH(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_HIGH_CONE_X,Constants.Arm.ARM_PRESET_HIGH_CONE_Y)), 
     TRAY(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_TRAY_X,Constants.Arm.ARM_PRESET_TRAY_Y)), 
     STOW(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_STOW_X,Constants.Arm.ARM_PRESET_STOW_Y));
+    //@formatter:on
 
     private final Pair<Double, Double> coordinates;
 
