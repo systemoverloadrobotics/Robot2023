@@ -228,8 +228,11 @@ public class ArmSubsystem extends SubsystemBase {
     refreshArmGoal();
 
     currentMechanism.update(getDegreesJoint(), getManipulatorPosition().getFirst());
-    aLogger.recordOutput("Arm/IntendedPosition", intendedPosition.getSecond());
-    aLogger.recordOutput("Arm/CurrentPosition", getManipulatorPosition().getSecond());
+    aLogger.recordOutput("Arm/IntendedPosition", intentMechanism.asMechanism());
+    aLogger.recordOutput("Arm/CurrentPosition", currentMechanism.asMechanism());
+
+    aLogger.recordOutput("Arm/TestingPositionSecond", intendedPosition.getSecond());
+    aLogger.recordOutput("Arm/TestingPositionManipulatorSecond", getManipulatorPosition().getSecond());
 
     aLogger.recordOutput("Arm/CurrentAngle", getDegreesJoint());
     // outputVelocity is in RPM, we want it in degrees/sec
