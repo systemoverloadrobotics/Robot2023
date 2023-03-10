@@ -30,6 +30,7 @@ import frc.sorutil.motor.SuSparkMax;
 import frc.sorutil.motor.SuTalonFx;
 
 public class ArmSubsystem extends SubsystemBase {
+
   private final java.util.logging.Logger logger;
   private final Logger aLogger;
 
@@ -219,7 +220,6 @@ public class ArmSubsystem extends SubsystemBase {
     //   return;
     // }
     // This method will be called once per scheduler run
-
     // When the arm is detected to be in the forbidden zone, the variable state for pause and preventExtension typically
     // goes:
     // safeMode/preventExtension = true -> pause = false (when arm is fully retracted) -> preventExtension = false (when arm

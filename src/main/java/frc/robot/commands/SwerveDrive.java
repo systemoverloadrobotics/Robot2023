@@ -3,9 +3,6 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -56,7 +53,7 @@ public class SwerveDrive extends CommandBase {
     SmartDashboard.putNumber("rspeed", rotationSpeed);
     SmartDashboard.putNumber("rotation 2d", swerve.getRotation2d().getDegrees());
     Logger.getInstance().recordOutput("SwerveDrive/rotation", swerve.getRotation2d().getDegrees());
-    swerve.setDrivebaseWheelVectors(xSpeed, ySpeed, rotationSpeed, true);
+    swerve.setDrivebaseWheelVectors(xSpeed, ySpeed, rotationSpeed, true, false);
   }
 
   // Called once when the command ends or is interrupted.

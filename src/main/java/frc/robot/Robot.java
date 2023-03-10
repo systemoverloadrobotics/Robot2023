@@ -10,8 +10,10 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.sorutil.Logging;
 
@@ -24,8 +26,9 @@ import frc.sorutil.Logging;
 public class Robot extends LoggedRobot {
   @SuppressWarnings("unused")
   private RobotContainer robotContainer;
-
+  private Command autonomousCommand;
   private java.util.logging.Logger javaLogger;
+  private static Alliance allianceColor;
 
   public Robot(double period) {
     super(period);
@@ -122,6 +125,15 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
     javaLogger.info("Autonomous started");
+   allianceColor = DriverStation.getAlliance();
+    autonomousCommand = robotContainer.getAutonomousCommand();
+    
+  }
+  public static Alliance getAllianceColor() {
+    if (allianceColor == DriverStation.Alliance.Blue) {
+      return Alliance.Blue;
+    }
+    return Alliance.Red;
   }
 
   /** This function is called periodically during autonomous. */

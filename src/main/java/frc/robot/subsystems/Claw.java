@@ -29,7 +29,6 @@ public class Claw extends SubsystemBase {
   public Claw() {
     logger = java.util.logging.Logger.getLogger(Claw.class.getName());
     aLogger = Logger.getInstance();
-
     MotorConfiguration rollerControllerConfig = new MotorConfiguration();
     rollerControllerConfig.setPidProfile(new PidProfile(0.0001, 0, 0));
 
@@ -53,7 +52,6 @@ public class Claw extends SubsystemBase {
   public void outtake() {
     rollerMotorLeft.set(ControlMode.VELOCITY, Constants.Claw.CLAW_VELOCITY_OUT);
     rollerMotorRight.set(ControlMode.VELOCITY, -Constants.Claw.CLAW_VELOCITY_OUT);
-  }
 
   public void stop() {
     rollerMotorLeft.set(ControlMode.VELOCITY, 0);
