@@ -13,22 +13,15 @@ import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Claw;
 
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.MoveToGrid;
 import frc.robot.commands.MoveToHumanPlayer;
 import frc.robot.commands.MoveToScoringLocation;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
-
-import frc.robot.commands.autos.AutoPaths;
 import frc.robot.commands.autos.AutoSelector;
 import frc.robot.subsystems.Swerve;
 
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.IntelligentScoring.ScoringLocations;
 import frc.robot.subsystems.DriveTrainPoseEstimator;

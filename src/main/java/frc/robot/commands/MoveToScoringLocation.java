@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 
 import frc.robot.Constants;
-import frc.robot.GridSelector;
 import frc.robot.GridSelector.GridLocation;
 import frc.robot.subsystems.IntelligentScoring.GridOffset;
 import frc.robot.subsystems.IntelligentScoring.ScoringLocations;
@@ -24,8 +23,6 @@ import java.util.logging.Logger;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 

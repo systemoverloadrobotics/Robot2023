@@ -7,8 +7,6 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.Pair;
@@ -25,7 +23,6 @@ import frc.robot.Constants;
 import frc.sorutil.SorMath;
 import frc.sorutil.motor.MotorConfiguration;
 import frc.sorutil.motor.SensorConfiguration;
-import frc.sorutil.motor.SuController.ControlMode;
 import frc.sorutil.motor.SuSparkMax;
 import frc.sorutil.motor.SuTalonFx;
 
