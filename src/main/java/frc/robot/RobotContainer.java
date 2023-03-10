@@ -6,28 +6,31 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.FinetuneArm;
+import frc.robot.commands.IntakeClaw;
+import frc.robot.commands.OuttakeClaw;
+import frc.robot.commands.SwerveDrive;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.Claw;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.MoveToGrid;
 import frc.robot.commands.MoveToHumanPlayer;
-
+import frc.robot.commands.MoveToScoringLocation;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
-import frc.robot.commands.SwerveDrive;
 import frc.robot.commands.autos.AutoPaths;
 import frc.robot.commands.autos.AutoSelector;
 import frc.robot.subsystems.Swerve;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.IntelligentScoring.ScoringLocations;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
 import frc.robot.subsystems.IntelligentScoring;
 
@@ -45,17 +48,36 @@ public class RobotContainer {
   private final java.util.logging.Logger logger;
 
   // The robot's subsystems and commands are defined here...
-
-  
-
   private final Swerve swerve; 
   private final AutoSelector autoSelector;
   private final DriveTrainPoseEstimator poseEstimator;
   private final Vision vision;
-  private final ArmSubsystem arm;
-  private final Claw claw;
-  private final Led led;
+  private ArmSubsystem arm;
+  private Claw claw;
+  private Led led;
   private final IntelligentScoring intelligentScoring;
+  
+  private Command pickUpGamePieceLow = new FunctionalCommand(() -> {}, () -> arm.setPosition(ArmSubsystem.ArmHeight.LOW), 
+    (a) -> arm.stop(), () -> arm.withinRange(), arm);
+  private Command pickUpGamePieceTray = new FunctionalCommand(() -> {}, () -> arm.setPosition(ArmSubsystem.ArmHeight.TRAY), 
+    (a) -> arm.stop(), () -> arm.withinRange(), arm);
+  private Command depositGamePieceMid = new FunctionalCommand(() -> {}, () -> arm.setPosition(ArmSubsystem.ArmHeight.MID), 
+    (a) -> arm.stop(), () -> arm.withinRange(), arm);
+  private Command depositGamePieceHigh = new FunctionalCommand(() -> {}, () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH), 
+    (a) -> arm.stop(), () -> arm.withinRange(), arm);
+  private Command intakeClaw = new FunctionalCommand(() -> {}, () -> claw.intake(), 
+    (a) -> claw.stop(), () -> arm.withinRange(), claw);
+  private Command outtakeClaw = new FunctionalCommand(() -> {}, () -> claw.outtake(), 
+    (a) -> claw.stop(), () -> arm.withinRange(), claw);
+  private Command stowArm = new FunctionalCommand(() -> {}, () -> arm.setPosition(ArmSubsystem.ArmHeight.STOW), 
+    (a) -> arm.stop(), () -> arm.withinRange(), claw);
+
+  
+  private Command clawIn = new IntakeClaw(claw);
+  private Command clawOut = new OuttakeClaw(claw);
+  private Command finetuneArm = new FinetuneArm(arm, Constants.Input.ARM_MANUAL_MOVEMENT_UP_DOWN.get(), Constants.Input.ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD.get());
+
+  
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -73,6 +95,9 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+
+    // Configure arm zero
+    configureArm();
   }
 
   private final Command ledCommandPurple = new RunCommand(() -> {
@@ -92,6 +117,12 @@ public class RobotContainer {
     swerve.setDefaultCommand(new SwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
         () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), Constants.Input.SWERVE_ROTATION_INPUT.get()));
 
+    arm.setDefaultCommand(finetuneArm);
+    Constants.Input.CLAW_IN.get().onTrue(clawIn);
+    Constants.Input.CLAW_OUT.get().onTrue(clawOut);
+
+    // Constants.Input.LED_TRIGGER_PURPLE.get().whenHeld(ledCommandPurple);
+    // Constants.Input.LED_TRIGGER_YELLOW.get().whenHeld(ledCommandYellow);
     //scoring
     Constants.Input.POSITION_TO_CLOSEST_GRID.get().onTrue(new MoveToGrid(poseEstimator, swerve, vision, intelligentScoring));
     Constants.Input.POSITION_TO_HUMAN_PLAYER.get().onTrue(new MoveToHumanPlayer(swerve, poseEstimator));
@@ -110,6 +141,9 @@ public class RobotContainer {
     Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);
   }
 
+  private void configureArm() {
+    
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

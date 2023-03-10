@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.sorutil.motor.MotorConfiguration;
+import frc.sorutil.motor.PidProfile;
+import frc.sorutil.motor.SensorConfiguration;
 import frc.sorutil.motor.SuSparkMax;
 import frc.sorutil.motor.SuController.ControlMode;
 import frc.robot.Constants;
@@ -21,8 +23,6 @@ public class Claw extends SubsystemBase {
   private final java.util.logging.Logger logger;
   private final Logger aLogger;
 
-  Solenoid extendSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Pneumatics.CLAW_SOLENOID_CHANNEL);
-
   private SuSparkMax rollerMotorLeft;
   private SuSparkMax rollerMotorRight;
 
@@ -30,46 +30,34 @@ public class Claw extends SubsystemBase {
     logger = java.util.logging.Logger.getLogger(Claw.class.getName());
     aLogger = Logger.getInstance();
     MotorConfiguration rollerControllerConfig = new MotorConfiguration();
+    rollerControllerConfig.setPidProfile(new PidProfile(0.0001, 0, 0));
+
     rollerControllerConfig.setCurrentLimit(Constants.Claw.CLAW_CURRENT_LIMIT);
     rollerControllerConfig.setMaxOutput(0.8);
-    rollerMotorLeft = new SuSparkMax(new CANSparkMax(Constants.Motor.ROLLER_LEFT, MotorType.kBrushless), "Left Roller Motor", rollerControllerConfig, 
-    null);
-    rollerMotorRight = new SuSparkMax(new CANSparkMax(Constants.Motor.ROLLER_RIGHT, MotorType.kBrushless), "Right Roller Motor", rollerControllerConfig, 
-    null);
+    System.out.print("hi");
+    SensorConfiguration sensorConfiguration =
+        new SensorConfiguration(new SensorConfiguration.IntegratedSensorSource(10));
 
+    rollerMotorLeft = new SuSparkMax(new CANSparkMax(Constants.Motor.ROLLER_LEFT, MotorType.kBrushless),
+        "Left Roller Motor", rollerControllerConfig, sensorConfiguration);
+    rollerMotorRight = new SuSparkMax(new CANSparkMax(Constants.Motor.ROLLER_RIGHT, MotorType.kBrushless),
+        "Right Roller Motor", rollerControllerConfig, sensorConfiguration);
     logger.info("Claw Initialized.");
   }
 
   public void intake() {
-    rollerMotorLeft.set(ControlMode.VELOCITY, Constants.Claw.CLAW_VELOCITY);
-    rollerMotorRight.set(ControlMode.VELOCITY, -Constants.Claw.CLAW_VELOCITY);
-  }
-
-  public void outtake() {
     rollerMotorLeft.set(ControlMode.VELOCITY, -Constants.Claw.CLAW_VELOCITY);
     rollerMotorRight.set(ControlMode.VELOCITY, Constants.Claw.CLAW_VELOCITY);
   }
 
+  public void outtake() {
+    rollerMotorLeft.set(ControlMode.VELOCITY, Constants.Claw.CLAW_VELOCITY_OUT);
+    rollerMotorRight.set(ControlMode.VELOCITY, -Constants.Claw.CLAW_VELOCITY_OUT);
+  }
+
   public void stop() {
-    rollerMotorLeft.stop();
-    rollerMotorRight.stop();
-  }
-
-  public void openClaw() {
-    extendSolenoid.set(true);
-  }
-
-  public void closeClaw() {
-    extendSolenoid.set(false);
-  }
-
-  public boolean isExtended() {
-    return extendSolenoid.get() == true;
-  }
-
-  @Override
-  public void periodic() {
-    aLogger.recordOutput("Claw/Open", extendSolenoid.get());
+    rollerMotorLeft.set(ControlMode.VELOCITY, 0);
+    rollerMotorRight.set(ControlMode.VELOCITY, 0);
   }
 
   @Override
