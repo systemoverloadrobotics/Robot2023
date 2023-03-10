@@ -202,7 +202,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   private double getDegreesJoint() {
-    return jointA.outputPosition() * 95 / 4;
+    return jointA.outputPosition() * 4;
     // return SorMath.ticksToDegrees(((WPI_TalonFX) jointA.rawController()).getSelectedSensorPosition(), 2048) / 95;
   }
 
@@ -232,7 +232,8 @@ public class ArmSubsystem extends SubsystemBase {
     aLogger.recordOutput("Arm/CurrentPosition", getManipulatorPosition().getSecond());
 
     aLogger.recordOutput("Arm/CurrentAngle", getDegreesJoint());
-    aLogger.recordOutput("Arm/CurrentAngleVelocity", jointA.outputVelocity() / 8192);
+    // outputVelocity is in RPM, we want it in degrees/sec
+    aLogger.recordOutput("Arm/CurrentAngleVelocity", jointA.outputVelocity() * 6.0);
     aLogger.recordOutput("Arm/CurrentCascade", cascadeDegreesToFeet(cascade.outputPosition()));
   }
 
