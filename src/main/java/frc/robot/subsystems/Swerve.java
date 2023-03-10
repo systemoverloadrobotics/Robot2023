@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -81,7 +82,7 @@ public class Swerve extends SubsystemBase {
     setModuleStates(moduleStates);
   }
 
-  private void setModuleStates(SwerveModuleState[] desiredStates) {
+  public void setModuleStates(SwerveModuleState[] desiredStates) {
     lastIntendedStates = desiredStates;
 
     frontLeft.setState(desiredStates[0]);
@@ -104,6 +105,7 @@ public class Swerve extends SubsystemBase {
   public Rotation2d getRotation2d() {
     return Rotation2d.fromDegrees(gyro.getYaw());
   }
+
   public Pose2d getOdometryPose() {
     return odometry.getPoseMeters();
   }

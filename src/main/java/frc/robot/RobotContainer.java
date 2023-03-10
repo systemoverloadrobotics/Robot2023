@@ -18,23 +18,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.MoveToGrid;
 import frc.robot.commands.MoveToHumanPlayer;
-
+import frc.robot.commands.MoveToScoringLocation;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
-import frc.robot.commands.SwerveDrive;
 import frc.robot.commands.autos.AutoPaths;
 import frc.robot.commands.autos.AutoSelector;
 import frc.robot.subsystems.Swerve;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.IntelligentScoring.ScoringLocations;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
 import frc.robot.subsystems.IntelligentScoring;
 
@@ -56,9 +52,9 @@ public class RobotContainer {
   private final AutoSelector autoSelector;
   private final DriveTrainPoseEstimator poseEstimator;
   private final Vision vision;
-  private final ArmSubsystem arm;
-  private final Claw claw;
-  private final Led led;
+  private ArmSubsystem arm;
+  private Claw claw;
+  private Led led;
   private final IntelligentScoring intelligentScoring;
   
   private Command pickUpGamePieceLow = new FunctionalCommand(() -> {}, () -> arm.setPosition(ArmSubsystem.ArmHeight.LOW), 
