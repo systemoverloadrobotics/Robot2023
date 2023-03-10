@@ -28,7 +28,6 @@ public class AutoPaths {
 
     public static Command createAutoCommand(Swerve swerve, ScoringPosition goal, PieceCount piece, boolean balance,
             StartingPosition startingPos) {
-
         // Do arm stuff here for config from ScoringPosition
         SequentialCommandGroup autoCommandGroup = new SequentialCommandGroup();
         autoCommandGroup.addCommands(); // TODO: arm command for score
@@ -127,7 +126,6 @@ public class AutoPaths {
         }
     }
 
-
     public enum PathName {
         //@formatter:off
         AUTO_RED_LEFT_TAXI("auto_red_left_taxi"), 
@@ -145,7 +143,6 @@ public class AutoPaths {
         AUTO_BALANCE_PREP_BLUE("auto_balance_prep_blue"), 
         AUTO_BALANCE_PREP_RED("auto_balance_prep_red");
         //@formatter:on
-
 
         private String path;
 

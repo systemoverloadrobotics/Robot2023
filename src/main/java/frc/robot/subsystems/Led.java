@@ -13,47 +13,47 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public class Led extends SubsystemBase {
-  private final Logger logger;
-  public AddressableLEDBuffer ledBuffer;
-  public AddressableLED led;
+    private final Logger logger;
+    public AddressableLEDBuffer ledBuffer;
+    public AddressableLED led;
 
-  /** Creates a new ExampleSubsystem. */
-  public Led() {
-    logger = Logger.getLogger(Led.class.getName());
-    
-    led = new AddressableLED(9);
+    /** Creates a new ExampleSubsystem. */
+    public Led() {
+        logger = Logger.getLogger(Led.class.getName());
 
-    // Default to a length of 60, start empty output
-    // Length is expensive to set, so only set it once, then just update data
-     ledBuffer = new AddressableLEDBuffer(150);
-     led.setLength(ledBuffer.getLength());
+        led = new AddressableLED(9);
 
-    // Set the data
-    led.setData(ledBuffer);
-    led.start();
+        // Default to a length of 60, start empty output
+        // Length is expensive to set, so only set it once, then just update data
+        ledBuffer = new AddressableLEDBuffer(150);
+        led.setLength(ledBuffer.getLength());
 
-  }
-  private void led(Color8Bit color8Bit) {
-  }
-  
-  public void setLEDColor(Color color){
-      for(var i = 0; i<ledBuffer.getLength(); i++ ){
-        led(new Color8Bit(color));
-          // ledBuffer.setRGB(i, red, green, blue);
-      }
+        // Set the data
+        led.setData(ledBuffer);
+        led.start();
 
- 
-    led.setData(ledBuffer); 
-  }
+    }
+
+    private void led(Color8Bit color8Bit) {}
+
+    public void setLEDColor(Color color) {
+        for (var i = 0; i < ledBuffer.getLength(); i++) {
+            led(new Color8Bit(color));
+            // ledBuffer.setRGB(i, red, green, blue);
+        }
 
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+        led.setData(ledBuffer);
+    }
 
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
+
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        // This method will be called once per scheduler run during simulation
+    }
 }

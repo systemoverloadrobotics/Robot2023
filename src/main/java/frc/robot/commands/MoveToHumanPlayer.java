@@ -21,83 +21,86 @@ import frc.sorutil.path.AsyncTrajectory;
 
 /** Moves Bot to designated human player station */
 public class MoveToHumanPlayer extends CommandBase {
-  private final Logger logger;
-  private final org.littletonrobotics.junction.Logger aLogger;
-  private final Swerve swerve;
-  private final DriveTrainPoseEstimator poseEstimator;
-  private final HolonomicDriveController controller;
-  private Future<Trajectory> futureTrajectory;
-  private Trajectory trajectory;
-  private Pose2d currentPose;
-  private Pose2d humanPlayerTagPose;
-  private Pose2d humanPlayerPose;
-  private boolean isTrajectoryGenerated;
+    private final Logger logger;
+    private final org.littletonrobotics.junction.Logger aLogger;
+    private final Swerve swerve;
+    private final DriveTrainPoseEstimator poseEstimator;
+    private final HolonomicDriveController controller;
+    private Future<Trajectory> futureTrajectory;
+    private Trajectory trajectory;
+    private Pose2d currentPose;
+    private Pose2d humanPlayerTagPose;
+    private Pose2d humanPlayerPose;
+    private boolean isTrajectoryGenerated;
 
-  /**
-   * Creates a new MoveToHumanPlayer Command.
-   */
-  public MoveToHumanPlayer(Swerve swerve, DriveTrainPoseEstimator poseEstimator) {
-    logger = Logger.getLogger(MoveToHumanPlayer.class.getName());
-    aLogger = org.littletonrobotics.junction.Logger.getInstance();
-    this.swerve = swerve;
-    this.poseEstimator = poseEstimator;
-    currentPose = poseEstimator.getEstimatedPose();
-    controller = new HolonomicDriveController(Constants.Scoring.X_CONTROLLER, Constants.Scoring.Y_CONTROLLER, Constants.Scoring.THETA_CONTROLLER);
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(swerve, poseEstimator);
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    humanPlayerTagPose = GridSelector.getTagPose2d(getHumanPlayerTag());
-    humanPlayerPose = new Pose2d(humanPlayerTagPose.getX(), humanPlayerTagPose.getY() + Constants.Scoring.NEXT_TO_TAG_OFFSET, humanPlayerTagPose.getRotation());
-    futureTrajectory = AsyncTrajectory.generateTrajectory(currentPose, humanPlayerTagPose, new ArrayList<>(), Constants.Scoring.SCORING_TRAJECTORY_CONFIG);
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    currentPose = poseEstimator.getEstimatedPose();
-    if(!(futureTrajectory.isDone() && !isTrajectoryGenerated)) {
-      return;
+    /**
+     * Creates a new MoveToHumanPlayer Command.
+     */
+    public MoveToHumanPlayer(Swerve swerve, DriveTrainPoseEstimator poseEstimator) {
+        logger = Logger.getLogger(MoveToHumanPlayer.class.getName());
+        aLogger = org.littletonrobotics.junction.Logger.getInstance();
+        this.swerve = swerve;
+        this.poseEstimator = poseEstimator;
+        currentPose = poseEstimator.getEstimatedPose();
+        controller = new HolonomicDriveController(Constants.Scoring.X_CONTROLLER, Constants.Scoring.Y_CONTROLLER,
+                Constants.Scoring.THETA_CONTROLLER);
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(swerve, poseEstimator);
     }
-    try {
-      if(!isTrajectoryGenerated) {
-        trajectory = futureTrajectory.get();
-        isTrajectoryGenerated = true;
-      }
-      aLogger.recordOutput("Scoring/MoveToHumanPlayerTrajectory", trajectory);
-    }
-    catch(Exception Exception) {
-      throw new RuntimeException("MoveToHumanPlayer unreachable block");
-    }
-    Trajectory.State goal = trajectory.sample(Constants.Scoring.TRAJECTORY_SAMPLE_TIME);
-    ChassisSpeeds chassisSpeeds = controller.calculate(currentPose, goal, humanPlayerPose.getRotation());
-    swerve.setDrivebaseWheelVectors(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond, true, true);
-  }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
-
-  //returns tag given bot alliance
-  private int getHumanPlayerTag() {
-    switch(DriverStation.getAlliance()) {
-        case Blue:
-            return 4;
-        case Red:
-            return 5;
-        case Invalid:
-            //error with alliance system, should do a DS update
-        default:
-            return -1; //should never occur
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        humanPlayerTagPose = GridSelector.getTagPose2d(getHumanPlayerTag());
+        humanPlayerPose = new Pose2d(humanPlayerTagPose.getX(),
+                humanPlayerTagPose.getY() + Constants.Scoring.NEXT_TO_TAG_OFFSET, humanPlayerTagPose.getRotation());
+        futureTrajectory = AsyncTrajectory.generateTrajectory(currentPose, humanPlayerTagPose, new ArrayList<>(),
+                Constants.Scoring.SCORING_TRAJECTORY_CONFIG);
     }
-  }
+
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        currentPose = poseEstimator.getEstimatedPose();
+        if (!(futureTrajectory.isDone() && !isTrajectoryGenerated)) {
+            return;
+        }
+        try {
+            if (!isTrajectoryGenerated) {
+                trajectory = futureTrajectory.get();
+                isTrajectoryGenerated = true;
+            }
+            aLogger.recordOutput("Scoring/MoveToHumanPlayerTrajectory", trajectory);
+        } catch (Exception Exception) {
+            throw new RuntimeException("MoveToHumanPlayer unreachable block");
+        }
+        Trajectory.State goal = trajectory.sample(Constants.Scoring.TRAJECTORY_SAMPLE_TIME);
+        ChassisSpeeds chassisSpeeds = controller.calculate(currentPose, goal, humanPlayerPose.getRotation());
+        swerve.setDrivebaseWheelVectors(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond,
+                chassisSpeeds.omegaRadiansPerSecond, true, true);
+    }
+
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {}
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+
+    // returns tag given bot alliance
+    private int getHumanPlayerTag() {
+        switch (DriverStation.getAlliance()) {
+            case Blue:
+                return 4;
+            case Red:
+                return 5;
+            case Invalid:
+                // error with alliance system, should do a DS update
+            default:
+                return -1; // should never occur
+        }
+    }
 }
