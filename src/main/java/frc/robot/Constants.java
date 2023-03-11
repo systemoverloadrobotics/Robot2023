@@ -57,11 +57,11 @@ public final class Constants {
         public static final double LENGTH = Units.inchesToMeters(26);
 
         public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(4) * Math.PI;
-        public static final SwerveDriveKinematics SWERVE_DRIVE_KINEMATICS = new SwerveDriveKinematics(
-                new Translation2d(RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2),
-                new Translation2d(RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2),
-                new Translation2d(-RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2),
-                new Translation2d(-RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2));
+        public static final SwerveDriveKinematics SWERVE_DRIVE_KINEMATICS =
+                new SwerveDriveKinematics(new Translation2d(RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2),
+                        new Translation2d(RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2),
+                        new Translation2d(-RobotDimensions.LENGTH / 2, -RobotDimensions.WIDTH / 2),
+                        new Translation2d(-RobotDimensions.LENGTH / 2, RobotDimensions.WIDTH / 2));
     }
 
     public static final class Drive {
@@ -89,8 +89,7 @@ public final class Constants {
         static {
             AprilTagFieldLayout temp = null;
             try {
-                temp = AprilTagFieldLayout
-                        .loadFromResource("/edu/wpi/first/apriltag/2023-chargedup.json");
+                temp = AprilTagFieldLayout.loadFromResource("/edu/wpi/first/apriltag/2023-chargedup.json");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -109,10 +108,10 @@ public final class Constants {
         public static final double ARM_CASCADE_CURRENT_LIMIT = 20;
         public static final int ARM_JOINT_ENCODER_RESOLUTION = 4096;
         public static final double ARM_CASCADE_RADIUS = 0.02408; // ft
-        public static final double ARM_CASCADE_STARTING_HEIGHT= 1.17; // feet
+        public static final double ARM_CASCADE_STARTING_HEIGHT = 1.17; // feet
         public static final double ARM_CASCADE_TICKS_PER_FEET = 1200; // PLACEHOLDER
-        
-        public static final double ARM_POSITION_TOLERANCE= 0.25; // feet
+
+        public static final double ARM_POSITION_TOLERANCE = 0.25; // feet
         public static final int ARM_CASCADE_TOLERANCE = 8; // degrees
         public static final double ARM_JOINT_TOLERANCE = 0.8; // degrees
 
@@ -125,7 +124,7 @@ public final class Constants {
         public static final double ARM_MAX_ANGLE_COLLISION_B = 280; // degrees
 
         // Placeholder
-        //TODO replace with actual values
+        // TODO replace with actual values
         public static final double ARM_PRESET_LOW_X = 3; // ft
         public static final double ARM_PRESET_LOW_Y = 1; // ft
         public static final double ARM_PRESET_MID_CONE_X = 3; // ft
@@ -161,15 +160,15 @@ public final class Constants {
         public static final TrajectoryConfig SCORING_TRAJECTORY_CONFIG =
                 new TrajectoryConfig(AUTO_SWERVE_MAX_VELOCITY, AUTO_SWERVE_MAX_ACCELERATION);
 
-        //TODO: replace the offsets with actual values
+        // TODO: replace the offsets with actual values
         public static final double MAX_AUTOMOVE_DISTANCE = 2; // meters
-        public static final double NEXT_TO_TAG_OFFSET = 0; 
-        
-        public static final double LEFT_GRID_LEFT_NODE_OFFSET = 0; 
-        public static final double LEFT_GRID_RIGHT_NODE_OFFSET = 0; 
-        public static final double RIGHT_GRID_LEFT_NODE_OFFSET = 0; 
+        public static final double NEXT_TO_TAG_OFFSET = 0;
+
+        public static final double LEFT_GRID_LEFT_NODE_OFFSET = 0;
+        public static final double LEFT_GRID_RIGHT_NODE_OFFSET = 0;
+        public static final double RIGHT_GRID_LEFT_NODE_OFFSET = 0;
         public static final double RIGHT_GRID_RIGHT_NODE_OFFSET = 0;
-        
+
 
         public static final HashMap<Integer, Alliance> VALID_SCORING_TARGETS = new HashMap<>();
         static {
@@ -181,8 +180,7 @@ public final class Constants {
             VALID_SCORING_TARGETS.put(8, Alliance.Blue);
         }
 
-        public static final HashMap<Alliance, HashSet<Integer>> TARGETS_PER_ALLIANCE =
-                new HashMap<>();
+        public static final HashMap<Alliance, HashSet<Integer>> TARGETS_PER_ALLIANCE = new HashMap<>();
         static {
             var redTargets = new HashSet<Integer>();
             redTargets.add(1);
@@ -198,8 +196,8 @@ public final class Constants {
 
         public static final PIDController X_CONTROLLER = new PIDController(0, 0, 0);
         public static final PIDController Y_CONTROLLER = new PIDController(0, 0, 0);
-        public static final ProfiledPIDController THETA_CONTROLLER = new ProfiledPIDController(0, 0,
-                0, new Constraints(AUTO_SWERVE_MAX_VELOCITY, AUTO_SWERVE_MAX_ACCELERATION));
+        public static final ProfiledPIDController THETA_CONTROLLER = new ProfiledPIDController(0, 0, 0,
+                new Constraints(AUTO_SWERVE_MAX_VELOCITY, AUTO_SWERVE_MAX_ACCELERATION));
         public static final double TRAJECTORY_SAMPLE_TIME = 0; // seconds
 
     }
@@ -221,7 +219,7 @@ public final class Constants {
 
         public static final int SWERVE_BACK_RIGHT_POWER = 5;
         public static final int SWERVE_BACK_RIGHT_STEER = 6;
-        
+
         public static final int ROLLER_LEFT = 9;
         public static final int ROLLER_RIGHT = 10;
     }
@@ -242,8 +240,7 @@ public final class Constants {
 
         public static final double DISTANCE_PER_REV = Units.inchesToMeters(4 * Math.PI);
         public static final double NEO_MAX_SPEED = 5600; // RPM
-        public static final double MAX_WHEEL_SPEED =
-                ((NEO_MAX_SPEED / 60) * DISTANCE_PER_REV) / 6.75;
+        public static final double MAX_WHEEL_SPEED = ((NEO_MAX_SPEED / 60) * DISTANCE_PER_REV) / 6.75;
         public static final double SWERVE_MAX_SPEED = 0.9 * MAX_WHEEL_SPEED; // m/s
         public static final double SWERVE_MAX_AUTO_SPEED = 0.2 * MAX_WHEEL_SPEED; // m/s
         public static final double SWERVE_MAX_PRECISION_SPEED = 0.1 * MAX_WHEEL_SPEED; // m/s
@@ -255,14 +252,14 @@ public final class Constants {
     }
 
     public static final class Input {
-        //TODO: Fix idx
+        // TODO: Fix idx
         public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(1, 0);
         public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(1, 1);
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
 
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_UP_DOWN = new ConstantAxis(2, 1);
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD = new ConstantAxis(2, 0);
-        //scoring
+        // scoring
         public static final ConstantButton POSITION_TO_CLOSEST_GRID = new ConstantButton(1, 0);
         public static final ConstantButton POSITION_TO_HUMAN_PLAYER = new ConstantButton(1, 1);
 
@@ -275,25 +272,28 @@ public final class Constants {
         public static final ConstantButton HYBRID_LEFT = new ConstantButton(1, 6);
         public static final ConstantButton HYBRID_MIDDLE = new ConstantButton(1, 7);
         public static final ConstantButton HYBRID_RIGHT = new ConstantButton(1, 8);
-        
-        public static final ConstantButton CLAW_IN = new ConstantButton(0,1);
-        public static final ConstantButton CLAW_OUT = new ConstantButton(0,2);
-        public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0,0);
-        public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0,0);
+
+        public static final ConstantButton CLAW_IN = new ConstantButton(0, 1);
+        public static final ConstantButton CLAW_OUT = new ConstantButton(0, 2);
+        public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0, 0);
+        public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0, 0);
     }
     public static final class Auto {
         private static final double SWERVE_AUTO_SPEED_MULTIPLIER = 0.6;
         public static final TrapezoidProfile.Constraints SWERVE_STRAFE_PID_CONSTRAINTS =
-            new TrapezoidProfile.Constraints(Swerve.SWERVE_MAX_SPEED*SWERVE_AUTO_SPEED_MULTIPLIER, Swerve.SWERVE_MAX_ACCELERATION);
+                new TrapezoidProfile.Constraints(Swerve.SWERVE_MAX_SPEED * SWERVE_AUTO_SPEED_MULTIPLIER,
+                        Swerve.SWERVE_MAX_ACCELERATION);
         public static final TrapezoidProfile.Constraints SWERVE_ROTATION_PID_CONSTRAINTS =
-            new TrapezoidProfile.Constraints(Swerve.SWERVE_ROTATION_MAX_SPEED, Swerve.SWERVE_ROTATION_MAX_ACCELERATION);
-        public static final ProfiledPIDController PROFILED_ROT_PID_CONTROLLER = new ProfiledPIDController(0, 0, 0, Constants.Auto.SWERVE_ROTATION_PID_CONSTRAINTS);
+                new TrapezoidProfile.Constraints(Swerve.SWERVE_ROTATION_MAX_SPEED,
+                        Swerve.SWERVE_ROTATION_MAX_ACCELERATION);
+        public static final ProfiledPIDController PROFILED_ROT_PID_CONTROLLER =
+                new ProfiledPIDController(0, 0, 0, Constants.Auto.SWERVE_ROTATION_PID_CONSTRAINTS);
         public static final PIDController X_PID_CONTROLLER = new PIDController(0, 0, 0);
         public static final PIDController Y_PID_CONTROLLER = new PIDController(0, 0, 0);
         public static final PIDController ROT_PID_CONTROLLER = new PIDController(0, 0, 0);
     }
-     public static final class PoseEstimation {
+    public static final class PoseEstimation {
         public static final Matrix<N3, N1> POSE_GYRO_STD = VecBuilder.fill(0.1, 0.1, 0.1);
         public static final Matrix<N3, N1> POSE_VISION_STD = VecBuilder.fill(0.1, 0.1, 0.1);
-     }
+    }
 }

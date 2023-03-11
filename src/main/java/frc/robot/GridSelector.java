@@ -24,16 +24,17 @@ public class GridSelector {
             }
         }
 
-        /* 
-         * checks if the closest apriltag if within the minimum distance  
+        /*
+         * checks if the closest apriltag if within the minimum distance
          */
         Pose2d targetTagPose = getTagPose2d(closestId);
-        if (currentPose.getTranslation().getDistance(targetTagPose.getTranslation()) > Constants.Scoring.MAX_AUTOMOVE_DISTANCE) {
+        if (currentPose.getTranslation()
+                .getDistance(targetTagPose.getTranslation()) > Constants.Scoring.MAX_AUTOMOVE_DISTANCE) {
             return -1;
         }
         return closestId;
     }
-    
+
     /**
      * Orientation from the center of the field facing grids
      **/
@@ -56,18 +57,18 @@ public class GridSelector {
         RIGHT, MIDDLE, LEFT;
     }
 
-    
+
     public static Pose2d getTagPose2d(int id) {
         Pose3d temPose3d = (Constants.Vision.TAG_FIELD_LAYOUT.getTagPose(id).get());
-        return new Pose2d(temPose3d.getX(), temPose3d.getY(), new Rotation2d(temPose3d.getRotation().getX(), temPose3d.getRotation().getY()));
+        return new Pose2d(temPose3d.getX(), temPose3d.getY(),
+                new Rotation2d(temPose3d.getRotation().getX(), temPose3d.getRotation().getY()));
     }
 
     /**
      * checks if two poses are the same
      **/
     public static boolean comparePose(Pose2d firstPose, Pose2d secondPose) {
-        return ((firstPose.getX() == secondPose.getX()) &&
-                (firstPose.getY() == secondPose.getY()) &&
-                (firstPose.getRotation().getRadians() == secondPose.getRotation().getRadians()));
+        return ((firstPose.getX() == secondPose.getX()) && (firstPose.getY() == secondPose.getY())
+                && (firstPose.getRotation().getRadians() == secondPose.getRotation().getRadians()));
     }
 }

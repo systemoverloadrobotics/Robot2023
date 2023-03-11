@@ -3,16 +3,10 @@ package frc.robot.commands.autos;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.Swerve;
@@ -34,7 +28,6 @@ public class AutoPaths {
 
     public static Command createAutoCommand(Swerve swerve, ScoringPosition goal, PieceCount piece, boolean balance,
             StartingPosition startingPos) {
-
         // Do arm stuff here for config from ScoringPosition
         SequentialCommandGroup autoCommandGroup = new SequentialCommandGroup();
         autoCommandGroup.addCommands(); // TODO: arm command for score
@@ -133,7 +126,6 @@ public class AutoPaths {
         }
     }
 
-
     public enum PathName {
         //@formatter:off
         AUTO_RED_LEFT_TAXI("auto_red_left_taxi"), 
@@ -151,7 +143,6 @@ public class AutoPaths {
         AUTO_BALANCE_PREP_BLUE("auto_balance_prep_blue"), 
         AUTO_BALANCE_PREP_RED("auto_balance_prep_red");
         //@formatter:on
-
 
         private String path;
 
