@@ -260,23 +260,23 @@ public final class Constants {
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_UP_DOWN = new ConstantAxis(2, 1);
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD = new ConstantAxis(2, 0);
         // scoring
-        public static final ConstantButton POSITION_TO_CLOSEST_GRID = new ConstantButton(1, 0);
-        public static final ConstantButton POSITION_TO_HUMAN_PLAYER = new ConstantButton(1, 1);
+        public static final ConstantButton POSITION_TO_CLOSEST_GRID = new ConstantButton(1, 10);
+        public static final ConstantButton POSITION_TO_HUMAN_PLAYER = new ConstantButton(1, 11);
 
-        public static final ConstantButton UPPER_LEFT_CONE = new ConstantButton(1, 0);
-        public static final ConstantButton UPPER_MIDDLE_CUBE = new ConstantButton(1, 1);
-        public static final ConstantButton UPPER_RIGHT_CONE = new ConstantButton(1, 2);
-        public static final ConstantButton MIDDLE_LEFT_CONE = new ConstantButton(1, 3);
-        public static final ConstantButton MIDDLE_MIDDLE_CUBE = new ConstantButton(1, 4);
-        public static final ConstantButton MIDDLE_RIGHT_CONE = new ConstantButton(1, 5);
-        public static final ConstantButton HYBRID_LEFT = new ConstantButton(1, 6);
-        public static final ConstantButton HYBRID_MIDDLE = new ConstantButton(1, 7);
-        public static final ConstantButton HYBRID_RIGHT = new ConstantButton(1, 8);
+        public static final ConstantButton UPPER_LEFT_CONE = new ConstantButton(1, 1);
+        public static final ConstantButton UPPER_MIDDLE_CUBE = new ConstantButton(1, 2);
+        public static final ConstantButton UPPER_RIGHT_CONE = new ConstantButton(1, 3);
+        public static final ConstantButton MIDDLE_LEFT_CONE = new ConstantButton(1, 4);
+        public static final ConstantButton MIDDLE_MIDDLE_CUBE = new ConstantButton(1, 5);
+        public static final ConstantButton MIDDLE_RIGHT_CONE = new ConstantButton(1, 6);
+        public static final ConstantButton HYBRID_LEFT = new ConstantButton(1, 7);
+        public static final ConstantButton HYBRID_MIDDLE = new ConstantButton(1, 8);
+        public static final ConstantButton HYBRID_RIGHT = new ConstantButton(1, 9);
 
         public static final ConstantButton CLAW_IN = new ConstantButton(0, 1);
         public static final ConstantButton CLAW_OUT = new ConstantButton(0, 2);
-        public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0, 0);
-        public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0, 0);
+        public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0, 3);
+        public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0, 4);
     }
     public static final class Auto {
         private static final double SWERVE_AUTO_SPEED_MULTIPLIER = 0.6;

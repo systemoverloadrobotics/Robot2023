@@ -104,7 +104,7 @@ public class ArmSubsystem extends SubsystemBase {
         jointMotorConfig.setPidProfile(Constants.Arm.ARM_PID_PROFILE);
         jointMotorConfig.setCurrentLimit(Constants.Arm.ARM_JOINT_CURRENT_LIMIT);
         SensorConfiguration jointSensorConfiguration =
-                new SensorConfiguration(new SensorConfiguration.IntegratedSensorSource(95));
+                new SensorConfiguration(new SensorConfiguration.IntegratedSensorSource(78.5));
         jointMotorConfig.setMaxOutput(0.1);
         jointA = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_INDEX), "Joint Motor A", jointMotorConfig,
                 jointSensorConfiguration);
@@ -199,7 +199,8 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     private double getDegreesJoint() {
-        return jointA.outputPosition();
+      return jointA.outputPosition();
+        // return ((WPI_TalonFX) (jointA.rawController())).getSelectedSensorPosition() / 78.54 / 2048 * 360;
         // return SorMath.ticksToDegrees(((WPI_TalonFX) jointA.rawController()).getSelectedSensorPosition(), 2048) / 95;
     }
 

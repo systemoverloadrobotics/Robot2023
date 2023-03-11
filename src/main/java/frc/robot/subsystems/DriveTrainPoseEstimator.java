@@ -20,13 +20,15 @@ public class DriveTrainPoseEstimator extends SubsystemBase {
     private final org.littletonrobotics.junction.Logger aLogger;
     private Pose2d prevPose2d;
 
-    public DriveTrainPoseEstimator() {
+    public DriveTrainPoseEstimator(Swerve swerve, Vision vision) {
+        this.swerve = swerve;
+        this.vision = vision;
         logger = Logger.getLogger(DriveTrainPoseEstimator.class.getName());
         aLogger = org.littletonrobotics.junction.Logger.getInstance();
-        prevPose2d = poseEstimator.getEstimatedPosition();
         poseEstimator = new SwerveDrivePoseEstimator(Constants.RobotDimensions.SWERVE_DRIVE_KINEMATICS,
                 swerve.getRotation2d(), swerve.getModulePositions(), new Pose2d(),
                 Constants.PoseEstimation.POSE_GYRO_STD, Constants.PoseEstimation.POSE_VISION_STD);
+        prevPose2d = poseEstimator.getEstimatedPosition();
     }
 
     public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds) {
@@ -43,10 +45,12 @@ public class DriveTrainPoseEstimator extends SubsystemBase {
         poseEstimator.updateWithTime(Timer.getFPGATimestamp(), swerve.getRotation2d(), swerve.getModulePositions());
         var visionPose = vision.getEstimatedGlobalPose(getEstimatedPose());
         // changes time to match time that photo is taken
-        poseEstimator.addVisionMeasurement(visionPose.getFirst(), Timer.getFPGATimestamp() - visionPose.getSecond());
+        if (visionPose != null) {
+            poseEstimator.addVisionMeasurement(visionPose.getFirst(), Timer.getFPGATimestamp() - visionPose.getSecond());
+        }
         prevPose2d = vision.getVisionPose2d();
         aLogger.recordOutput("PoseEstimator/position", getEstimatedPose());
-        aLogger.recordOutput("Vision/rawPosition", prevPose2d);
+        if (prevPose2d != null) aLogger.recordOutput("Vision/rawPosition", prevPose2d);
     }
 
     @Override

@@ -50,31 +50,18 @@ public class RobotContainer {
     // ---------- Begin Simple Commands ----------
 
     //@formatter:off
-    private final Command pickUpGamePieceLow = new FunctionalCommand(() -> {}, 
-            () -> arm.setPosition(ArmSubsystem.ArmHeight.LOW), (a) -> arm.stop(), () -> arm.withinRange(), arm);
-    private final Command pickUpGamePieceTray = new FunctionalCommand(() -> {},
-            () -> arm.setPosition(ArmSubsystem.ArmHeight.TRAY), (a) -> arm.stop(), () -> arm.withinRange(), arm);
-    private final Command depositGamePieceMid = new FunctionalCommand(() -> {},
-            () -> arm.setPosition(ArmSubsystem.ArmHeight.MID), (a) -> arm.stop(), () -> arm.withinRange(), arm);
-    private final Command depositGamePieceHigh = new FunctionalCommand(() -> {},
-            () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH), (a) -> arm.stop(), () -> arm.withinRange(), arm);
-    private final Command intakeClaw = new FunctionalCommand(() -> {},
-            () -> claw.intake(), (a) -> claw.stop(), () -> false, claw);
-    private final Command outtakeClaw = new FunctionalCommand(() -> {},
-            () -> claw.outtake(), (a) -> claw.stop(), () -> false, claw);
-    private final Command stowArm = new FunctionalCommand(() -> {},
-            () -> arm.setPosition(ArmSubsystem.ArmHeight.STOW), (a) -> arm.stop(), () -> arm.withinRange(), claw);
+    private final Command pickUpGamePieceLow;
+    private final Command pickUpGamePieceTray;
+    private final Command depositGamePieceMid;
+    private final Command depositGamePieceHigh;
+    private final Command intakeClaw;
+    private final Command outtakeClaw;
+    private final Command stowArm;
     //@formatter:on
 
-    private Command finetuneArm = new FinetuneArm(arm, Constants.Input.ARM_MANUAL_MOVEMENT_UP_DOWN.get(),
-            Constants.Input.ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD.get());
-
-    private final Command ledCommandPurple = new RunCommand(() -> {
-        led.setLEDColor(Color.kAquamarine);
-    }, led);
-    private final Command ledCommandYellow = new RunCommand(() -> {
-        led.setLEDColor(Color.kYellow);
-    }, led);
+    private Command finetuneArm;
+    private final Command ledCommandPurple;
+    private final Command ledCommandYellow;
 
     // ---------- End Simple Commands ----------
 
@@ -82,14 +69,39 @@ public class RobotContainer {
     public RobotContainer() {
         logger = java.util.logging.Logger.getLogger(RobotContainer.class.getName());
 
-        poseEstimator = new DriveTrainPoseEstimator();
         vision = new Vision();
         arm = new ArmSubsystem();
         claw = new Claw();
         led = new Led();
         swerve = new Swerve();
+        poseEstimator = new DriveTrainPoseEstimator(swerve, vision);
         intelligentScoring = new IntelligentScoring(vision, poseEstimator);
         autoSelector = new AutoSelector(swerve);
+
+        pickUpGamePieceLow = new FunctionalCommand(() -> {}, 
+        () -> arm.setPosition(ArmSubsystem.ArmHeight.LOW), (a) -> arm.stop(), () -> arm.withinRange(), arm);
+        pickUpGamePieceTray = new FunctionalCommand(() -> {},
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.TRAY), (a) -> arm.stop(), () -> arm.withinRange(), arm);
+        depositGamePieceMid = new FunctionalCommand(() -> {},
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.MID), (a) -> arm.stop(), () -> arm.withinRange(), arm);
+        depositGamePieceHigh = new FunctionalCommand(() -> {},
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH), (a) -> arm.stop(), () -> arm.withinRange(), arm);
+        intakeClaw = new FunctionalCommand(() -> {},
+                () -> claw.intake(), (a) -> claw.stop(), () -> false, claw);
+        outtakeClaw = new FunctionalCommand(() -> {},
+                () -> claw.outtake(), (a) -> claw.stop(), () -> false, claw);
+        stowArm = new FunctionalCommand(() -> {},
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.STOW), (a) -> arm.stop(), () -> arm.withinRange(), claw);
+
+        finetuneArm = new FinetuneArm(arm, Constants.Input.ARM_MANUAL_MOVEMENT_UP_DOWN.get(),
+                Constants.Input.ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD.get());
+        
+        ledCommandYellow = new RunCommand(() -> {
+            led.setLEDColor(Color.kYellow);
+        }, led);
+        ledCommandPurple = new RunCommand(() -> {
+            led.setLEDColor(Color.kPurple);
+        }, led);
 
         // Configure the button bindings
         configureButtonBindings();
