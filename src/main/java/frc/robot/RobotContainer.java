@@ -83,9 +83,9 @@ public class RobotContainer {
         pickUpGamePieceTray = new FunctionalCommand(() -> {},
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.TRAY), (a) -> arm.stop(), () -> arm.withinRange(), arm);
         depositGamePieceMid = new FunctionalCommand(() -> {},
-                () -> arm.setPosition(ArmSubsystem.ArmHeight.MID), (a) -> arm.stop(), () -> arm.withinRange(), arm);
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.MID_CUBE), (a) -> arm.stop(), () -> arm.withinRange(), arm);
         depositGamePieceHigh = new FunctionalCommand(() -> {},
-                () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH), (a) -> arm.stop(), () -> arm.withinRange(), arm);
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH_CUBE), (a) -> arm.stop(), () -> arm.withinRange(), arm);
         intakeClaw = new FunctionalCommand(() -> {},
                 () -> claw.intake(), (a) -> claw.stop(), () -> false, claw);
         outtakeClaw = new FunctionalCommand(() -> {},
@@ -123,6 +123,7 @@ public class RobotContainer {
         arm.setDefaultCommand(finetuneArm);
         Constants.Input.CLAW_IN.get().whileTrue(intakeClaw);
         Constants.Input.CLAW_OUT.get().whileTrue(outtakeClaw);
+        Constants.Input.CLAW_OUT.get().whileTrue(depositGamePieceMid);
 
         Constants.Input.LED_TRIGGER_PURPLE.get().whileTrue(ledCommandPurple);
         Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);
