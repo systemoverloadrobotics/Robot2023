@@ -162,4 +162,8 @@ public class RobotContainer {
         // An ExampleCommand will run in autonomous
         return autoSelector.getAuto();
     }
+
+    public void disabledPeriodic() {
+        arm.resetArmProfile();
+    }
 }

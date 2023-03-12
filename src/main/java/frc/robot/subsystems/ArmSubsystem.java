@@ -89,10 +89,11 @@ public class ArmSubsystem extends SubsystemBase {
     private ArmModel intentMechanism = new ArmModel("ArmIntent");
     private ArmModel currentMechanism = new ArmModel("ArmCurrent");
 
-    private final TrapezoidProfile.Constraints constraintsAngle = new TrapezoidProfile.Constraints(10, 5); // Units/s,
+    private final TrapezoidProfile.Constraints constraintsAngle = new TrapezoidProfile.Constraints(720, 3000); // Units/s,
                                                                                                              // Units/s^2
     private TrapezoidProfile.State goalAngle;
     private TrapezoidProfile.State testAngle;
+
     private TrapezoidProfile.State currentAngle;
 
     private final TrapezoidProfile.Constraints constraintsArmLength = new TrapezoidProfile.Constraints(10, 5); // Units/s,
@@ -111,7 +112,7 @@ public class ArmSubsystem extends SubsystemBase {
         jointMotorConfig.setCurrentLimit(Constants.Arm.ARM_JOINT_CURRENT_LIMIT);
         SensorConfiguration jointSensorConfiguration =
                 new SensorConfiguration(new SensorConfiguration.IntegratedSensorSource(83.2));
-        jointMotorConfig.setMaxOutput(0.1);
+        jointMotorConfig.setMaxOutput(0.3);
         jointA = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_INDEX), "Joint Motor A", jointMotorConfig,
                 jointSensorConfiguration);
         jointB = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_FOLLOWER_INDEX), "Joint Motor B",
@@ -139,7 +140,8 @@ public class ArmSubsystem extends SubsystemBase {
         Pair<Double, Double> pairtemp = new Pair<Double, Double>(0d, 0d);
 
         setPosition(pairtemp);
-        goalAngle = new TrapezoidProfile.State(getDegreesJoint(), 0);
+        //goalAngle = new TrapezoidProfile.State(80, 0);
+        testAngle = new TrapezoidProfile.State(120, 0);
         currentAngle = new TrapezoidProfile.State(getDegreesJoint(), jointA.outputVelocity());
 
         goalArmLength = new TrapezoidProfile.State(cascade.outputPosition(), 0);
@@ -197,7 +199,7 @@ public class ArmSubsystem extends SubsystemBase {
         double sinAngle = Math.cos(Math.toRadians(angle));
         double torque = (-1.72 * 16.53 * sinAngle) + (3.19 * extension * sinAngle) + (9.33 * 44.02 * sinAngle)
                 + (5.33 * (extension + 19.53) * sinAngle);
-        return (torque / 290) * 0.35d;
+        return (torque / 290);// * 0.35d;
     }
 
     public double calcFeedForwardCascade() {
@@ -249,7 +251,8 @@ public class ArmSubsystem extends SubsystemBase {
         // outputVelocity is in RPM, we want it in degrees/sec
         aLogger.recordOutput("Arm/CurrentAngleVelocity", jointA.outputVelocity() * 6.0);
         aLogger.recordOutput("Arm/CurrentCascade", cascadeDegreesToFeet(cascade.outputPosition()));
-        aLogger.recordOutput("Arm/TestGoal", testGoal);
+        aLogger.recordOutput("Arm/GoalAngle", goalAngle.position);
+        aLogger.recordOutput("Arm/TestAngle", testAngle.position);
     }
 
     private void refreshArmGoal() {
@@ -283,20 +286,28 @@ public class ArmSubsystem extends SubsystemBase {
         setUpdatedArmState();
     }
 
-    private void setUpdatedArmState() {
-        currentAngle = new TrapezoidProfile.State(getDegreesJoint(), jointA.outputVelocity() * 6);
-        var profileAngle = new TrapezoidProfile(constraintsAngle, goalAngle, currentAngle);
-        var neededStateAngle = profileAngle.calculate(Constants.ROBOT_PERIOD);
+    private TrapezoidProfile.State armAngleSetpoint = new TrapezoidProfile.State();
 
-        currentArmLength = new TrapezoidProfile.State(cascade.outputPosition(), cascade.outputVelocity());
-        var profileArmLength = new TrapezoidProfile(constraintsArmLength, goalArmLength, currentArmLength);
-        var neededArmLength = profileArmLength.calculate(Constants.ROBOT_PERIOD);
-        aLogger.recordOutput("Arm/NeededAngle", neededStateAngle.position);
+    public void resetArmProfile() {
+      armAngleSetpoint = new TrapezoidProfile.State(getDegreesJoint(),0);
+    }
+
+    private void setUpdatedArmState() {
+        //aLogger.recordOutput("Arm/", null);
+        currentAngle = new TrapezoidProfile.State(getDegreesJoint(), jointA.outputVelocity() * 6);
+        var profileAngle = new TrapezoidProfile(constraintsAngle, testAngle, armAngleSetpoint);
+        armAngleSetpoint = profileAngle.calculate(Constants.ROBOT_PERIOD);
+
+        // currentArmLength = new TrapezoidProfile.State(cascade.outputPosition(), cascade.outputVelocity());
+        // var profileArmLength = new TrapezoidProfile(constraintsArmLength, goalArmLength, currentArmLength);
+        // var neededArmLength = profileArmLength.calculate(Constants.ROBOT_PERIOD);
+        aLogger.recordOutput("Arm/NeededAngle", armAngleSetpoint.position);
+        aLogger.recordOutput("Arm/OutputVelocity", jointA.outputVelocity() * 6);
 
         // jointA.set(ControlMode.POSITION, testGoal, calcFeedForwardJoint(getDegreesJoint(), cascadeDegreesToFeet(cascade.outputPosition())));
         // cascade.set(ControlMode.POSITION, neededArmLength.position, calcFeedForwardCascade());
         // Above means going to 0, needs negative
-        jointA.set(ControlMode.POSITION, (2 * goalAngle.position) - neededStateAngle.position, calcFeedForwardJoint(getDegreesJoint(), cascadeDegreesToFeet(cascade.outputPosition())));
+        jointA.set(ControlMode.POSITION, armAngleSetpoint.position, calcFeedForwardJoint(getDegreesJoint(), cascadeDegreesToFeet(cascade.outputPosition())));
     }
 
     private boolean futureArmSafetyPrediction() {
