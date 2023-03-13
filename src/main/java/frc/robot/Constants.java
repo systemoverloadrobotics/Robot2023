@@ -103,7 +103,7 @@ public final class Constants {
         public static final double ARM_DEGREE_DISTANCE_FROM_ZERO_TO_LIMIT_SWITCH = 36; // PLACEHOLDER degrees // 40mm
         public static final double ARM_ZEROING_SPEED = -20; // deg/sec
         public static final PidProfile ARM_PID_PROFILE = new PidProfile(0.04, 0, 0); // I: .000009
-        public static final PidProfile CASCADE_PID_PROFILE = new PidProfile(0, 0, 0);
+        public static final PidProfile CASCADE_PID_PROFILE = new PidProfile(0.01, 0, 0.0001);
         public static final double ARM_JOINT_CURRENT_LIMIT = 20;
         public static final double ARM_CASCADE_CURRENT_LIMIT = 20;
         public static final int ARM_JOINT_ENCODER_RESOLUTION = 4096;

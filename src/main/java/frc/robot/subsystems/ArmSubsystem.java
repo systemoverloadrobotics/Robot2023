@@ -114,7 +114,7 @@ public class ArmSubsystem extends SubsystemBase {
         jointMotorConfig.setCurrentLimit(Constants.Arm.ARM_JOINT_CURRENT_LIMIT);
         SensorConfiguration jointSensorConfiguration =
                 new SensorConfiguration(new SensorConfiguration.IntegratedSensorSource(83.2));
-        jointMotorConfig.setMaxOutput(0.3);
+        jointMotorConfig.setMaxOutput(0.1);
         jointA = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_INDEX), "Joint Motor A", jointMotorConfig,
                 jointSensorConfiguration);
         jointB = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_FOLLOWER_INDEX), "Joint Motor B",
@@ -143,10 +143,10 @@ public class ArmSubsystem extends SubsystemBase {
 
         setPosition(pairtemp);
         //goalAngle = new TrapezoidProfile.State(80, 0);
-        testAngle = new TrapezoidProfile.State(120, 0);
+        testAngle = new TrapezoidProfile.State(130, 0);
         currentAngle = new TrapezoidProfile.State(getDegreesJoint(), jointA.outputVelocity());
 
-        goalArmLength = new TrapezoidProfile.State(cascade.outputPosition(), 0);
+        goalArmLength = new TrapezoidProfile.State(2, 0);
         currentArmLength = new TrapezoidProfile.State(cascade.outputPosition(), cascade.outputVelocity());
 
         logger.info("Arm Initialized.");
@@ -220,6 +220,8 @@ public class ArmSubsystem extends SubsystemBase {
         // return SorMath.ticksToDegrees(((WPI_TalonFX) jointA.rawController()).getSelectedSensorPosition(), 2048) / 95;
     }
 
+    
+
     @Override
     public void periodic() {
         if (timerArmAnglePosition.hasElapsed(4)) {
@@ -228,12 +230,12 @@ public class ArmSubsystem extends SubsystemBase {
             timerArmAnglePosition.reset();
             timerArmAnglePosition.stop();
         }
-        if (flag) {
-            cascade.set(ControlMode.VELOCITY, Constants.Arm.ARM_ZEROING_SPEED);
-            if (((CANSparkMax) cascade.rawController()).getOutputCurrent() > 10) {
-                cascade.set(ControlMode.VELOCITY, 0);
-                cascade.setSensorPosition(Constants.Arm.ARM_DEGREE_DISTANCE_FROM_ZERO_TO_LIMIT_SWITCH);
-                flag = false;
+        if (!flag) {
+            cascade.set(ControlMode.POSITION, cascade.outputPosition() - 10);
+            if (((CANSparkMax) cascade.rawController()).getOutputCurrent() > 25) {
+                cascade.set(ControlMode.POSITION, cascade.outputPosition());
+                cascade.setSensorPosition(0);
+                
             }
             return;
         }
@@ -310,7 +312,7 @@ public class ArmSubsystem extends SubsystemBase {
         aLogger.recordOutput("Arm/NeededAngle", armAngleSetpoint.position);
         aLogger.recordOutput("Arm/OutputVelocity", jointA.outputVelocity() * 6);
 
-        // cascade.set(ControlMode.POSITION, armCascadeSetpoint.position, calcFeedForwardCascade(getDegreesJoint()));
+        cascade.set(ControlMode.POSITION, armCascadeSetpoint.position, calcFeedForwardCascade(getDegreesJoint()));
         // Above means going to 0, needs negative
         jointA.set(ControlMode.POSITION, armAngleSetpoint.position, calcFeedForwardJoint(getDegreesJoint(), cascadeDegreesToFeet(cascade.outputPosition())));
     }
