@@ -10,8 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.Pair;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -44,6 +43,7 @@ public class ArmSubsystem extends SubsystemBase {
     private boolean retractCascade;
     private boolean preventExtension;
     private final Timer timerArmAnglePosition = new Timer();
+    private final LinearFilter filter = LinearFilter.movingAverage(10);
 
     private double testGoal;
 
@@ -220,8 +220,6 @@ public class ArmSubsystem extends SubsystemBase {
         // return SorMath.ticksToDegrees(((WPI_TalonFX) jointA.rawController()).getSelectedSensorPosition(), 2048) / 95;
     }
 
-    
-
     @Override
     public void periodic() {
         if (timerArmAnglePosition.hasElapsed(4)) {
@@ -231,11 +229,10 @@ public class ArmSubsystem extends SubsystemBase {
             timerArmAnglePosition.stop();
         }
         if (!flag) {
-            cascade.set(ControlMode.POSITION, cascade.outputPosition() - 10);
-            if (((CANSparkMax) cascade.rawController()).getOutputCurrent() > 25) {
+            cascade.set(ControlMode.VOLTAGE, Constants.Arm.ARM_ZEROING_VOLTAGE);
+            if (filter.calculate(((CANSparkMax) cascade.rawController()).getOutputCurrent()) > 25) {
                 cascade.set(ControlMode.POSITION, cascade.outputPosition());
                 cascade.setSensorPosition(0);
-                
             }
             return;
         }
