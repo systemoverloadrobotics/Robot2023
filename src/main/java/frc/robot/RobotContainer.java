@@ -50,10 +50,10 @@ public class RobotContainer {
     // ---------- Begin Simple Commands ----------
 
     //@formatter:off
-    private final Command pickUpGamePieceLow;
-    private final Command pickUpGamePieceTray;
-    private final Command depositGamePieceMid;
-    private final Command depositGamePieceHigh;
+    private final Command moveArmLow;
+    private final Command moveArmTray;
+    private final Command moveArmMidCube;
+    private final Command moveArmHighCube;
     private final Command intakeClaw;
     private final Command outtakeClaw;
     private final Command stowArm;
@@ -78,13 +78,13 @@ public class RobotContainer {
         intelligentScoring = new IntelligentScoring(vision, poseEstimator);
         autoSelector = new AutoSelector(swerve);
 
-        pickUpGamePieceLow = new FunctionalCommand(() -> {}, 
+        moveArmLow = new FunctionalCommand(() -> {}, 
         () -> arm.setPosition(ArmSubsystem.ArmHeight.LOW), (a) -> arm.stop(), () -> arm.withinRange(), arm);
-        pickUpGamePieceTray = new FunctionalCommand(() -> {},
+        moveArmTray = new FunctionalCommand(() -> {},
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.TRAY), (a) -> arm.stop(), () -> arm.withinRange(), arm);
-        depositGamePieceMid = new FunctionalCommand(() -> {},
-                () -> arm.setPosition(ArmSubsystem.ArmHeight.MID_CUBE), (a) -> arm.stop(), () -> arm.withinRange(), arm);
-        depositGamePieceHigh = new FunctionalCommand(() -> {},
+        moveArmMidCube = new FunctionalCommand(() -> {},
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.MID_CUBE), (a) -> arm.stop(), () -> false, arm);
+        moveArmHighCube = new FunctionalCommand(() -> {},
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH_CUBE), (a) -> arm.stop(), () -> arm.withinRange(), arm);
         intakeClaw = new FunctionalCommand(() -> {},
                 () -> claw.intake(), (a) -> claw.stop(), () -> false, claw);
@@ -120,10 +120,8 @@ public class RobotContainer {
                 () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(),
                 Constants.Input.SWERVE_ROTATION_INPUT.get()));
 
-        arm.setDefaultCommand(finetuneArm);
-        Constants.Input.CLAW_IN.get().whileTrue(intakeClaw);
-        Constants.Input.CLAW_OUT.get().whileTrue(outtakeClaw);
-        Constants.Input.CLAW_OUT.get().whileTrue(depositGamePieceMid);
+        
+        Constants.Input.MID_SCORE.get().toggleOnTrue(moveArmMidCube);
 
         Constants.Input.LED_TRIGGER_PURPLE.get().whileTrue(ledCommandPurple);
         Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);

@@ -102,7 +102,7 @@ public final class Constants {
         public static final int ARM_ABSOLUTE_ENCODER_PORT = 9;
         public static final double ARM_DEGREE_DISTANCE_FROM_ZERO_TO_LIMIT_SWITCH = 36; // PLACEHOLDER degrees // 40mm
         public static final double ARM_ZEROING_SPEED = -20; // deg/sec
-        public static final double ARM_ZEROING_VOLTAGE = -3; // volts
+        public static final double ARM_ZEROING_VOLTAGE = -2; // volts
         public static final PidProfile ARM_PID_PROFILE = new PidProfile(0.04, 0, 0); // I: .000009
         public static final PidProfile CASCADE_PID_PROFILE = new PidProfile(0.01, 0, 0.0001);
         public static final double ARM_JOINT_CURRENT_LIMIT = 20;
@@ -110,9 +110,9 @@ public final class Constants {
         public static final int ARM_JOINT_ENCODER_RESOLUTION = 4096;
         public static final double ARM_CASCADE_DEG_PER_FOOT = 785.45454; // degrees
         public static final double ARM_CASCADE_STARTING_HEIGHT = 0.35; // feet
-        public static final double ARM_JOINT_OFFSET = 0.519 + 0.25 + 0.25;
+        public static final double ARM_JOINT_OFFSET = 1.02;
 
-        public static final double ARM_POSITION_TOLERANCE = 0.25; // feet
+        public static final double ARM_POSITION_TOLERANCE = 0.1; // feet
         public static final int ARM_CASCADE_TOLERANCE = 8; // degrees
         public static final double ARM_JOINT_TOLERANCE = 0.8; // degrees
         public static final double ARM_CASCADE_MAX_FEEDFORWARD = 0.65; // volts
@@ -131,8 +131,8 @@ public final class Constants {
         public static final double ARM_PRESET_LOW_LENGTH = 1; // ft
         public static final double ARM_PRESET_MID_CONE_ANGLE = 3; // deg
         public static final double ARM_PRESET_MID_CONE_LENGTH = 2; // ft
-        public static final double ARM_PRESET_MID_CUBE_ANGLE = 15; // deg
-        public static final double ARM_PRESET_MID_CUBE_LENGTH = 2; // ft
+        public static final double ARM_PRESET_MID_CUBE_ANGLE = 105; // deg
+        public static final double ARM_PRESET_MID_CUBE_LENGTH = 1.5; // ft
         public static final double ARM_PRESET_HIGH_CONE_ANGLE = 3; // deg
         public static final double ARM_PRESET_HIGH_CONE_LENGTH = 3; // ft
         public static final double ARM_PRESET_HIGH_CUBE_ANGLE = 3; // deg
