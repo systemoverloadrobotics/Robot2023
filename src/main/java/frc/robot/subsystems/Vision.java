@@ -74,7 +74,7 @@ public class Vision extends SubsystemBase {
         robotPoseEstimator.setReferencePose(prevEstimatedRobotPose);
         double currentTime = Timer.getFPGATimestamp();
         var result = robotPoseEstimator.update();
-        if (result.isPresent()) {
+        if (result.isPresent() && result.get().getFirst() != null) {
             Pose2d pose = result.get().getFirst().toPose2d();
             visonPose2d = pose;
             var deltaTms = currentTime - result.get().getSecond();
@@ -96,6 +96,11 @@ public class Vision extends SubsystemBase {
 
         aLogger.recordOutput("Vision/HasTarget", targetsExist());
         aLogger.recordOutput("Vision/CameraConnected", camera.isConnected());
-        aLogger.recordOutput("Vision/VisionPose", robotPoseEstimator.getReferencePose());
+
+        try {
+            aLogger.recordOutput("Vision/VisionPose", robotPoseEstimator.getReferencePose());
+        } catch (Exception e) {
+            
+        }
     }
 }

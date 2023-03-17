@@ -14,7 +14,7 @@ public class GridSelector {
     public static int getClosestId(Vision vision, DriveTrainPoseEstimator poseEstimator) {
         Pose2d currentPose = poseEstimator.getEstimatedPose();
         double closestDistance = -1;
-        int closestId = 0;
+        int closestId = 1;
         // finds the closest Grid on your alliance
         for (int id : Constants.Scoring.TARGETS_PER_ALLIANCE.get(DriverStation.getAlliance())) {
             double tempIdDistance = currentPose.getTranslation().getDistance(getTagPose2d(closestId).getTranslation());

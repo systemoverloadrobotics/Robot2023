@@ -99,21 +99,23 @@ public final class Constants {
 
     public static final class Arm {
         public static final int ARM_LIMIT_SWITCH_PORT = 0;
-        public static final int ARM_ABSOLUTE_ENCODER_PORT = 1;
+        public static final int ARM_ABSOLUTE_ENCODER_PORT = 9;
         public static final double ARM_DEGREE_DISTANCE_FROM_ZERO_TO_LIMIT_SWITCH = 36; // PLACEHOLDER degrees // 40mm
-        public static final double ARM_ZEROING_SPEED = 30; // PLACEHOLDER rotations/min
-        public static final PidProfile ARM_PID_PROFILE = new PidProfile(0, 0, 0);
-        public static final PidProfile CASCADE_PID_PROFILE = new PidProfile(0, 0, 0);
+        public static final double ARM_ZEROING_SPEED = -20; // deg/sec
+        public static final double ARM_ZEROING_VOLTAGE = -2; // volts
+        public static final PidProfile ARM_PID_PROFILE = new PidProfile(0.04, 0, 0); // I: .000009
+        public static final PidProfile CASCADE_PID_PROFILE = new PidProfile(0.01, 0, 0.0001);
         public static final double ARM_JOINT_CURRENT_LIMIT = 20;
         public static final double ARM_CASCADE_CURRENT_LIMIT = 20;
         public static final int ARM_JOINT_ENCODER_RESOLUTION = 4096;
-        public static final double ARM_CASCADE_RADIUS = 0.02408; // ft
-        public static final double ARM_CASCADE_STARTING_HEIGHT = 1.17; // feet
-        public static final double ARM_CASCADE_TICKS_PER_FEET = 1200; // PLACEHOLDER
+        public static final double ARM_CASCADE_DEG_PER_FOOT = 785.45454; // degrees
+        public static final double ARM_CASCADE_STARTING_HEIGHT = 0.35; // feet
+        public static final double ARM_JOINT_OFFSET = 1.02;
 
-        public static final double ARM_POSITION_TOLERANCE = 0.25; // feet
+        public static final double ARM_POSITION_TOLERANCE = 0.1; // feet
         public static final int ARM_CASCADE_TOLERANCE = 8; // degrees
         public static final double ARM_JOINT_TOLERANCE = 0.8; // degrees
+        public static final double ARM_CASCADE_MAX_FEEDFORWARD = 0.65; // volts
 
         public static final double ARM_PREDICTIVE_TIMESPAN = 0.25; // seconds
         public static final double ARM_HEIGHT_FROM_GROUND = -1.5; // ft
@@ -125,21 +127,21 @@ public final class Constants {
 
         // Placeholder
         // TODO replace with actual values
-        public static final double ARM_PRESET_LOW_X = 3; // ft
-        public static final double ARM_PRESET_LOW_Y = 1; // ft
-        public static final double ARM_PRESET_MID_CONE_X = 3; // ft
-        public static final double ARM_PRESET_MID_CONE_Y = 2; // ft
-        public static final double ARM_PRESET_MID_CUBE_X = 3; // ft
-        public static final double ARM_PRESET_MID_CUBE_Y = 2; // ft
-        public static final double ARM_PRESET_HIGH_CONE_X = 3; // ft
-        public static final double ARM_PRESET_HIGH_CONE_Y = 3; // ft
-        public static final double ARM_PRESET_HIGH_CUBE_X = 3; // ft
-        public static final double ARM_PRESET_HIGH_CUBE_Y = 3; // ft
+        public static final double ARM_PRESET_LOW_ANGLE = 3; // deg
+        public static final double ARM_PRESET_LOW_LENGTH = 1; // ft
+        public static final double ARM_PRESET_MID_CONE_ANGLE = 3; // deg
+        public static final double ARM_PRESET_MID_CONE_LENGTH = 2; // ft
+        public static final double ARM_PRESET_MID_CUBE_ANGLE = 105; // deg
+        public static final double ARM_PRESET_MID_CUBE_LENGTH = 1.5; // ft
+        public static final double ARM_PRESET_HIGH_CONE_ANGLE = 3; // deg
+        public static final double ARM_PRESET_HIGH_CONE_LENGTH = 3; // ft
+        public static final double ARM_PRESET_HIGH_CUBE_ANGLE = 3; // deg
+        public static final double ARM_PRESET_HIGH_CUBE_LENGTH = 3; // ft
 
-        public static final double ARM_PRESET_TRAY_X = 3; // ft
-        public static final double ARM_PRESET_TRAY_Y = 2; // ft
-        public static final double ARM_PRESET_STOW_X = 0; // ft
-        public static final double ARM_PRESET_STOW_Y = 1; // ft
+        public static final double ARM_PRESET_TRAY_ANGLE = 3; // deg
+        public static final double ARM_PRESET_TRAY_LENGTH = 2; // ft
+        public static final double ARM_PRESET_STOW_ANGLE = 0; // deg
+        public static final double ARM_PRESET_STOW_LENGTH = 1; // ft
 
         // Geometry
         public static final double ARM_PIVOT_X = Units.inchesToMeters(11);
@@ -148,9 +150,9 @@ public final class Constants {
     }
 
     public static final class Claw {
-        public static final double CLAW_VELOCITY = 360; // degrees/sec
+        public static final double CLAW_VELOCITY = 1800; // degrees/sec
         public static final double CLAW_VELOCITY_OUT = 3600; // degrees/sec
-        public static final double CLAW_CURRENT_LIMIT = 3.0; // Amps
+        public static final double CLAW_CURRENT_LIMIT = 5.0; // Amps
     }
 
     public static final class Scoring {
@@ -260,23 +262,24 @@ public final class Constants {
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_UP_DOWN = new ConstantAxis(2, 1);
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD = new ConstantAxis(2, 0);
         // scoring
-        public static final ConstantButton POSITION_TO_CLOSEST_GRID = new ConstantButton(1, 0);
-        public static final ConstantButton POSITION_TO_HUMAN_PLAYER = new ConstantButton(1, 1);
+        public static final ConstantButton POSITION_TO_CLOSEST_GRID = new ConstantButton(1, 10);
+        public static final ConstantButton POSITION_TO_HUMAN_PLAYER = new ConstantButton(1, 11);
 
-        public static final ConstantButton UPPER_LEFT_CONE = new ConstantButton(1, 0);
-        public static final ConstantButton UPPER_MIDDLE_CUBE = new ConstantButton(1, 1);
-        public static final ConstantButton UPPER_RIGHT_CONE = new ConstantButton(1, 2);
-        public static final ConstantButton MIDDLE_LEFT_CONE = new ConstantButton(1, 3);
-        public static final ConstantButton MIDDLE_MIDDLE_CUBE = new ConstantButton(1, 4);
-        public static final ConstantButton MIDDLE_RIGHT_CONE = new ConstantButton(1, 5);
-        public static final ConstantButton HYBRID_LEFT = new ConstantButton(1, 6);
-        public static final ConstantButton HYBRID_MIDDLE = new ConstantButton(1, 7);
-        public static final ConstantButton HYBRID_RIGHT = new ConstantButton(1, 8);
+        public static final ConstantButton UPPER_LEFT_CONE = new ConstantButton(1, 1);
+        public static final ConstantButton UPPER_MIDDLE_CUBE = new ConstantButton(1, 2);
+        public static final ConstantButton UPPER_RIGHT_CONE = new ConstantButton(1, 3);
+        public static final ConstantButton MIDDLE_LEFT_CONE = new ConstantButton(1, 4);
+        public static final ConstantButton MIDDLE_MIDDLE_CUBE = new ConstantButton(1, 5);
+        public static final ConstantButton MIDDLE_RIGHT_CONE = new ConstantButton(1, 6);
+        public static final ConstantButton HYBRID_LEFT = new ConstantButton(1, 7);
+        public static final ConstantButton HYBRID_MIDDLE = new ConstantButton(1, 8);
+        public static final ConstantButton HYBRID_RIGHT = new ConstantButton(1, 9);
 
         public static final ConstantButton CLAW_IN = new ConstantButton(0, 1);
         public static final ConstantButton CLAW_OUT = new ConstantButton(0, 2);
-        public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0, 0);
-        public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0, 0);
+        public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0, 3);
+        public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0, 4);
+        public static final ConstantButton MID_SCORE = new ConstantButton(0, 5);
     }
     public static final class Auto {
         private static final double SWERVE_AUTO_SPEED_MULTIPLIER = 0.6;
