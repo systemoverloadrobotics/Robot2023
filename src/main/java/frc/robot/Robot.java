@@ -123,6 +123,7 @@ public class Robot extends LoggedRobot {
     public void autonomousInit() {
         javaLogger.info("Autonomous started");
         allianceColor = DriverStation.getAlliance();
+        robotContainer.autonomousInit();
     }
 
     public static Alliance getAllianceColor() {
@@ -139,6 +140,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void teleopInit() {
         javaLogger.info("Teleop started");
+        robotContainer.teleopInit();
     }
 
     /** This function is called periodically during operator control. */
