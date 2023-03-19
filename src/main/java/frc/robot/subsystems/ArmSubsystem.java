@@ -112,7 +112,7 @@ public class ArmSubsystem extends SubsystemBase {
         jointMotorConfig.setCurrentLimit(Constants.Arm.ARM_JOINT_CURRENT_LIMIT);
         SensorConfiguration jointSensorConfiguration =
                 new SensorConfiguration(new SensorConfiguration.IntegratedSensorSource(83.2));
-        jointMotorConfig.setMaxOutput(0.25);
+        jointMotorConfig.setMaxOutput(0.1);
         jointA = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_INDEX), "Joint Motor A", jointMotorConfig,
                 jointSensorConfiguration);
         jointB = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_FOLLOWER_INDEX), "Joint Motor B",
@@ -135,10 +135,7 @@ public class ArmSubsystem extends SubsystemBase {
         jointAbsoluteEncoder = new DutyCycleEncoder(Constants.Arm.ARM_ABSOLUTE_ENCODER_PORT);
         // Absolute Encoder is 8192 / rot
         timerArmAnglePosition.start();
-
         retractCascade = false;
-        Pair<Double, Double> pairtemp = new Pair<Double, Double>(0d, 0d);
-
         resetArmProfile();
         setPosition(getManipulatorPositionRTheta());
         currentAngle = new TrapezoidProfile.State(getDegreesJoint(), jointA.outputVelocity());
@@ -152,9 +149,6 @@ public class ArmSubsystem extends SubsystemBase {
      * Reference plane for 2d coordinate has origin at joint with plane parallel to side view, r and theta are first and second
      */
     public void setPosition(ArmSubsystem.ArmHeight height) {
-        System.out.println(height);
-        System.out.println(height.getCoordinates());
-        System.out.println("--------------");
         setPosition(height.getCoordinates());
     }
 
@@ -304,7 +298,8 @@ public class ArmSubsystem extends SubsystemBase {
     public void resetArmProfile() {
         intendedPosition = getManipulatorPositionRTheta();
         armAngleSetpoint = new TrapezoidProfile.State(getDegreesJoint(), 0);
-    }
+        goalAngle = new TrapezoidProfile.State(getDegreesJoint(), 0);
+      }
 
     private void setUpdatedArmState() {
         //aLogger.recordOutput("Arm/", null);
@@ -378,6 +373,7 @@ public class ArmSubsystem extends SubsystemBase {
     HIGH_CONE(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_HIGH_CONE_ANGLE,Constants.Arm.ARM_PRESET_HIGH_CONE_LENGTH)), 
     TRAY(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_TRAY_ANGLE,Constants.Arm.ARM_PRESET_TRAY_LENGTH)), 
     STOW(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_STOW_ANGLE,Constants.Arm.ARM_PRESET_STOW_LENGTH));
+    
     //@formatter:on
 
         private final Pair<Double, Double> coordinates;

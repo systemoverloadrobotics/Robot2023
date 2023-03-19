@@ -61,6 +61,8 @@ public class RobotContainer {
     private final Command outtakeClaw;
     private final Command stowArm;
     private final Command resetArmPosition;
+    // private final Command armTestA;
+    // private final Command armTestB;
     //@formatter:on
 
     private Command finetuneArm;
@@ -95,13 +97,14 @@ public class RobotContainer {
         moveArmHighCone = new FunctionalCommand(() -> {},
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH_CONE), (a) -> {}, () -> false, arm);
         intakeClaw = new FunctionalCommand(() -> {},
-                () -> claw.intake(), (a) -> claw.stop(), () -> false, claw);
+                () -> claw.intake(), (a) -> claw.defaultIn(), () -> false, claw);
         outtakeClaw = new FunctionalCommand(() -> {},
-                () -> claw.outtake(), (a) -> claw.stop(), () -> false, claw);
+                () -> claw.outtake(), (a) -> claw.defaultOut(), () -> false, claw);
         stowArm = new FunctionalCommand(() -> {},
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.STOW), (a) -> arm.stop(), () -> false, claw);
 
         resetArmPosition = new InstantCommand(() -> arm.resetArmProfile(), arm);
+        
 
         finetuneArm = new FinetuneArm(arm, Constants.Input.ARM_MANUAL_MOVEMENT_UP_DOWN.get(),
                 Constants.Input.ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD.get());
@@ -135,6 +138,8 @@ public class RobotContainer {
         Constants.Input.LOW_SCORE.get().toggleOnTrue(moveArmLow);
         Constants.Input.TRAY.get().toggleOnTrue(moveArmTray);
         Constants.Input.STOW.get().toggleOnTrue(stowArm);
+        Constants.Input.CLAW_IN.get().toggleOnTrue(intakeClaw);
+        Constants.Input.CLAW_OUT.get().toggleOnTrue(outtakeClaw);
 
         // Constants.Input.LED_TRIGGER_PURPLE.get().whileTrue(ledCommandPurple);
         // Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);
