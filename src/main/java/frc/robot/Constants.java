@@ -109,8 +109,8 @@ public final class Constants {
         public static final double ARM_CASCADE_CURRENT_LIMIT = 20;
         public static final int ARM_JOINT_ENCODER_RESOLUTION = 4096;
         public static final double ARM_CASCADE_DEG_PER_FOOT = 785.45454; // degrees
-        public static final double ARM_CASCADE_STARTING_HEIGHT = 0.35; // feet
-        public static final double ARM_JOINT_OFFSET = 1.02;
+        public static final double ARM_CASCADE_STARTING_HEIGHT = 0; // feet
+        public static final double ARM_JOINT_OFFSET = 0.5;
 
         public static final double ARM_POSITION_TOLERANCE = 0.1; // feet
         public static final int ARM_CASCADE_TOLERANCE = 8; // degrees
@@ -140,7 +140,7 @@ public final class Constants {
         public static final double ARM_PRESET_TRAY_ANGLE = 116.5; // deg
         public static final double ARM_PRESET_TRAY_LENGTH = 1.82; // ft
         public static final double ARM_PRESET_STOW_ANGLE = 160.95; // deg
-        public static final double ARM_PRESET_STOW_LENGTH = 1; // ft
+        public static final double ARM_PRESET_STOW_LENGTH = 0; // ft
 
         // Geometry
         public static final double ARM_PIVOT_X = Units.inchesToMeters(11);
@@ -149,9 +149,9 @@ public final class Constants {
     }
 
     public static final class Claw {
-        public static final double CLAW_VELOCITY = 1800; // degrees/sec
-        public static final double CLAW_VELOCITY_OUT = 3600; // degrees/sec
-        public static final double CLAW_CURRENT_LIMIT = 5.0; // Amps
+        public static final double CLAW_VELOCITY = 1200; // RPM
+        public static final double CLAW_VELOCITY_OUT = 1500; // RPM
+        public static final double CLAW_CURRENT_LIMIT = 12.0; // Amps
     }
 
     public static final class Scoring {
