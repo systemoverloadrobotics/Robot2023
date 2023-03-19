@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.FinetuneArm;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.MoveToGrid;
 import frc.robot.commands.MoveToHumanPlayer;
 import frc.robot.commands.MoveToScoringLocation;
+import frc.robot.commands.RotationControlledSwerveDrive;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.commands.autos.AutoSelector;
 import frc.robot.subsystems.Swerve;
@@ -22,6 +24,7 @@ import frc.robot.subsystems.Swerve;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.IntelligentScoring.ScoringLocations;
+import frc.sorutil.SorMath;
 import frc.robot.subsystems.DriveTrainPoseEstimator;
 import frc.robot.subsystems.IntelligentScoring;
 
@@ -63,6 +66,9 @@ public class RobotContainer {
     private final Command ledCommandPurple;
     private final Command ledCommandYellow;
 
+    private final Command driveFacingWall;
+    private final Command driveWithAngleSnapping;
+
     // ---------- End Simple Commands ----------
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -79,7 +85,7 @@ public class RobotContainer {
         autoSelector = new AutoSelector(swerve);
 
         moveArmLow = new FunctionalCommand(() -> {}, 
-        () -> arm.setPosition(ArmSubsystem.ArmHeight.LOW), (a) -> arm.stop(), () -> arm.withinRange(), arm);
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.LOW), (a) -> arm.stop(), () -> arm.withinRange(), arm);
         moveArmTray = new FunctionalCommand(() -> {},
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.TRAY), (a) -> arm.stop(), () -> arm.withinRange(), arm);
         moveArmMidCube = new FunctionalCommand(() -> {},
@@ -102,6 +108,17 @@ public class RobotContainer {
         ledCommandPurple = new RunCommand(() -> {
             led.setLEDColor(Color.kPurple);
         }, led);
+        
+
+        driveFacingWall = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
+                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 180);
+        driveWithAngleSnapping = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
+                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> {
+                    int snappedHeading = RotationControlledSwerveDrive.snapThresholdJoystickAxis(
+                            Constants.Input.SWERVE_SNAP_ROTATION_X.get().getAsDouble(),
+                            Constants.Input.SWERVE_SNAP_ROTATION_Y.get().getAsDouble());
+                    return snappedHeading;
+                });
 
         // Configure the button bindings
         configureButtonBindings();
@@ -119,6 +136,8 @@ public class RobotContainer {
         swerve.setDefaultCommand(new SwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
                 () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(),
                 Constants.Input.SWERVE_ROTATION_INPUT.get()));
+        Constants.Input.SWERVE_FACE_ALLIANCE.get().whileTrue(driveFacingWall);
+        Constants.Input.SWERVE_DRIVE_SNAPPED.get().whileTrue(driveWithAngleSnapping);
 
         
         Constants.Input.MID_SCORE.get().toggleOnTrue(moveArmMidCube);

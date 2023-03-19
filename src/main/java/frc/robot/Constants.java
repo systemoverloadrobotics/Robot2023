@@ -251,6 +251,8 @@ public final class Constants {
         public static final double SWERVE_ROTATION_MAX_ACCELERATION = Math.PI; // rads/s^2
 
         public static final double SWERVE_DEADBAND = 0.05;
+        public static final double SWERVE_ROTATION_TOLERANCE = 5; // degrees
+        public static final double SWERVE_SNAPPING_DEADBAND = 0.5; // 50%
     }
 
     public static final class Input {
@@ -258,6 +260,11 @@ public final class Constants {
         public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(1, 0);
         public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(1, 1);
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
+        public static final ConstantButton SWERVE_FACE_ALLIANCE = new ConstantButton(0, 0);
+        public static final ConstantButton SWERVE_DRIVE_SNAPPED = new ConstantButton(0, 0);
+
+        public static final ConstantAxis SWERVE_SNAP_ROTATION_X = new ConstantAxis(0, 4);
+        public static final ConstantAxis SWERVE_SNAP_ROTATION_Y = new ConstantAxis(0, 5);
 
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_UP_DOWN = new ConstantAxis(2, 1);
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD = new ConstantAxis(2, 0);
@@ -287,10 +294,9 @@ public final class Constants {
                 new TrapezoidProfile.Constraints(Swerve.SWERVE_MAX_SPEED * SWERVE_AUTO_SPEED_MULTIPLIER,
                         Swerve.SWERVE_MAX_ACCELERATION);
         public static final TrapezoidProfile.Constraints SWERVE_ROTATION_PID_CONSTRAINTS =
-                new TrapezoidProfile.Constraints(Swerve.SWERVE_ROTATION_MAX_SPEED,
-                        Swerve.SWERVE_ROTATION_MAX_ACCELERATION);
+                new TrapezoidProfile.Constraints(360, 360);
         public static final ProfiledPIDController PROFILED_ROT_PID_CONTROLLER =
-                new ProfiledPIDController(0, 0, 0, Constants.Auto.SWERVE_ROTATION_PID_CONSTRAINTS);
+                new ProfiledPIDController(10, 0, 0, Constants.Auto.SWERVE_ROTATION_PID_CONSTRAINTS);
         public static final PIDController X_PID_CONTROLLER = new PIDController(0, 0, 0);
         public static final PIDController Y_PID_CONTROLLER = new PIDController(0, 0, 0);
         public static final PIDController ROT_PID_CONTROLLER = new PIDController(0, 0, 0);

@@ -11,10 +11,10 @@ import frc.sorutil.SorMath;
 
 
 public class SwerveDrive extends CommandBase {
-    private final Swerve swerve;
-    private final DoubleSupplier xSupplier, ySupplier, rotationSupplier;
-    private SlewRateLimiter xLimiter, yLimiter, rotationLimiter;
+    protected final Swerve swerve;
+    protected SlewRateLimiter xLimiter, yLimiter, rotationLimiter;
 
+    private final DoubleSupplier xSupplier, ySupplier, rotationSupplier;
 
     public SwerveDrive(Swerve swerve, DoubleSupplier xSupplier, DoubleSupplier ySupplier,
             DoubleSupplier rotationSupplier) {
@@ -29,7 +29,7 @@ public class SwerveDrive extends CommandBase {
         addRequirements(swerve);
     }
 
-    private double cleanAndScaleInput(double input, SlewRateLimiter limiter, double speedScaling) {
+    protected double cleanAndScaleInput(double input, SlewRateLimiter limiter, double speedScaling) {
         input = (Math.abs(input) > Constants.Swerve.SWERVE_DEADBAND) ? input : 0;
         input = SorMath.signedSquare(input);
         input = limiter.calculate(input);
@@ -46,12 +46,15 @@ public class SwerveDrive extends CommandBase {
         double ySpeed = cleanAndScaleInput(ySupplier.getAsDouble(), yLimiter, Constants.Swerve.SWERVE_MAX_SPEED);
         double rotationSpeed = cleanAndScaleInput(rotationSupplier.getAsDouble(), rotationLimiter,
                 Constants.Swerve.SWERVE_ROTATION_MAX_SPEED);
+        swerve.setDrivebaseWheelVectors(xSpeed, ySpeed, rotationSpeed, true, false);
+    }
+
+    protected void executeLogging(double xSpeed, double ySpeed, double rotationSpeed) {
         Logger.getInstance().recordOutput("SwerveDrive/xSpeed", xSpeed);
         Logger.getInstance().recordOutput("SwerveDrive/ySpeed", ySpeed);
         SmartDashboard.putNumber("rspeed", rotationSpeed);
         SmartDashboard.putNumber("rotation 2d", swerve.getRotation2d().getDegrees());
         Logger.getInstance().recordOutput("SwerveDrive/rotation", swerve.getRotation2d().getDegrees());
-        swerve.setDrivebaseWheelVectors(xSpeed, ySpeed, rotationSpeed, true, false);
     }
 
     // Called once when the command ends or is interrupted.
