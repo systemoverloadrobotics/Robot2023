@@ -96,7 +96,7 @@ public class ArmSubsystem extends SubsystemBase {
     private TrapezoidProfile.State goalAngle;
     private TrapezoidProfile.State currentAngle;
 
-    private final TrapezoidProfile.Constraints constraintsArmLength = new TrapezoidProfile.Constraints(0.5, 0.2); // Units/s,
+    private final TrapezoidProfile.Constraints constraintsArmLength = new TrapezoidProfile.Constraints(2, 4); // Units/s,
                                                                                                                  // Units/s^2
     private TrapezoidProfile.State goalArmLength;
     private TrapezoidProfile.State currentArmLength;
@@ -124,7 +124,7 @@ public class ArmSubsystem extends SubsystemBase {
         MotorConfiguration cascadeMotorConfig = new MotorConfiguration();
         cascadeMotorConfig.setPidProfile(Constants.Arm.CASCADE_PID_PROFILE);
         cascadeMotorConfig.setCurrentLimit(Constants.Arm.ARM_CASCADE_CURRENT_LIMIT);
-        cascadeMotorConfig.setMaxOutput(0.25);
+        cascadeMotorConfig.setMaxOutput(0.4);
         SensorConfiguration cascadeSensorConfiguration =
                 new SensorConfiguration(new SensorConfiguration.IntegratedSensorSource(9));
 
@@ -138,6 +138,7 @@ public class ArmSubsystem extends SubsystemBase {
         retractCascade = false;
         resetArmProfile();
         setPosition(getManipulatorPositionRTheta());
+        
         currentAngle = new TrapezoidProfile.State(getDegreesJoint(), jointA.outputVelocity());
         currentArmLength = new TrapezoidProfile.State(cascade.outputPosition(), cascade.outputVelocity());
         filter = LinearFilter.movingAverage(10);
@@ -299,6 +300,9 @@ public class ArmSubsystem extends SubsystemBase {
         intendedPosition = getManipulatorPositionRTheta();
         armAngleSetpoint = new TrapezoidProfile.State(getDegreesJoint(), 0);
         goalAngle = new TrapezoidProfile.State(getDegreesJoint(), 0);
+        flag = false;
+        goalArmLength = new TrapezoidProfile.State(0, 0);
+        armCascadeSetpoint = new TrapezoidProfile.State(0, 0);
       }
 
     private void setUpdatedArmState() {
@@ -372,8 +376,9 @@ public class ArmSubsystem extends SubsystemBase {
     MID_CONE(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_MID_CONE_ANGLE,Constants.Arm.ARM_PRESET_MID_CONE_LENGTH)), 
     HIGH_CONE(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_HIGH_CONE_ANGLE,Constants.Arm.ARM_PRESET_HIGH_CONE_LENGTH)), 
     TRAY(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_TRAY_ANGLE,Constants.Arm.ARM_PRESET_TRAY_LENGTH)), 
-    STOW(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_STOW_ANGLE,Constants.Arm.ARM_PRESET_STOW_LENGTH));
-    
+    STOW(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_STOW_ANGLE,Constants.Arm.ARM_PRESET_STOW_LENGTH)),
+    TESTA(new Pair<Double, Double>(90.0, 0.0)),
+    TESTB(new Pair<Double, Double>(90.0, 1.0));
     //@formatter:on
 
         private final Pair<Double, Double> coordinates;

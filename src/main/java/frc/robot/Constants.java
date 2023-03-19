@@ -104,13 +104,13 @@ public final class Constants {
         public static final double ARM_ZEROING_SPEED = -20; // deg/sec
         public static final double ARM_ZEROING_VOLTAGE = -2; // volts
         public static final PidProfile ARM_PID_PROFILE = new PidProfile(0.04, 0, 0); // I: .000009
-        public static final PidProfile CASCADE_PID_PROFILE = new PidProfile(0.01, 0, 0.0001);
+        public static final PidProfile CASCADE_PID_PROFILE = new PidProfile(0.005, 0, 0.001);
         public static final double ARM_JOINT_CURRENT_LIMIT = 20;
         public static final double ARM_CASCADE_CURRENT_LIMIT = 20;
         public static final int ARM_JOINT_ENCODER_RESOLUTION = 4096;
         public static final double ARM_CASCADE_DEG_PER_FOOT = 785.45454; // degrees
         public static final double ARM_CASCADE_STARTING_HEIGHT = 0; // feet
-        public static final double ARM_JOINT_OFFSET = 0.5;
+        public static final double ARM_JOINT_OFFSET = 0.75;
 
         public static final double ARM_POSITION_TOLERANCE = 0.1; // feet
         public static final int ARM_CASCADE_TOLERANCE = 8; // degrees
@@ -281,8 +281,10 @@ public final class Constants {
         public static final ConstantButton HYBRID_MIDDLE = new ConstantButton(1, 8);
         public static final ConstantButton HYBRID_RIGHT = new ConstantButton(1, 9);
 
-        public static final ConstantButton CLAW_IN = new ConstantButton(0, 1);
-        public static final ConstantButton CLAW_OUT = new ConstantButton(0, 2);
+        // public static final ConstantButton CLAW_IN = new ConstantButton(0, 1);
+        // public static final ConstantButton CLAW_OUT = new ConstantButton(0, 2);
+        public static final ConstantButton TEST_A = new ConstantButton(0, 1);
+        public static final ConstantButton TEST_B = new ConstantButton(0, 2);
         // public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0, 3);
         // public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0, 4);
         public static final ConstantButton MID_CUBE_SCORE = new ConstantButton(0, 3);
