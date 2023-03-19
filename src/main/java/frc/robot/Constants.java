@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import java.util.function.DoubleUnaryOperator;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -166,10 +167,19 @@ public final class Constants {
         public static final double SWERVE_ROTATION_MAX_ACCELERATION = Math.PI; // rads/s^2
 
         public static final double SWERVE_DEADBAND = 0.05;
-        // public static final double SWERVE_DEADBAND= 0.09;
-        // public static final double SWERVE_DEADBAND= 0.15;
-        // TODO: We can use different deadband values as per our needs
-    }
+        
+
+   
+    public enum Curve {
+        
+        SWERVE_DEADBAND(x -> Math.pow(x, 3) * Math.signum(x));
+        
+        public final DoubleUnaryOperator fn;
+      
+        private Curve(DoubleUnaryOperator fn) {
+          this.fn = fn;
+        }
+      }
 
     public static final class Input {
         public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(0, 5);

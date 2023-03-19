@@ -126,4 +126,6 @@ public class Swerve extends SubsystemBase {
 
     aLogger.recordOutput("SwerveDrive/GyroscopeHeading", getRotation2d().getDegrees());
   }
+
+public void setModuleStates(double xSpeed, double ySpeed, double rotationSpeed, boolean b) {}
 }
