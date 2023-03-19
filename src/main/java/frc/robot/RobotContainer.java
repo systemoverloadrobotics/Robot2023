@@ -22,6 +22,7 @@ import frc.robot.commands.autos.AutoSelector;
 import frc.robot.subsystems.Swerve;
 
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.IntelligentScoring.ScoringLocations;
 import frc.sorutil.SorMath;
@@ -57,9 +58,14 @@ public class RobotContainer {
     private final Command moveArmTray;
     private final Command moveArmMidCube;
     private final Command moveArmHighCube;
+    private final Command moveArmMidCone;
+    private final Command moveArmHighCone;
     private final Command intakeClaw;
     private final Command outtakeClaw;
     private final Command stowArm;
+    private final Command resetArmPosition;
+    // private final Command armTestA;
+    // private final Command armTestB;
     //@formatter:on
 
     private Command finetuneArm;
@@ -85,19 +91,26 @@ public class RobotContainer {
         autoSelector = new AutoSelector(swerve);
 
         moveArmLow = new FunctionalCommand(() -> {}, 
-                () -> arm.setPosition(ArmSubsystem.ArmHeight.LOW), (a) -> arm.stop(), () -> arm.withinRange(), arm);
+        () -> arm.setPosition(ArmSubsystem.ArmHeight.LOW), (a) -> {}, () -> false, arm);
         moveArmTray = new FunctionalCommand(() -> {},
-                () -> arm.setPosition(ArmSubsystem.ArmHeight.TRAY), (a) -> arm.stop(), () -> arm.withinRange(), arm);
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.TRAY), (a) -> {}, () -> false, arm);
         moveArmMidCube = new FunctionalCommand(() -> {},
-                () -> arm.setPosition(ArmSubsystem.ArmHeight.MID_CUBE), (a) -> arm.stop(), () -> false, arm);
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.MID_CUBE), (a) -> {}, () -> false, arm);
         moveArmHighCube = new FunctionalCommand(() -> {},
-                () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH_CUBE), (a) -> arm.stop(), () -> arm.withinRange(), arm);
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH_CUBE), (a) -> {}, () -> false, arm);
+        moveArmMidCone = new FunctionalCommand(() -> {},
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.MID_CONE), (a) -> {}, () -> false, arm);
+        moveArmHighCone = new FunctionalCommand(() -> {},
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH_CONE), (a) -> {}, () -> false, arm);
         intakeClaw = new FunctionalCommand(() -> {},
-                () -> claw.intake(), (a) -> claw.stop(), () -> false, claw);
+                () -> claw.intake(), (a) -> claw.defaultIn(), () -> false, claw);
         outtakeClaw = new FunctionalCommand(() -> {},
-                () -> claw.outtake(), (a) -> claw.stop(), () -> false, claw);
+                () -> claw.outtake(), (a) -> claw.defaultOut(), () -> false, claw);
         stowArm = new FunctionalCommand(() -> {},
-                () -> arm.setPosition(ArmSubsystem.ArmHeight.STOW), (a) -> arm.stop(), () -> arm.withinRange(), claw);
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.STOW), (a) -> arm.stop(), () -> false, claw);
+
+        resetArmPosition = new InstantCommand(() -> arm.resetArmProfile(), arm);
+        
 
         finetuneArm = new FinetuneArm(arm, Constants.Input.ARM_MANUAL_MOVEMENT_UP_DOWN.get(),
                 Constants.Input.ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD.get());
@@ -122,9 +135,6 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
-
-        // Configure arm zero
-        configureArm();
     }
 
     /**
@@ -140,10 +150,18 @@ public class RobotContainer {
         Constants.Input.SWERVE_DRIVE_SNAPPED.get().whileTrue(driveWithAngleSnapping);
 
         
-        Constants.Input.MID_SCORE.get().toggleOnTrue(moveArmMidCube);
+        Constants.Input.MID_CONE_SCORE.get().toggleOnTrue(moveArmMidCone);
+        Constants.Input.MID_CUBE_SCORE.get().toggleOnTrue(moveArmMidCube);
+        Constants.Input.HIGH_CONE_SCORE.get().toggleOnTrue(moveArmHighCone);
+        Constants.Input.HIGH_CUBE_SCORE.get().toggleOnTrue(moveArmHighCube);
+        Constants.Input.LOW_SCORE.get().toggleOnTrue(moveArmLow);
+        Constants.Input.TRAY.get().toggleOnTrue(moveArmTray);
+        Constants.Input.STOW.get().toggleOnTrue(stowArm);
+        Constants.Input.CLAW_IN.get().toggleOnTrue(intakeClaw);
+        Constants.Input.CLAW_OUT.get().toggleOnTrue(outtakeClaw);
 
-        Constants.Input.LED_TRIGGER_PURPLE.get().whileTrue(ledCommandPurple);
-        Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);
+        // Constants.Input.LED_TRIGGER_PURPLE.get().whileTrue(ledCommandPurple);
+        // Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);
 
         // scoring
         Constants.Input.POSITION_TO_CLOSEST_GRID.get()
@@ -166,8 +184,12 @@ public class RobotContainer {
         return new MoveToScoringLocation(poseEstimator, swerve, intelligentScoring, location);
     }
 
-    private void configureArm() {
-        // TODO: setup arm offset
+    public void autonomousInit() {
+        resetArmPosition.schedule();
+    }
+
+    public void teleopInit() {
+        resetArmPosition.schedule();
     }
 
     /**
