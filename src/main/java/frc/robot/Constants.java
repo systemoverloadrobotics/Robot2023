@@ -259,11 +259,11 @@ public final class Constants {
         public static final ConstantButton SWERVE_FACE_ALLIANCE = new ConstantButton(0, 0);
         public static final ConstantButton SWERVE_DRIVE_SNAPPED = new ConstantButton(0, 0);
 
+        public static final ConstantAxis SWERVE_SNAP_ROTATION_X = new ConstantAxis(0, 1);
+        public static final ConstantAxis SWERVE_SNAP_ROTATION_Y = new ConstantAxis(0, 2);
         public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(0, 4);
         public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(0, 5);
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 1);
-        public static final ConstantAxis SWERVE_SNAP_ROTATION_X = new ConstantAxis(0, 1);
-        public static final ConstantAxis SWERVE_SNAP_ROTATION_Y = new ConstantAxis(0, 2);
 
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_UP_DOWN = new ConstantAxis(2, 1);
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD = new ConstantAxis(2, 0);
