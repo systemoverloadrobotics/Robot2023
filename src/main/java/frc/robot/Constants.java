@@ -117,10 +117,10 @@ public final class Constants {
         public static final double ARM_JOINT_TOLERANCE = 0.8; // degrees
         public static final double ARM_CASCADE_MAX_FEEDFORWARD = 0.65; // volts
 
-        public static final double ARM_PREDICTIVE_TIMESPAN = 0.1; // seconds
+        public static final double ARM_PREDICTIVE_TIMESPAN = 0.25; // seconds
         public static final double ARM_HEIGHT_FROM_GROUND = -1.5; // ft
         public static final double ARM_HEIGHT_FROM_BASE = -1; // ft
-        public static final double ARM_MIN_ANGLE_COLLISION_A = 10; // degrees
+        public static final double ARM_MIN_ANGLE_COLLISION_A = 0; // degrees
         public static final double ARM_MAX_ANGLE_COLLISION_A = 50; // degrees
         public static final double ARM_MIN_ANGLE_COLLISION_B = 200; // degrees
         public static final double ARM_MAX_ANGLE_COLLISION_B = 280; // degrees

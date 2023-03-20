@@ -177,14 +177,14 @@ public class ArmSubsystem extends SubsystemBase {
         double r = cascadeDegreesToFeet(cascade.outputPosition());
         double theta = getDegreesJoint();
         Pair<Double, Double> position = new Pair<>(theta, r);
-        aLogger.recordOutput("armThet", theta);
-        aLogger.recordOutput("armR", r);
         return position;
     }
 
     public Pair<Double, Double> getManipulatorPositionXY() {
-        var pose = new Translation2d(1, getDegreesJoint() - 90);
-        pose.times(cascadeDegreesToFeet(testGoal));
+        var cascadeMult = cascadeDegreesToFeet(cascade.outputPosition()) + (17/12);
+        var pose = new Translation2d(Math.cos(Math.toRadians(getDegreesJoint() - 90)) * cascadeMult, Math.sin(Math.toRadians(getDegreesJoint() - 90)) * cascadeMult);
+        aLogger.recordOutput("armX", pose.getX());
+        aLogger.recordOutput("armY", pose.getY());
         return new Pair<Double, Double>(pose.getX(), pose.getY());
     }
 
@@ -221,6 +221,7 @@ public class ArmSubsystem extends SubsystemBase {
         aLogger.recordOutput("Arm/IntendedTheta", intendedPosition.getFirst());
         aLogger.recordOutput("Arm/IntendedPosition", intentMechanism.asMechanism());
         aLogger.recordOutput("Arm/CurrentPosition", currentMechanism.asMechanism());
+        getManipulatorPositionXY();
 
         if (timerArmAnglePosition.hasElapsed(4)) {
             jointA.setSensorPosition(Constants.Arm.ARM_JOINT_OFFSET - jointAbsoluteEncoder.getAbsolutePosition());
@@ -253,7 +254,7 @@ public class ArmSubsystem extends SubsystemBase {
         // moved to right position)
         refreshArmGoal();
 
-        currentMechanism.update(getDegreesJoint(), getManipulatorPositionXY().getFirst());
+        currentMechanism.update(getDegreesJoint(), getManipulatorPositionRTheta().getFirst());
 
         aLogger.recordOutput("Arm/TestingPositionSecond", intendedPosition.getSecond());
         aLogger.recordOutput("Arm/TestingPositionManipulatorSecond", getManipulatorPositionXY().getSecond());
@@ -288,6 +289,10 @@ public class ArmSubsystem extends SubsystemBase {
             else if (preventExtension) {
                 jointA.set(ControlMode.POSITION, intendedPosition.getFirst(), calcFeedForwardJoint(jointA.outputPosition(), cascadeDegreesToFeet(cascade.outputPosition())));
                 cascade.set(ControlMode.POSITION, 16, calcFeedForwardCascade(jointA.outputPosition()));
+                if (intendedPosition.getFirst() > Constants.Arm.ARM_MAX_ANGLE_COLLISION_A) {
+                    safeMode = false;
+                    preventExtension = false;
+                }
             }
         }
     }
@@ -332,9 +337,9 @@ public class ArmSubsystem extends SubsystemBase {
                 cascade.outputPosition() + (cascade.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN * 6)); 
         double estimatedAngle =
                 (getDegreesJoint() + (jointA.outputVelocity() * Constants.Arm.ARM_PREDICTIVE_TIMESPAN * 6)) % 360;
-        double[] cartesian = SorMath.polarToCartesian(estimatedLength, estimatedAngle);
+        var thet = getManipulatorPositionXY();
 
-        return isSafeFromGroundCollision(cartesian[1]) && isAngleSafe(estimatedAngle);
+        return isSafeFromGroundCollision(thet.getSecond()) && isAngleSafe(estimatedAngle);
     }
 
 
