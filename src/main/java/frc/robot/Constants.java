@@ -117,11 +117,11 @@ public final class Constants {
         public static final double ARM_JOINT_TOLERANCE = 0.8; // degrees
         public static final double ARM_CASCADE_MAX_FEEDFORWARD = 0.65; // volts
 
-        public static final double ARM_PREDICTIVE_TIMESPAN = 0.25; // seconds
+        public static final double ARM_PREDICTIVE_TIMESPAN = 0.1; // seconds
         public static final double ARM_HEIGHT_FROM_GROUND = -1.5; // ft
         public static final double ARM_HEIGHT_FROM_BASE = -1; // ft
         public static final double ARM_MIN_ANGLE_COLLISION_A = 10; // degrees
-        public static final double ARM_MAX_ANGLE_COLLISION_A = 54; // degrees
+        public static final double ARM_MAX_ANGLE_COLLISION_A = 50; // degrees
         public static final double ARM_MIN_ANGLE_COLLISION_B = 200; // degrees
         public static final double ARM_MAX_ANGLE_COLLISION_B = 280; // degrees
 
@@ -256,8 +256,8 @@ public final class Constants {
 
     public static final class Input {
         // TODO: Fix idx
-        public static final ConstantButton SWERVE_FACE_ALLIANCE = new ConstantButton(0, 0);
-        public static final ConstantButton SWERVE_DRIVE_SNAPPED = new ConstantButton(0, 0);
+        public static final ConstantButton SWERVE_FACE_ALLIANCE = new ConstantButton(0, 9);
+        public static final ConstantButton SWERVE_DRIVE_SNAPPED = new ConstantButton(0, 9);
 
         public static final ConstantAxis SWERVE_SNAP_ROTATION_X = new ConstantAxis(0, 1);
         public static final ConstantAxis SWERVE_SNAP_ROTATION_Y = new ConstantAxis(0, 2);

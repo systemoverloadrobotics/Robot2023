@@ -135,7 +135,7 @@ public class ArmSubsystem extends SubsystemBase {
         jointAbsoluteEncoder = new DutyCycleEncoder(Constants.Arm.ARM_ABSOLUTE_ENCODER_PORT);
         // Absolute Encoder is 8192 / rot
         timerArmAnglePosition.start();
-        retractCascade = false;
+
         resetArmProfile();
         setPosition(getManipulatorPositionRTheta());
         
@@ -177,6 +177,8 @@ public class ArmSubsystem extends SubsystemBase {
         double r = cascadeDegreesToFeet(cascade.outputPosition());
         double theta = getDegreesJoint();
         Pair<Double, Double> position = new Pair<>(theta, r);
+        aLogger.recordOutput("armThet", theta);
+        aLogger.recordOutput("armR", r);
         return position;
     }
 
@@ -266,31 +268,28 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     private void refreshArmGoal() {
-        if (futureArmSafetyPrediction() && !safeMode) {
-            // NO CHANGE
-        } else if (!futureArmSafetyPrediction() && !safeMode) {
-            safeMode = true;
-            preventExtension = true;
-            retractCascade = true;
-            stop();
-        } else if (retractCascade) {
-            // set the arm to 0 and angle to current
-            var manipulatorPosition = getManipulatorPositionRTheta();
-            goalAngle = new TrapezoidProfile.State(manipulatorPosition.getSecond(), 0);
-            goalArmLength = new TrapezoidProfile.State(0, 0);
-            if (isArmRetracted()) {
-                retractCascade = false;
+        aLogger.recordOutput("Arm/Safe", safeMode);
+        if (futureArmSafetyPrediction() && !safeMode) { // && !safeMode
+            setUpdatedArmState();
+        } else if (!futureArmSafetyPrediction() || safeMode) { //  && !safeMode
+            if (!safeMode) {
+                jointA.set(ControlMode.POSITION, jointA.outputPosition(), calcFeedForwardJoint(jointA.outputPosition(), cascadeDegreesToFeet(cascade.outputPosition())));
+                safeMode = true;
+                retractCascade = true;
+                preventExtension = true;
             }
-        } else if (preventExtension) {
-            goalArmLength = new TrapezoidProfile.State(0, 0);
 
-            if (between(getDegreesJoint(), goalAngle.position + Constants.Arm.ARM_JOINT_TOLERANCE, goalAngle.position - Constants.Arm.ARM_JOINT_TOLERANCE)) {
-                safeMode = false;
-                preventExtension = false;
+            if (retractCascade) {
+                cascade.set(ControlMode.POSITION, 16, calcFeedForwardCascade(jointA.outputPosition()));
+                if (between(cascade.outputPosition(), 0, 32)) {
+                    retractCascade = false;
+                }
+            }
+            else if (preventExtension) {
+                jointA.set(ControlMode.POSITION, intendedPosition.getFirst(), calcFeedForwardJoint(jointA.outputPosition(), cascadeDegreesToFeet(cascade.outputPosition())));
+                cascade.set(ControlMode.POSITION, 16, calcFeedForwardCascade(jointA.outputPosition()));
             }
         }
-
-        setUpdatedArmState();
     }
 
     private TrapezoidProfile.State armAngleSetpoint = new TrapezoidProfile.State();
@@ -303,6 +302,10 @@ public class ArmSubsystem extends SubsystemBase {
         flag = false;
         goalArmLength = new TrapezoidProfile.State(0, 0);
         armCascadeSetpoint = new TrapezoidProfile.State(0, 0);
+
+        safeMode = false;
+        retractCascade = false;
+        preventExtension = false;
       }
 
     private void setUpdatedArmState() {
@@ -340,10 +343,8 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     private boolean isAngleSafe(double estimatedAngle) {
-        return !(between(estimatedAngle, Math.toRadians(Constants.Arm.ARM_MIN_ANGLE_COLLISION_A),
-                Math.toRadians(Constants.Arm.ARM_MAX_ANGLE_COLLISION_A))
-                || between(estimatedAngle, Math.toRadians(Constants.Arm.ARM_MIN_ANGLE_COLLISION_B),
-                        Math.toRadians(Constants.Arm.ARM_MAX_ANGLE_COLLISION_B)));
+        aLogger.recordOutput("Arm/PredictedAngle", estimatedAngle);
+        return !between(estimatedAngle, Constants.Arm.ARM_MIN_ANGLE_COLLISION_A, Constants.Arm.ARM_MAX_ANGLE_COLLISION_A);
     }
 
     private boolean isArmRetracted() {
@@ -377,7 +378,7 @@ public class ArmSubsystem extends SubsystemBase {
     HIGH_CONE(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_HIGH_CONE_ANGLE,Constants.Arm.ARM_PRESET_HIGH_CONE_LENGTH)), 
     TRAY(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_TRAY_ANGLE,Constants.Arm.ARM_PRESET_TRAY_LENGTH)), 
     STOW(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_STOW_ANGLE,Constants.Arm.ARM_PRESET_STOW_LENGTH)),
-    TESTA(new Pair<Double, Double>(90.0, 0.0)),
+    TESTA(new Pair<Double, Double>(25.0, 1.0)),
     TESTB(new Pair<Double, Double>(90.0, 1.0));
     //@formatter:on
 
