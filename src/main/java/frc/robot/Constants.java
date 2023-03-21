@@ -209,17 +209,17 @@ public final class Constants {
         public static final int ARM_JOINT_FOLLOWER_INDEX = 13;
         public static final int ARM_CASCADE_INDEX = 11;
 
-        public static final int SWERVE_FRONT_LEFT_POWER = 3;
-        public static final int SWERVE_FRONT_LEFT_STEER = 4;
+        public static final int SWERVE_FRONT_LEFT_POWER = 1;
+        public static final int SWERVE_FRONT_LEFT_STEER = 2;
 
-        public static final int SWERVE_FRONT_RIGHT_POWER = 7;
-        public static final int SWERVE_FRONT_RIGHT_STEER = 8;
+        public static final int SWERVE_FRONT_RIGHT_POWER = 3;
+        public static final int SWERVE_FRONT_RIGHT_STEER = 4;
 
-        public static final int SWERVE_BACK_LEFT_POWER = 1;
-        public static final int SWERVE_BACK_LEFT_STEER = 2;
+        public static final int SWERVE_BACK_LEFT_POWER = 5;
+        public static final int SWERVE_BACK_LEFT_STEER = 6;
 
-        public static final int SWERVE_BACK_RIGHT_POWER = 5;
-        public static final int SWERVE_BACK_RIGHT_STEER = 6;
+        public static final int SWERVE_BACK_RIGHT_POWER = 7;
+        public static final int SWERVE_BACK_RIGHT_STEER = 8;
 
         public static final int ROLLER_LEFT = 9;
         public static final int ROLLER_RIGHT = 10;
@@ -263,7 +263,7 @@ public final class Constants {
         public static final ConstantAxis SWERVE_SNAP_ROTATION_Y = new ConstantAxis(0, 2);
         public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(0, 4);
         public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(0, 5);
-        public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 1);
+        public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
 
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_UP_DOWN = new ConstantAxis(2, 1);
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD = new ConstantAxis(2, 0);
@@ -281,19 +281,19 @@ public final class Constants {
         public static final ConstantButton HYBRID_MIDDLE = new ConstantButton(1, 8);
         public static final ConstantButton HYBRID_RIGHT = new ConstantButton(1, 9);
 
-        // public static final ConstantButton CLAW_IN = new ConstantButton(0, 1);
-        // public static final ConstantButton CLAW_OUT = new ConstantButton(0, 2);
+        public static final ConstantButton CLAW_IN = new ConstantButton(3, 5);
+        public static final ConstantButton CLAW_OUT = new ConstantButton(3, 11);
         public static final ConstantButton TEST_A = new ConstantButton(0, 1);
         public static final ConstantButton TEST_B = new ConstantButton(0, 2);
         // public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0, 3);
         // public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0, 4);
-        public static final ConstantButton MID_CUBE_SCORE = new ConstantButton(0, 3);
-        public static final ConstantButton MID_CONE_SCORE = new ConstantButton(0, 4);
-        public static final ConstantButton HIGH_CUBE_SCORE = new ConstantButton(0, 5);
-        public static final ConstantButton HIGH_CONE_SCORE = new ConstantButton(0, 6);
-        public static final ConstantButton LOW_SCORE = new ConstantButton(0, 7);
-        public static final ConstantButton STOW = new ConstantButton(0, 8);
-        public static final ConstantButton TRAY = new ConstantButton(0, 9);
+        public static final ConstantButton MID_CUBE_SCORE = new ConstantButton(3, 3);
+        public static final ConstantButton MID_CONE_SCORE = new ConstantButton(3, 7);
+        public static final ConstantButton HIGH_CUBE_SCORE = new ConstantButton(3, 2);
+        public static final ConstantButton HIGH_CONE_SCORE = new ConstantButton(3, 12);
+        public static final ConstantButton LOW_SCORE = new ConstantButton(3, 4);
+        public static final ConstantButton STOW = new ConstantButton(3, 8);
+        public static final ConstantButton TRAY = new ConstantButton(3, 6);
     }
     public static final class Auto {
         private static final double SWERVE_AUTO_SPEED_MULTIPLIER = 0.6;

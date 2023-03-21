@@ -161,8 +161,8 @@ public class RobotContainer {
         Constants.Input.LOW_SCORE.get().toggleOnTrue(moveArmLow);
         Constants.Input.TRAY.get().toggleOnTrue(moveArmTray);
         Constants.Input.STOW.get().toggleOnTrue(stowArm);
-        // Constants.Input.CLAW_IN.get().toggleOnTrue(intakeClaw);
-        // Constants.Input.CLAW_OUT.get().toggleOnTrue(outtakeClaw);
+        Constants.Input.CLAW_IN.get().toggleOnTrue(intakeClaw);
+        Constants.Input.CLAW_OUT.get().toggleOnTrue(outtakeClaw);
         Constants.Input.TEST_A.get().toggleOnTrue(armTestA);
         Constants.Input.TEST_B.get().toggleOnTrue(armTestB);
 
