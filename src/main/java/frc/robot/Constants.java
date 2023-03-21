@@ -166,19 +166,42 @@ public final class Constants {
         public static final double SWERVE_ROTATION_MAX_SPEED = 3; // rad/s
         public static final double SWERVE_ROTATION_MAX_ACCELERATION = Math.PI; // rads/s^2
 
+        public static final double DRIVER_RESPONSE = 0.25;
         public static final double SWERVE_DEADBAND = 0.05;
-        
+    
 
    
-    public enum Curve {
+        public enum ResponseCurve {
+            SWERVE_DEADBAND(0, 0.5, x -> Math.pow(x, 2) * Math.signum(x));
+
+            private final double minInput;
+            private final double maxInput;
+            public final DoubleUnaryOperator fn;
+            
         
-        SWERVE_DEADBAND(x -> Math.pow(x, 3) * Math.signum(x));
+            private ResponseCurve(double minInput, double maxInput, DoubleUnaryOperator fn) {
+                this.minInput = minInput;
+                this.maxInput = maxInput;
+                this.fn = fn;
+            }
         
-        public final DoubleUnaryOperator fn;
-      
-        private Curve(DoubleUnaryOperator fn) {
-          this.fn = fn;
+            public double apply(double input) {
+                if (input < minInput) {
+                    return 0;
+                } else if (input > maxInput) {
+                    return Math.signum(input);
+                } else {
+                    return fn.applyAsDouble(input);
+                }
+            }
         }
+    
+        
+        
+        
+        
+        
+        
       }
 
     public static final class Input {
