@@ -221,8 +221,8 @@ public final class Constants {
         public static final int SWERVE_BACK_RIGHT_POWER = 7;
         public static final int SWERVE_BACK_RIGHT_STEER = 8;
 
-        public static final int ROLLER_LEFT = 9;
-        public static final int ROLLER_RIGHT = 10;
+        public static final int ROLLER_LEFT = 14;
+        public static final int ROLLER_RIGHT = 15;
     }
 
     public static final class Pneumatics {
