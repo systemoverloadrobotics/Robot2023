@@ -61,11 +61,13 @@ public class RobotContainer {
     private final Command moveArmMidCone;
     private final Command moveArmHighCone;
     private final Command intakeClaw;
-    private final Command outtakeClaw;
+    private final Command outtakeClawMid;
+    private final Command outtakeClawHigh;
     private final Command stowArm;
     private final Command resetArmPosition;
     private final Command armTestA;
     private final Command armTestB;
+    
     //@formatter:on
 
     private Command finetuneArm;
@@ -104,8 +106,10 @@ public class RobotContainer {
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH_CONE), (a) -> {}, () -> false, arm);
         intakeClaw = new FunctionalCommand(() -> {},
                 () -> claw.intake(), (a) -> claw.stop(), () -> false, claw);
-        outtakeClaw = new FunctionalCommand(() -> {},
-                () -> claw.outtake(), (a) -> claw.stop(), () -> false, claw);
+        outtakeClawMid = new FunctionalCommand(() -> {},
+                () -> claw.outtake(Constants.Claw.CLAW_VELOCITY_OUT_MID), (a) -> claw.stop(), () -> false, claw);
+        outtakeClawHigh = new FunctionalCommand(() -> {},
+                () -> claw.outtake(Constants.Claw.CLAW_VELOCITY_OUT_HIGH), (a) -> claw.stop(), () -> false, claw);
         stowArm = new FunctionalCommand(() -> {},
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.STOW), (a) -> arm.stop(), () -> false, claw);
         armTestA = new FunctionalCommand(() -> {},
@@ -162,7 +166,8 @@ public class RobotContainer {
         Constants.Input.TRAY.get().toggleOnTrue(moveArmTray);
         Constants.Input.STOW.get().toggleOnTrue(stowArm);
         Constants.Input.CLAW_IN.get().toggleOnTrue(intakeClaw);
-        Constants.Input.CLAW_OUT.get().toggleOnTrue(outtakeClaw);
+        Constants.Input.CLAW_OUT_MID.get().toggleOnTrue(outtakeClawMid);
+        Constants.Input.CLAW_OUT_HIGH.get().toggleOnTrue(outtakeClawHigh);
         Constants.Input.TEST_A.get().toggleOnTrue(armTestA);
         Constants.Input.TEST_B.get().toggleOnTrue(armTestB);
 
