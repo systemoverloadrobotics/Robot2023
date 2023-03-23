@@ -103,9 +103,9 @@ public class RobotContainer {
         moveArmHighCone = new FunctionalCommand(() -> {},
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH_CONE), (a) -> {}, () -> false, arm);
         intakeClaw = new FunctionalCommand(() -> {},
-                () -> claw.intake(), (a) -> claw.defaultIn(), () -> false, claw);
+                () -> claw.intake(), (a) -> claw.stop(), () -> false, claw);
         outtakeClaw = new FunctionalCommand(() -> {},
-                () -> claw.outtake(), (a) -> claw.defaultOut(), () -> false, claw);
+                () -> claw.outtake(), (a) -> claw.stop(), () -> false, claw);
         stowArm = new FunctionalCommand(() -> {},
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.STOW), (a) -> arm.stop(), () -> false, claw);
         armTestA = new FunctionalCommand(() -> {},

@@ -126,20 +126,20 @@ public final class Constants {
         public static final double ARM_MAX_ANGLE_COLLISION_B = 280; // degrees
 
         // Placeholder
-        public static final double ARM_PRESET_LOW_ANGLE = 55.7; // deg
-        public static final double ARM_PRESET_LOW_LENGTH = 0.83; // ft
+        public static final double ARM_PRESET_LOW_ANGLE = 58; // deg
+        public static final double ARM_PRESET_LOW_LENGTH = 1; // ft
         public static final double ARM_PRESET_MID_CONE_ANGLE = 115; // deg
         public static final double ARM_PRESET_MID_CONE_LENGTH = 1.24; // ft
         public static final double ARM_PRESET_MID_CUBE_ANGLE = 106; // deg
         public static final double ARM_PRESET_MID_CUBE_LENGTH = 0.86; // ft
-        public static final double ARM_PRESET_HIGH_CONE_ANGLE = 125; // deg
+        public static final double ARM_PRESET_HIGH_CONE_ANGLE = 135; // deg
         public static final double ARM_PRESET_HIGH_CONE_LENGTH = 2.2; // ft
         public static final double ARM_PRESET_HIGH_CUBE_ANGLE = 112; // deg
         public static final double ARM_PRESET_HIGH_CUBE_LENGTH = 2.2; // ft
 
-        public static final double ARM_PRESET_TRAY_ANGLE = 116.5; // deg
+        public static final double ARM_PRESET_TRAY_ANGLE = 112; // deg
         public static final double ARM_PRESET_TRAY_LENGTH = 1.82; // ft
-        public static final double ARM_PRESET_STOW_ANGLE = 160.95; // deg
+        public static final double ARM_PRESET_STOW_ANGLE = 170.95; // deg
         public static final double ARM_PRESET_STOW_LENGTH = 0; // ft
 
         // Geometry
@@ -149,9 +149,9 @@ public final class Constants {
     }
 
     public static final class Claw {
-        public static final double CLAW_VELOCITY = 1200; // RPM
-        public static final double CLAW_VELOCITY_OUT = 1500; // RPM
-        public static final double CLAW_CURRENT_LIMIT = 12.0; // Amps
+        public static final double CLAW_VELOCITY = 750; // RPM
+        public static final double CLAW_VELOCITY_OUT = 1000; // RPM
+        public static final double CLAW_CURRENT_LIMIT = 4.0; // Amps
     }
 
     public static final class Scoring {
@@ -281,19 +281,19 @@ public final class Constants {
         public static final ConstantButton HYBRID_MIDDLE = new ConstantButton(1, 8);
         public static final ConstantButton HYBRID_RIGHT = new ConstantButton(1, 9);
 
-        public static final ConstantButton CLAW_IN = new ConstantButton(3, 5);
-        public static final ConstantButton CLAW_OUT = new ConstantButton(3, 11);
+        public static final ConstantButton CLAW_IN = new ConstantButton(3, 3);
+        public static final ConstantButton CLAW_OUT = new ConstantButton(3, 2);
         public static final ConstantButton TEST_A = new ConstantButton(0, 1);
         public static final ConstantButton TEST_B = new ConstantButton(0, 2);
         // public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0, 3);
         // public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0, 4);
-        public static final ConstantButton MID_CUBE_SCORE = new ConstantButton(3, 3);
-        public static final ConstantButton MID_CONE_SCORE = new ConstantButton(3, 7);
-        public static final ConstantButton HIGH_CUBE_SCORE = new ConstantButton(3, 2);
-        public static final ConstantButton HIGH_CONE_SCORE = new ConstantButton(3, 12);
+        public static final ConstantButton MID_CUBE_SCORE = new ConstantButton(3, 8);
+        public static final ConstantButton MID_CONE_SCORE = new ConstantButton(3, 9);
+        public static final ConstantButton HIGH_CUBE_SCORE = new ConstantButton(3, 5);
+        public static final ConstantButton HIGH_CONE_SCORE = new ConstantButton(3, 6);
         public static final ConstantButton LOW_SCORE = new ConstantButton(3, 4);
-        public static final ConstantButton STOW = new ConstantButton(3, 8);
-        public static final ConstantButton TRAY = new ConstantButton(3, 6);
+        public static final ConstantButton STOW = new ConstantButton(3, 7);
+        public static final ConstantButton TRAY = new ConstantButton(3, 1);
     }
     public static final class Auto {
         private static final double SWERVE_AUTO_SPEED_MULTIPLIER = 0.6;

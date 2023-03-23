@@ -65,15 +65,7 @@ public class Claw extends SubsystemBase {
 
         lastState = "stop";
     }
-    public void defaultIn(){
-        rollerMotorLeft.set(ControlMode.VOLTAGE, -2);
-        rollerMotorRight.set(ControlMode.VOLTAGE,2);
-    }
-    public void defaultOut(){
-        rollerMotorLeft.set(ControlMode.VOLTAGE, 2);
-        rollerMotorRight.set(ControlMode.VOLTAGE,-2);
-    }
-
+    
     @Override
     public void periodic() {
         aLogger.recordOutput("Claw/LastState", lastState);
