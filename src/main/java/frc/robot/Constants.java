@@ -137,7 +137,7 @@ public final class Constants {
         public static final double ARM_PRESET_HIGH_CUBE_ANGLE = 112; // deg
         public static final double ARM_PRESET_HIGH_CUBE_LENGTH = 2.2; // ft
 
-        public static final double ARM_PRESET_TRAY_ANGLE = 113; // deg
+        public static final double ARM_PRESET_TRAY_ANGLE = 114; // deg
         public static final double ARM_PRESET_TRAY_LENGTH = 1.82; // ft
         public static final double ARM_PRESET_STOW_ANGLE = 174.95; // deg
         public static final double ARM_PRESET_STOW_LENGTH = 0; // ft
@@ -234,19 +234,19 @@ public final class Constants {
         public static final PidProfile STEER_PROFILE = new PidProfile(0.03, 0, 0.1);
         public static final PidProfile POWER_PROFILE = new PidProfile(0.0001, 0.0, 0);
 
-        public static final double SWERVE_POWER_CURRENT_LIMIT = 15.0;
-        public static final double SWERVE_POWER_MAX_OUTPUT = 0.5;
+        public static final double SWERVE_POWER_CURRENT_LIMIT = 30.0;
+        public static final double SWERVE_POWER_MAX_OUTPUT = 0.7;
 
-        public static final double SWERVE_ROTATION_CURRENT_LIMIT = 15.0;
-        public static final double SWERVE_ROTATION_MAX_OUTPUT = 0.5;
+        public static final double SWERVE_ROTATION_CURRENT_LIMIT = 30.0;
+        public static final double SWERVE_ROTATION_MAX_OUTPUT = 0.7;
 
         public static final double DISTANCE_PER_REV = Units.inchesToMeters(4 * Math.PI);
         public static final double NEO_MAX_SPEED = 5600; // RPM
-        public static final double MAX_WHEEL_SPEED = ((NEO_MAX_SPEED / 60) * DISTANCE_PER_REV) / 6.75;
+        public static final double MAX_WHEEL_SPEED = ((NEO_MAX_SPEED / 60) * DISTANCE_PER_REV);
         public static final double SWERVE_MAX_SPEED = 0.9 * MAX_WHEEL_SPEED; // m/s
         public static final double SWERVE_MAX_AUTO_SPEED = 0.2 * MAX_WHEEL_SPEED; // m/s
         public static final double SWERVE_MAX_PRECISION_SPEED = 0.1 * MAX_WHEEL_SPEED; // m/s
-        public static final double SWERVE_MAX_ACCELERATION = 3; // m/s^2
+        public static final double SWERVE_MAX_ACCELERATION = 2; // m/s^2
         public static final double SWERVE_ROTATION_MAX_SPEED = 3; // rad/s
         public static final double SWERVE_ROTATION_MAX_ACCELERATION = Math.PI; // rads/s^2
 
