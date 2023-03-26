@@ -52,6 +52,13 @@ public class Claw extends SubsystemBase {
         lastState = "intake";
     }
 
+    public void defaultClaw() {
+        rollerMotorLeft.set(ControlMode.VOLTAGE, -2);
+        rollerMotorRight.set(ControlMode.VOLTAGE, 2);
+        
+        lastState = "default";
+    }
+
     public void outtake(double velocity) {
         rollerMotorLeft.set(ControlMode.VELOCITY, velocity);
         rollerMotorRight.set(ControlMode.VELOCITY, -velocity);

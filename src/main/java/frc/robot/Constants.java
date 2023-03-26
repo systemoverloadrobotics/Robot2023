@@ -126,8 +126,8 @@ public final class Constants {
         public static final double ARM_MAX_ANGLE_COLLISION_B = 280; // degrees
 
         // Placeholder
-        public static final double ARM_PRESET_LOW_ANGLE = 58; // deg
-        public static final double ARM_PRESET_LOW_LENGTH = 1; // ft
+        public static final double ARM_PRESET_LOW_ANGLE = 60; // deg
+        public static final double ARM_PRESET_LOW_LENGTH = 1.2; // ft
         public static final double ARM_PRESET_MID_CONE_ANGLE = 115; // deg
         public static final double ARM_PRESET_MID_CONE_LENGTH = 1.24; // ft
         public static final double ARM_PRESET_MID_CUBE_ANGLE = 106; // deg
@@ -149,10 +149,10 @@ public final class Constants {
     }
 
     public static final class Claw {
-        public static final double CLAW_VELOCITY = 750; // RPM
-        public static final double CLAW_VELOCITY_OUT_MID = 100; // RPM
-        public static final double CLAW_VELOCITY_OUT_HIGH = 4000; // RPM
-        public static final double CLAW_CURRENT_LIMIT = 4.0; // Amps
+        public static final double CLAW_VELOCITY = 400; // RPM
+        public static final double CLAW_VELOCITY_OUT_MID = 150; // RPM
+        public static final double CLAW_VELOCITY_OUT_HIGH = 4000; // RPMs
+        public static final double CLAW_CURRENT_LIMIT = 0.5; // Amps
     }
 
     public static final class Scoring {
@@ -247,8 +247,8 @@ public final class Constants {
         public static final double SWERVE_MAX_AUTO_SPEED = 0.2 * MAX_WHEEL_SPEED; // m/s
         public static final double SWERVE_MAX_PRECISION_SPEED = 0.1 * MAX_WHEEL_SPEED; // m/s
         public static final double SWERVE_MAX_ACCELERATION = 2; // m/s^2
-        public static final double SWERVE_ROTATION_MAX_SPEED = 3; // rad/s
-        public static final double SWERVE_ROTATION_MAX_ACCELERATION = Math.PI; // rads/s^2
+        public static final double SWERVE_ROTATION_MAX_SPEED = Math.PI * 2; // rad/s
+        public static final double SWERVE_ROTATION_MAX_ACCELERATION = Math.PI * 2 / 3; // rads/s^2
 
         public static final double SWERVE_DEADBAND = 0.05;
         public static final double SWERVE_ROTATION_TOLERANCE = 5; // degrees
@@ -257,14 +257,16 @@ public final class Constants {
 
     public static final class Input {
         // TODO: Fix idx
-        public static final ConstantButton SWERVE_FACE_ALLIANCE = new ConstantButton(0, 9);
-        public static final ConstantButton SWERVE_DRIVE_SNAPPED = new ConstantButton(0, 9);
+        public static final ConstantButton SWERVE_FACE_ALLIANCE = new ConstantButton(0, 6);
+        public static final ConstantButton SWERVE_FACE_HUMAN_PLAYER = new ConstantButton(0, 5);
 
         public static final ConstantAxis SWERVE_SNAP_ROTATION_X = new ConstantAxis(0, 1);
         public static final ConstantAxis SWERVE_SNAP_ROTATION_Y = new ConstantAxis(0, 2);
         public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(0, 4);
         public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(0, 5);
         public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
+        public static final ConstantAxis SWERVE_ROTATION_SLOWDOWN_L  = new ConstantAxis(0, 2);
+        public static final ConstantAxis SWERVE_ROTATION_SLOWDOWN_R = new ConstantAxis(0, 3);
 
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_UP_DOWN = new ConstantAxis(2, 1);
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD = new ConstantAxis(2, 0);
@@ -290,12 +292,13 @@ public final class Constants {
         // public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0, 3);
         // public static final ConstantButton LED_TRIGGER_YELLOW = new ConstantButton(0, 4);
         public static final ConstantButton MID_CUBE_SCORE = new ConstantButton(3, 8);
-        public static final ConstantButton MID_CONE_SCORE = new ConstantButton(3, 9);
+        public static final ConstantButton MID_CONE_SCORE = new ConstantButton(3, 10);
         public static final ConstantButton HIGH_CUBE_SCORE = new ConstantButton(3, 5);
         public static final ConstantButton HIGH_CONE_SCORE = new ConstantButton(3, 6);
         public static final ConstantButton LOW_SCORE = new ConstantButton(3, 4);
         public static final ConstantButton STOW = new ConstantButton(3, 7);
         public static final ConstantButton TRAY = new ConstantButton(3, 1);
+        public static final ConstantButton LOCK = new ConstantButton(3, 9);
     }
     public static final class Auto {
         private static final double SWERVE_AUTO_SPEED_MULTIPLIER = 0.6;

@@ -67,6 +67,7 @@ public class RobotContainer {
     private final Command resetArmPosition;
     private final Command armTestA;
     private final Command armTestB;
+    private final Command lockSwerve;
     
     //@formatter:on
 
@@ -74,8 +75,8 @@ public class RobotContainer {
     private final Command ledCommandPurple;
     private final Command ledCommandYellow;
 
-    private final Command driveFacingWall;
-    private final Command driveWithAngleSnapping;
+    private final Command driveFacingAlliance;
+    private final Command driveFacingHumanPlayer;
 
     // ---------- End Simple Commands ----------
 
@@ -93,29 +94,41 @@ public class RobotContainer {
         autoSelector = new AutoSelector(swerve);
 
         moveArmLow = new FunctionalCommand(() -> {}, 
-        () -> arm.setPosition(ArmSubsystem.ArmHeight.LOW), (a) -> {}, () -> false, arm);
+        () -> arm.setPosition(ArmSubsystem.ArmHeight.LOW), (a) -> {arm.stop();}, () -> false, arm);
         moveArmTray = new FunctionalCommand(() -> {},
-                () -> arm.setPosition(ArmSubsystem.ArmHeight.TRAY), (a) -> {}, () -> false, arm);
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.TRAY), (a) -> {arm.stop();}, () -> false, arm);
         moveArmMidCube = new FunctionalCommand(() -> {},
-                () -> arm.setPosition(ArmSubsystem.ArmHeight.MID_CUBE), (a) -> {}, () -> false, arm);
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.MID_CUBE), (a) -> {arm.stop();}, () -> false, arm);
         moveArmHighCube = new FunctionalCommand(() -> {},
-                () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH_CUBE), (a) -> {}, () -> false, arm);
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH_CUBE), (a) -> {arm.stop();}, () -> false, arm);
         moveArmMidCone = new FunctionalCommand(() -> {},
-                () -> arm.setPosition(ArmSubsystem.ArmHeight.MID_CONE), (a) -> {}, () -> false, arm);
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.MID_CONE), (a) -> {arm.stop();}, () -> false, arm);
         moveArmHighCone = new FunctionalCommand(() -> {},
-                () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH_CONE), (a) -> {}, () -> false, arm);
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH_CONE), (a) -> {arm.stop();}, () -> false, arm);
         intakeClaw = new FunctionalCommand(() -> {},
-                () -> claw.intake(), (a) -> claw.stop(), () -> false, claw);
+                () -> claw.intake(), (a) -> {
+                        claw.defaultClaw();
+                }, () -> false, claw);
         outtakeClawMid = new FunctionalCommand(() -> {},
-                () -> claw.outtake(Constants.Claw.CLAW_VELOCITY_OUT_MID), (a) -> claw.stop(), () -> false, claw);
+                () -> claw.outtake(Constants.Claw.CLAW_VELOCITY_OUT_MID), (a) -> {
+                        if (Constants.Input.CLAW_OUT_MID.get().getAsBoolean()) {
+                                claw.stop();
+                        }
+                }, () -> false, claw);
         outtakeClawHigh = new FunctionalCommand(() -> {},
-                () -> claw.outtake(Constants.Claw.CLAW_VELOCITY_OUT_HIGH), (a) -> claw.stop(), () -> false, claw);
+                () -> claw.outtake(Constants.Claw.CLAW_VELOCITY_OUT_HIGH), (a) -> {
+                        if (Constants.Input.CLAW_OUT_HIGH.get().getAsBoolean()) {
+                                claw.stop();
+                        }
+                }, () -> false, claw);
         stowArm = new FunctionalCommand(() -> {},
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.STOW), (a) -> arm.stop(), () -> false, claw);
         armTestA = new FunctionalCommand(() -> {},
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.TESTA), (a) -> arm.stop(), () -> false, claw);
         armTestB = new FunctionalCommand(() -> {},
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.TESTB), (a) -> arm.stop(), () -> false, claw);
+        lockSwerve = new FunctionalCommand(() -> {}, 
+                () -> swerve.lock(), (a) -> swerve.reset(), () -> false, swerve);
 
         resetArmPosition = new InstantCommand(() -> arm.resetArmProfile(), arm);
         
@@ -131,15 +144,10 @@ public class RobotContainer {
         }, led);
         
 
-        driveFacingWall = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
-                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 180);
-        driveWithAngleSnapping = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
-                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> {
-                    int snappedHeading = RotationControlledSwerveDrive.snapThresholdJoystickAxis(
-                            Constants.Input.SWERVE_SNAP_ROTATION_X.get().getAsDouble(),
-                            Constants.Input.SWERVE_SNAP_ROTATION_Y.get().getAsDouble());
-                    return snappedHeading;
-                });
+        driveFacingAlliance = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
+                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 270);
+        driveFacingHumanPlayer = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
+                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 90);
 
         // Configure the button bindings
         configureButtonBindings();
@@ -154,8 +162,8 @@ public class RobotContainer {
         swerve.setDefaultCommand(new SwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
                 () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(),
                 Constants.Input.SWERVE_ROTATION_INPUT.get()));
-        Constants.Input.SWERVE_FACE_ALLIANCE.get().whileTrue(driveFacingWall);
-        Constants.Input.SWERVE_DRIVE_SNAPPED.get().whileTrue(driveWithAngleSnapping);
+        Constants.Input.SWERVE_FACE_ALLIANCE.get().whileTrue(driveFacingAlliance);
+        Constants.Input.SWERVE_FACE_HUMAN_PLAYER.get().whileTrue(driveFacingHumanPlayer);
 
         
         Constants.Input.MID_CONE_SCORE.get().toggleOnTrue(moveArmMidCone);
@@ -165,11 +173,12 @@ public class RobotContainer {
         Constants.Input.LOW_SCORE.get().toggleOnTrue(moveArmLow);
         Constants.Input.TRAY.get().toggleOnTrue(moveArmTray);
         Constants.Input.STOW.get().toggleOnTrue(stowArm);
-        Constants.Input.CLAW_IN.get().toggleOnTrue(intakeClaw);
+        Constants.Input.CLAW_IN.get().whileTrue(intakeClaw);
         Constants.Input.CLAW_OUT_MID.get().toggleOnTrue(outtakeClawMid);
         Constants.Input.CLAW_OUT_HIGH.get().toggleOnTrue(outtakeClawHigh);
         Constants.Input.TEST_A.get().toggleOnTrue(armTestA);
         Constants.Input.TEST_B.get().toggleOnTrue(armTestB);
+        Constants.Input.LOCK.get().toggleOnTrue(lockSwerve);
 
         // Constants.Input.LED_TRIGGER_PURPLE.get().whileTrue(ledCommandPurple);
         // Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);

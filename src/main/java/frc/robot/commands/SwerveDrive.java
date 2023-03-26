@@ -23,8 +23,8 @@ public class SwerveDrive extends CommandBase {
         this.ySupplier = ySupplier;
         this.rotationSupplier = rotationSupplier;
 
-        xLimiter = new SlewRateLimiter(Constants.Swerve.SWERVE_MAX_SPEED, 0.5, 0);
-        yLimiter = new SlewRateLimiter(Constants.Swerve.SWERVE_MAX_SPEED, 0.5, 0);
+        xLimiter = new SlewRateLimiter(Constants.Swerve.SWERVE_MAX_SPEED);
+        yLimiter = new SlewRateLimiter(Constants.Swerve.SWERVE_MAX_SPEED);
         rotationLimiter = new SlewRateLimiter(Constants.Swerve.SWERVE_ROTATION_MAX_SPEED);
         addRequirements(swerve);
     }
@@ -46,6 +46,12 @@ public class SwerveDrive extends CommandBase {
         double ySpeed = cleanAndScaleInput(ySupplier.getAsDouble(), yLimiter, Constants.Swerve.SWERVE_MAX_SPEED);
         double rotationSpeed = cleanAndScaleInput(rotationSupplier.getAsDouble(), rotationLimiter,
                 Constants.Swerve.SWERVE_ROTATION_MAX_SPEED);
+        if (Constants.Input.SWERVE_ROTATION_SLOWDOWN_L.get().getAsDouble() > Constants.Swerve.SWERVE_DEADBAND || 
+            Constants.Input.SWERVE_ROTATION_SLOWDOWN_R.get().getAsDouble() > Constants.Swerve.SWERVE_DEADBAND) {
+                rotationSpeed /= 3;
+                xSpeed /= 3;
+                ySpeed /= 3;
+        }
         swerve.setDrivebaseWheelVectors(xSpeed, ySpeed, rotationSpeed, true, false);
     }
 

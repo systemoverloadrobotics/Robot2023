@@ -92,6 +92,13 @@ public class Swerve extends SubsystemBase {
                 new SwerveModuleState(0, Rotation2d.fromDegrees(-45)),});
     }
 
+    public void reset() {
+        setModuleStates(new SwerveModuleState[] {new SwerveModuleState(0, Rotation2d.fromDegrees(0)),
+                new SwerveModuleState(0, Rotation2d.fromDegrees(0)),
+                new SwerveModuleState(0, Rotation2d.fromDegrees(0)),
+                new SwerveModuleState(0, Rotation2d.fromDegrees(0)),});
+    }
+
     public Rotation2d getRotation2d() {
         return Rotation2d.fromDegrees(gyro.getYaw() + 90);
     }

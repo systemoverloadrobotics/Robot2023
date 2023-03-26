@@ -141,7 +141,7 @@ public class ArmSubsystem extends SubsystemBase {
         
         currentAngle = new TrapezoidProfile.State(getDegreesJoint(), jointA.outputVelocity());
         currentArmLength = new TrapezoidProfile.State(cascade.outputPosition(), cascade.outputVelocity());
-        filter = LinearFilter.movingAverage(10);
+        filter = LinearFilter.movingAverage(40);
 
         logger.info("Arm Initialized.");
     }

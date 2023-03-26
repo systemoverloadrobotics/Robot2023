@@ -20,7 +20,7 @@ public class RotationControlledSwerveDrive extends SwerveDrive {
     private double lastHeading;
 
     private final ProfiledPIDController angleController =
-            new ProfiledPIDController(10, 0, 0, Constants.Auto.SWERVE_ROTATION_PID_CONSTRAINTS);
+            new ProfiledPIDController(0.5, 0, 0, Constants.Auto.SWERVE_ROTATION_PID_CONSTRAINTS);
 
     public RotationControlledSwerveDrive(Swerve swerve, DoubleSupplier xSupplier, DoubleSupplier ySupplier,
             DoubleSupplier headingSupplier) {
