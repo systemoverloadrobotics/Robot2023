@@ -137,7 +137,7 @@ public final class Constants {
         public static final double ARM_PRESET_HIGH_CUBE_ANGLE = 112; // deg
         public static final double ARM_PRESET_HIGH_CUBE_LENGTH = 2.2; // ft
 
-        public static final double ARM_PRESET_TRAY_ANGLE = 114; // deg
+        public static final double ARM_PRESET_TRAY_ANGLE = 118; // deg
         public static final double ARM_PRESET_TRAY_LENGTH = 1.82; // ft
         public static final double ARM_PRESET_STOW_ANGLE = 174.95; // deg
         public static final double ARM_PRESET_STOW_LENGTH = 0; // ft
@@ -149,7 +149,8 @@ public final class Constants {
     }
 
     public static final class Claw {
-        public static final double CLAW_VELOCITY = 400; // RPM
+        public static final double CLAW_VELOCITY_IN_CONE = 750; // RPM
+        public static final double CLAW_VELOCITY_IN_CUBE = 100; // RPM
         public static final double CLAW_VELOCITY_OUT_MID = 150; // RPM
         public static final double CLAW_VELOCITY_OUT_HIGH = 4000; // RPMs
         public static final double CLAW_CURRENT_LIMIT = 0.5; // Amps
@@ -284,9 +285,10 @@ public final class Constants {
         public static final ConstantButton HYBRID_MIDDLE = new ConstantButton(1, 8);
         public static final ConstantButton HYBRID_RIGHT = new ConstantButton(1, 9);
 
-        public static final ConstantButton CLAW_IN = new ConstantButton(3, 3);
-        public static final ConstantButton CLAW_OUT_MID = new ConstantButton(3, 2);
-        public static final ConstantButton CLAW_OUT_HIGH = new ConstantButton(3, 11);
+        public static final ConstantButton CLAW_IN_CONE = new ConstantButton(3, 11);
+        public static final ConstantButton CLAW_IN_CUBE = new ConstantButton(3, 9);
+        public static final ConstantButton CLAW_OUT_MID = new ConstantButton(3, 3);
+        public static final ConstantButton CLAW_OUT_HIGH = new ConstantButton(3, 2);
         public static final ConstantButton TEST_A = new ConstantButton(0, 1);
         public static final ConstantButton TEST_B = new ConstantButton(0, 2);
         // public static final ConstantButton LED_TRIGGER_PURPLE = new ConstantButton(0, 3);

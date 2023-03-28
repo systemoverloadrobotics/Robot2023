@@ -60,7 +60,8 @@ public class RobotContainer {
     private final Command moveArmHighCube;
     private final Command moveArmMidCone;
     private final Command moveArmHighCone;
-    private final Command intakeClaw;
+    private final Command intakeClawCone;
+    private final Command intakeClawCube;
     private final Command outtakeClawMid;
     private final Command outtakeClawHigh;
     private final Command stowArm;
@@ -105,9 +106,13 @@ public class RobotContainer {
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.MID_CONE), (a) -> {arm.stop();}, () -> false, arm);
         moveArmHighCone = new FunctionalCommand(() -> {},
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.HIGH_CONE), (a) -> {arm.stop();}, () -> false, arm);
-        intakeClaw = new FunctionalCommand(() -> {},
-                () -> claw.intake(), (a) -> {
+        intakeClawCone = new FunctionalCommand(() -> {},
+                () -> claw.intake(Constants.Claw.CLAW_VELOCITY_IN_CONE), (a) -> {
                         claw.defaultClaw();
+                }, () -> false, claw);
+        intakeClawCube = new FunctionalCommand(() -> {},
+                () -> claw.intake(Constants.Claw.CLAW_VELOCITY_IN_CUBE), (a) -> {
+                        claw.stop();
                 }, () -> false, claw);
         outtakeClawMid = new FunctionalCommand(() -> {},
                 () -> claw.outtake(Constants.Claw.CLAW_VELOCITY_OUT_MID), (a) -> {
@@ -173,7 +178,8 @@ public class RobotContainer {
         Constants.Input.LOW_SCORE.get().toggleOnTrue(moveArmLow);
         Constants.Input.TRAY.get().toggleOnTrue(moveArmTray);
         Constants.Input.STOW.get().toggleOnTrue(stowArm);
-        Constants.Input.CLAW_IN.get().whileTrue(intakeClaw);
+        Constants.Input.CLAW_IN_CONE.get().whileTrue(intakeClawCone);
+        Constants.Input.CLAW_IN_CUBE.get().whileTrue(intakeClawCube);
         Constants.Input.CLAW_OUT_MID.get().toggleOnTrue(outtakeClawMid);
         Constants.Input.CLAW_OUT_HIGH.get().toggleOnTrue(outtakeClawHigh);
         Constants.Input.TEST_A.get().toggleOnTrue(armTestA);

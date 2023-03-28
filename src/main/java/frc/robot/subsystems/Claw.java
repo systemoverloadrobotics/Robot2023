@@ -45,9 +45,9 @@ public class Claw extends SubsystemBase {
         logger.info("Claw Initialized.");
     }
 
-    public void intake() {
-        rollerMotorLeft.set(ControlMode.VELOCITY, -Constants.Claw.CLAW_VELOCITY);
-        rollerMotorRight.set(ControlMode.VELOCITY, Constants.Claw.CLAW_VELOCITY);
+    public void intake(double velocity) {
+        rollerMotorLeft.set(ControlMode.VELOCITY, -velocity);
+        rollerMotorRight.set(ControlMode.VELOCITY, velocity);
 
         lastState = "intake";
     }
