@@ -67,9 +67,6 @@ public class RobotContainer {
     private final Command outtakeClawHigh;
     private final Command stowArm;
     private final Command resetArmPosition;
-    private final Command armTestA;
-    private final Command armTestB;
-    private final Command lockSwerve;
     private final Command chargeStation;
     
     //@formatter:on
@@ -129,13 +126,7 @@ public class RobotContainer {
                         }
                 }, () -> false, claw);
         stowArm = new FunctionalCommand(() -> {},
-                () -> arm.setPosition(ArmSubsystem.ArmHeight.STOW), (a) -> arm.stop(), () -> false, claw);
-        armTestA = new FunctionalCommand(() -> {},
-                () -> arm.setPosition(ArmSubsystem.ArmHeight.TESTA), (a) -> arm.stop(), () -> false, claw);
-        armTestB = new FunctionalCommand(() -> {},
-                () -> arm.setPosition(ArmSubsystem.ArmHeight.TESTB), (a) -> arm.stop(), () -> false, claw);
-        lockSwerve = new FunctionalCommand(() -> {}, 
-                () -> swerve.lock(), (a) -> swerve.reset(), () -> false, swerve);
+                () -> arm.setPosition(ArmSubsystem.ArmHeight.STOW), (a) -> arm.stop(), () -> false, arm);
         chargeStation = new SimpleBalance(swerve);
 
         resetArmPosition = new InstantCommand(() -> arm.resetArmProfile(), arm);
@@ -185,9 +176,8 @@ public class RobotContainer {
         Constants.Input.CLAW_IN_CUBE.get().whileTrue(intakeClawCube);
         Constants.Input.CLAW_OUT_MID.get().toggleOnTrue(outtakeClawMid);
         Constants.Input.CLAW_OUT_HIGH.get().toggleOnTrue(outtakeClawHigh);
-        Constants.Input.TEST_A.get().toggleOnTrue(armTestA);
-        Constants.Input.TEST_B.get().toggleOnTrue(armTestB);
-        Constants.Input.LOCK.get().toggleOnTrue(lockSwerve);
+        // Constants.Input.TEST_A.get().toggleOnTrue(armTestA);
+        // Constants.Input.TEST_B.get().toggleOnTrue(armTestB);
 
         // Constants.Input.LED_TRIGGER_PURPLE.get().whileTrue(ledCommandPurple);
         // Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);
@@ -234,5 +224,10 @@ public class RobotContainer {
 
     public void disabledPeriodic() {
         arm.resetArmProfile();
+    }
+
+    public void teleopPeriodic() {
+        if (swerve.getCurrentCommand() != null)
+        System.out.println(swerve.getCurrentCommand().getClass().getName());
     }
 }

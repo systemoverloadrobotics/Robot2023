@@ -4,6 +4,7 @@
       "/AdvantageKit/RealOutputs/Arm/CurrentPosition": "Mechanism2d",
       "/AdvantageKit/RealOutputs/Arm/IntendedPosition": "Mechanism2d",
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Autos": "String Chooser",
       "/SmartDashboard/Gyro": "Gyro"
     }
   },
