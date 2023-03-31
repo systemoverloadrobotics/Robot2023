@@ -158,7 +158,7 @@ public final class Constants {
 
     public static final class Scoring {
 
-        public static final double AUTO_SWERVE_MAX_VELOCITY = 3; // Meters per second
+        public static final double AUTO_SWERVE_MAX_VELOCITY = 4; // Meters per second
         public static final double AUTO_SWERVE_MAX_ACCELERATION = 2.5; // Meters per second
         public static final TrajectoryConfig SCORING_TRAJECTORY_CONFIG =
                 new TrajectoryConfig(AUTO_SWERVE_MAX_VELOCITY, AUTO_SWERVE_MAX_ACCELERATION);
@@ -233,18 +233,18 @@ public final class Constants {
 
     public static final class Swerve {
         public static final PidProfile STEER_PROFILE = new PidProfile(0.03, 0, 0.1);
-        public static final PidProfile POWER_PROFILE = new PidProfile(0.0001, 0.0, 0);
+        public static final PidProfile POWER_PROFILE = new PidProfile(0.0002, 0.0, 0);
 
-        public static final double SWERVE_POWER_CURRENT_LIMIT = 30.0;
-        public static final double SWERVE_POWER_MAX_OUTPUT = 0.7;
+        public static final double SWERVE_POWER_CURRENT_LIMIT = 60.0;
+        public static final double SWERVE_POWER_MAX_OUTPUT = 0.8;
 
-        public static final double SWERVE_ROTATION_CURRENT_LIMIT = 30.0;
+        public static final double SWERVE_ROTATION_CURRENT_LIMIT = 40.0;
         public static final double SWERVE_ROTATION_MAX_OUTPUT = 0.7;
 
         public static final double DISTANCE_PER_REV = Units.inchesToMeters(4 * Math.PI);
         public static final double NEO_MAX_SPEED = 5600; // RPM
         public static final double MAX_WHEEL_SPEED = ((NEO_MAX_SPEED / 60) * DISTANCE_PER_REV);
-        public static final double SWERVE_MAX_SPEED = 0.9 * MAX_WHEEL_SPEED; // m/s
+        public static final double SWERVE_MAX_SPEED = 6; // m/s
         public static final double SWERVE_MAX_AUTO_SPEED = 0.2 * MAX_WHEEL_SPEED; // m/s
         public static final double SWERVE_MAX_PRECISION_SPEED = 0.1 * MAX_WHEEL_SPEED; // m/s
         public static final double SWERVE_MAX_ACCELERATION = 2; // m/s^2

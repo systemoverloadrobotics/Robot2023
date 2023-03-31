@@ -53,11 +53,15 @@ public class SwerveDrive extends CommandBase {
                 ySpeed /= 3;
         }
         swerve.setDrivebaseWheelVectors(xSpeed, ySpeed, rotationSpeed, true, false);
+        executeLogging(xSpeed, ySpeed, rotationSpeed);
     }
 
     protected void executeLogging(double xSpeed, double ySpeed, double rotationSpeed) {
         Logger.getInstance().recordOutput("SwerveDrive/xSpeed", xSpeed);
         Logger.getInstance().recordOutput("SwerveDrive/ySpeed", ySpeed);
+        Logger.getInstance().recordOutput("SwerveDrive/inputX", xSupplier.getAsDouble());
+        Logger.getInstance().recordOutput("SwerveDrive/inputY", ySupplier.getAsDouble());
+        // Logger.getInstance().recordOutput("SwerveDrive/inputR", rotationSupplier.getAsDouble());
         SmartDashboard.putNumber("rspeed", rotationSpeed);
         SmartDashboard.putNumber("rotation 2d", swerve.getRotation2d().getDegrees());
         Logger.getInstance().recordOutput("SwerveDrive/rotation", swerve.getRotation2d().getDegrees());

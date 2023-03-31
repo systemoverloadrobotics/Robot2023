@@ -17,6 +17,7 @@ import frc.robot.commands.MoveToGrid;
 import frc.robot.commands.MoveToHumanPlayer;
 import frc.robot.commands.MoveToScoringLocation;
 import frc.robot.commands.RotationControlledSwerveDrive;
+import frc.robot.commands.SimpleBalance;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.commands.autos.AutoSelector;
 import frc.robot.subsystems.Swerve;
@@ -44,9 +45,9 @@ public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     private final Swerve swerve;
     private final AutoSelector autoSelector;
-    private final DriveTrainPoseEstimator poseEstimator;
-    private final Vision vision;
-    private final IntelligentScoring intelligentScoring;
+   // private final DriveTrainPoseEstimator poseEstimator;
+    //private final Vision vision;
+  //  private final IntelligentScoring intelligentScoring;
     private ArmSubsystem arm;
     private Claw claw;
     private Led led;
@@ -69,6 +70,7 @@ public class RobotContainer {
     private final Command armTestA;
     private final Command armTestB;
     private final Command lockSwerve;
+    private final Command chargeStation;
     
     //@formatter:on
 
@@ -85,13 +87,13 @@ public class RobotContainer {
     public RobotContainer() {
         logger = java.util.logging.Logger.getLogger(RobotContainer.class.getName());
 
-        vision = new Vision();
+       // vision = new Vision();
         arm = new ArmSubsystem();
         claw = new Claw();
         led = new Led();
         swerve = new Swerve();
-        poseEstimator = new DriveTrainPoseEstimator(swerve, vision);
-        intelligentScoring = new IntelligentScoring(vision, poseEstimator);
+      //  poseEstimator = new DriveTrainPoseEstimator(swerve, vision);
+      //  intelligentScoring = new IntelligentScoring(vision, poseEstimator);
         autoSelector = new AutoSelector(swerve);
 
         moveArmLow = new FunctionalCommand(() -> {}, 
@@ -134,6 +136,7 @@ public class RobotContainer {
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.TESTB), (a) -> arm.stop(), () -> false, claw);
         lockSwerve = new FunctionalCommand(() -> {}, 
                 () -> swerve.lock(), (a) -> swerve.reset(), () -> false, swerve);
+        chargeStation = new SimpleBalance(swerve);
 
         resetArmPosition = new InstantCommand(() -> arm.resetArmProfile(), arm);
         
@@ -190,25 +193,25 @@ public class RobotContainer {
         // Constants.Input.LED_TRIGGER_YELLOW.get().whileTrue(ledCommandYellow);
 
         // scoring
-        Constants.Input.POSITION_TO_CLOSEST_GRID.get()
-                .onTrue(new MoveToGrid(poseEstimator, swerve, intelligentScoring));
+        // Constants.Input.POSITION_TO_CLOSEST_GRID.get()
+        //         .onTrue(new MoveToGrid(poseEstimator, swerve, intelligentScoring));
 
-        Constants.Input.POSITION_TO_HUMAN_PLAYER.get().onTrue(new MoveToHumanPlayer(swerve, poseEstimator));
+        //Constants.Input.POSITION_TO_HUMAN_PLAYER.get().onTrue(new MoveToHumanPlayer(swerve, poseEstimator));
 
-        Constants.Input.UPPER_LEFT_CONE.get().onTrue(createMoveCommand(ScoringLocations.UPPER_LEFT_CONE));
-        Constants.Input.UPPER_MIDDLE_CUBE.get().onTrue(createMoveCommand(ScoringLocations.UPPER_MIDDLE_CUBE));
-        Constants.Input.UPPER_RIGHT_CONE.get().onTrue(createMoveCommand(ScoringLocations.UPPER_RIGHT_CONE));
-        Constants.Input.MIDDLE_LEFT_CONE.get().onTrue(createMoveCommand(ScoringLocations.MIDDLE_LEFT_CONE));
-        Constants.Input.MIDDLE_MIDDLE_CUBE.get().onTrue(createMoveCommand(ScoringLocations.MIDDLE_MIDDLE_CUBE));
-        Constants.Input.MIDDLE_RIGHT_CONE.get().onTrue(createMoveCommand(ScoringLocations.MIDDLE_RIGHT_CONE));
-        Constants.Input.HYBRID_LEFT.get().onTrue(createMoveCommand(ScoringLocations.HYBRID_LEFT));
-        Constants.Input.HYBRID_MIDDLE.get().onTrue(createMoveCommand(ScoringLocations.HYBRID_MIDDLE));
-        Constants.Input.HYBRID_RIGHT.get().onTrue(createMoveCommand(ScoringLocations.HYBRID_RIGHT));
+        // Constants.Input.UPPER_LEFT_CONE.get().onTrue(createMoveCommand(ScoringLocations.UPPER_LEFT_CONE));
+        // Constants.Input.UPPER_MIDDLE_CUBE.get().onTrue(createMoveCommand(ScoringLocations.UPPER_MIDDLE_CUBE));
+        // Constants.Input.UPPER_RIGHT_CONE.get().onTrue(createMoveCommand(ScoringLocations.UPPER_RIGHT_CONE));
+        // Constants.Input.MIDDLE_LEFT_CONE.get().onTrue(createMoveCommand(ScoringLocations.MIDDLE_LEFT_CONE));
+        // Constants.Input.MIDDLE_MIDDLE_CUBE.get().onTrue(createMoveCommand(ScoringLocations.MIDDLE_MIDDLE_CUBE));
+        // Constants.Input.MIDDLE_RIGHT_CONE.get().onTrue(createMoveCommand(ScoringLocations.MIDDLE_RIGHT_CONE));
+        // Constants.Input.HYBRID_LEFT.get().onTrue(createMoveCommand(ScoringLocations.HYBRID_LEFT));
+        // Constants.Input.HYBRID_MIDDLE.get().onTrue(createMoveCommand(ScoringLocations.HYBRID_MIDDLE));
+        // Constants.Input.HYBRID_RIGHT.get().onTrue(createMoveCommand(ScoringLocations.HYBRID_RIGHT));
     }
 
-    private Command createMoveCommand(ScoringLocations location) {
-        return new MoveToScoringLocation(poseEstimator, swerve, intelligentScoring, location);
-    }
+//     private Command createMoveCommand(ScoringLocations location) {
+//         return new MoveToScoringLocation(poseEstimator, swerve, intelligentScoring, location);
+//     }
 
     public void autonomousInit() {
         resetArmPosition.schedule();
@@ -226,6 +229,7 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
         return autoSelector.getAuto();
+        // return chargeStation;
     }
 
     public void disabledPeriodic() {

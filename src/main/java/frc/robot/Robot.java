@@ -135,7 +135,9 @@ public class Robot extends LoggedRobot {
 
     /** This function is called periodically during autonomous. */
     @Override
-    public void autonomousPeriodic() {}
+    public void autonomousPeriodic() {
+        robotContainer.getAutonomousCommand().schedule();
+    }
 
     @Override
     public void teleopInit() {
