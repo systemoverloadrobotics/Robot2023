@@ -45,11 +45,6 @@ public class ArmSubsystem extends SubsystemBase {
     private final Timer timerArmAnglePosition = new Timer();
     private final LinearFilter filter;
 
-    private double testGoal;
-
-    @SuppressWarnings("unused")
-    private DigitalInput limitSwitch;
-    @SuppressWarnings("unused")
     private boolean flag;
 
     private static class ArmModel {
@@ -130,8 +125,6 @@ public class ArmSubsystem extends SubsystemBase {
 
         cascade = new SuSparkMax(new CANSparkMax(Constants.Motor.ARM_CASCADE_INDEX, MotorType.kBrushless),
                 "Cascade Motor", cascadeMotorConfig, cascadeSensorConfiguration);
-
-        limitSwitch = new DigitalInput(Constants.Arm.ARM_LIMIT_SWITCH_PORT);
         jointAbsoluteEncoder = new DutyCycleEncoder(Constants.Arm.ARM_ABSOLUTE_ENCODER_PORT);
         // Absolute Encoder is 8192 / rot
         timerArmAnglePosition.start();
