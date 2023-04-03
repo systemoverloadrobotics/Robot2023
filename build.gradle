@@ -130,3 +130,6 @@ gversion {
     timeZone = "America/Los_Angeles"
     indent = "   "
 }
+javadoc {
+    failOnError = false
+}
