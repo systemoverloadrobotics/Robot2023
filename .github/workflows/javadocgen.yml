@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy JavaDoc
-        uses: OneLemonyBoi/SOR-Javadoc-publisher.yml@v0.1.0
+        uses: OneLemonyBoi/Javadoc-publisher.yml@v0.1.0
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           javadoc-branch: javadoc
