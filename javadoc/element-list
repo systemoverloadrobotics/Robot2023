@@ -1,0 +1,8 @@
+frc.robot
+frc.robot.commands
+frc.robot.commands.autos
+frc.robot.subsystems
+frc.sorutil
+frc.sorutil.interpolate
+frc.sorutil.motor
+frc.sorutil.path
