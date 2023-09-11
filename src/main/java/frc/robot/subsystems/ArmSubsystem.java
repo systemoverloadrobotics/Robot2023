@@ -107,7 +107,7 @@ public class ArmSubsystem extends SubsystemBase {
         jointMotorConfig.setCurrentLimit(Constants.Arm.ARM_JOINT_CURRENT_LIMIT);
         SensorConfiguration jointSensorConfiguration =
                 new SensorConfiguration(new SensorConfiguration.IntegratedSensorSource(83.2));
-        jointMotorConfig.setMaxOutput(0.1);
+        jointMotorConfig.setMaxOutput(0.4);
         jointA = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_INDEX), "Joint Motor A", jointMotorConfig,
                 jointSensorConfiguration);
         jointB = new SuTalonFx(new WPI_TalonFX(Constants.Motor.ARM_JOINT_FOLLOWER_INDEX), "Joint Motor B",

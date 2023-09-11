@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.FinetuneArm;
+import frc.robot.commands.MoveStraightAuton;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Claw;
@@ -218,8 +219,8 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return autoSelector.getAuto();
-        // return chargeStation;
+        return new MoveStraightAuton(swerve, 1);
+        // return autoSelector.getAuto();
     }
 
     public void disabledPeriodic() {

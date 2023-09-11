@@ -46,6 +46,7 @@ public class Swerve extends SubsystemBase {
         backRight = new SwerveModule("Back Right", Constants.Motor.SWERVE_BACK_RIGHT_POWER,
                 Constants.Motor.SWERVE_BACK_RIGHT_STEER, 0);
         gyro.reset();
+        gyro.resetDisplacement();
 
         logger.info("Swerve Drive Initialized.");
     }
@@ -110,6 +111,19 @@ public class Swerve extends SubsystemBase {
     public double getPitch() {
         return gyro.getPitch();
     }
+
+    public double getDisplacementX() {
+        return gyro.getDisplacementX();
+    }
+
+    public double getDisplacementY() {
+        return gyro.getDisplacementY();
+    }
+
+    public double getDisplacementZ() {
+        return gyro.getDisplacementZ();
+    }
+
 
     public SwerveModulePosition[] getModulePositions() {
         return new SwerveModulePosition[] {frontLeft.getPosition(), frontRight.getPosition(), backLeft.getPosition(),
