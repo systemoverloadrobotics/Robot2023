@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.Logger;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -9,11 +10,18 @@ import edu.wpi.first.wpilibj.SerialPort;
 
 public class MoveStraightAuton extends CommandBase {
     private final Swerve swerve;   
-    private final double distance;
+    private final double time;
+    private final double xSpeed;
+    private final double ySpeed;
+    public double currentElapsed;
 
-    public MoveStraightAuton(Swerve swerve, double distance) {
+    public MoveStraightAuton(Swerve swerve, double time, double xSpeed, double ySpeed) {
         this.swerve = swerve;
-        this.distance = distance;
+        // seconds -> robot cycles
+        this.time = time;
+        this.xSpeed = xSpeed;
+        this.ySpeed = ySpeed;
+        this.currentElapsed = 0;
         addRequirements(swerve);
         
     }
@@ -21,16 +29,19 @@ public class MoveStraightAuton extends CommandBase {
     @Override
     public void initialize() {
         super.initialize();
+        
     }
 
     @Override
     public void execute() {
-        if (swerve.getDisplacementZ() > distance) { 
+        Logger.getInstance().recordOutput("TimeElapsed", currentElapsed);
+        if (currentElapsed > time) { 
             end(false);
         }
         else {
-            swerve.setDrivebaseWheelVectors(1, 0, 0, false, false);
+            swerve.setDrivebaseWheelVectors(xSpeed, ySpeed, 0, false, false);
         }
+        currentElapsed += 0.02;
     }
 
     // Called once when the command ends or is interrupted.

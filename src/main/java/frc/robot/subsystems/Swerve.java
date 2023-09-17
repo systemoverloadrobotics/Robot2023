@@ -142,5 +142,8 @@ public class Swerve extends SubsystemBase {
         aLogger.recordOutput("Gyro/Pitch", gyro.getPitch());
         aLogger.recordOutput("Gyro/Yaw", gyro.getYaw());
         aLogger.recordOutput("Gyro/Roll", gyro.getRoll());
+        aLogger.recordOutput("Gyro/xDisplacement", getDisplacementX());
+        aLogger.recordOutput("Gyro/yDisplacement", getDisplacementY());
+        aLogger.recordOutput("Gyro/zDisplacement", getDisplacementZ());
     }
 }

@@ -219,8 +219,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return new MoveStraightAuton(swerve, 1);
-        // return autoSelector.getAuto();
+        return autoSelector.getAuto();
     }
 
     public void disabledPeriodic() {
