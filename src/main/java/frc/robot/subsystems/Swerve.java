@@ -65,6 +65,7 @@ public class Swerve extends SubsystemBase {
 
     public void setDrivebaseWheelVectors(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldOriented,
             boolean forScoring) {
+        Logger.getInstance().recordOutput("testtttttttt", rotationSpeed);
         ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed,
                 fieldOriented ? getRotation2d() : new Rotation2d());
         SwerveModuleState[] moduleStates =

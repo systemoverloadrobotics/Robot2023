@@ -20,7 +20,7 @@ public class RotationControlledSwerveDrive extends SwerveDrive {
     private double lastHeading;
 
     private final ProfiledPIDController angleController =
-            new ProfiledPIDController(0.5, 0, 0, Constants.Auto.SWERVE_ROTATION_PID_CONSTRAINTS);
+            new ProfiledPIDController(0.5, 0, 0.025, Constants.Auto.SWERVE_ROTATION_PID_CONSTRAINTS);
 
     public RotationControlledSwerveDrive(Swerve swerve, DoubleSupplier xSupplier, DoubleSupplier ySupplier,
             DoubleSupplier headingSupplier) {
@@ -48,12 +48,15 @@ public class RotationControlledSwerveDrive extends SwerveDrive {
 
     @Override
     public void execute() {
+        Logger.getInstance().recordOutput("Hi", -1);
         double xSpeed = cleanAndScaleInput(xSupplier.getAsDouble(), xLimiter, Constants.Swerve.SWERVE_MAX_SPEED);
         double ySpeed = cleanAndScaleInput(ySupplier.getAsDouble(), yLimiter, Constants.Swerve.SWERVE_MAX_SPEED);
         
         double desiredHeading = headingSupplier.getAsDouble() != -1 ? headingSupplier.getAsDouble() : lastHeading;
 
         double rotSpeed = angleController.calculate(currentHeading(), desiredHeading);
+        
+        Logger.getInstance().recordOutput("testt", rotSpeed);
         swerve.setDrivebaseWheelVectors(xSpeed, ySpeed, rotSpeed, true, false);
 
         super.executeLogging(xSpeed, ySpeed, rotSpeed);

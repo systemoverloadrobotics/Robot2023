@@ -258,6 +258,11 @@ public final class Constants {
 
     public static final class Input {
         // TODO: Fix idx
+        public static final ConstantButton SWERVE_FACE_N = new ConstantButton(0, 0);
+        public static final ConstantButton SWERVE_FACE_E = new ConstantButton(0, 90);
+        public static final ConstantButton SWERVE_FACE_S = new ConstantButton(0, 180);
+        public static final ConstantButton SWERVE_FACE_W = new ConstantButton(0, 270);
+
         public static final ConstantButton SWERVE_FACE_ALLIANCE = new ConstantButton(0, 6);
         public static final ConstantButton SWERVE_FACE_HUMAN_PLAYER = new ConstantButton(0, 5);
 
@@ -307,7 +312,7 @@ public final class Constants {
                 new TrapezoidProfile.Constraints(Swerve.SWERVE_MAX_SPEED * SWERVE_AUTO_SPEED_MULTIPLIER,
                         Swerve.SWERVE_MAX_ACCELERATION);
         public static final TrapezoidProfile.Constraints SWERVE_ROTATION_PID_CONSTRAINTS =
-                new TrapezoidProfile.Constraints(360, 360);
+                new TrapezoidProfile.Constraints(36000, 36000);
         public static final ProfiledPIDController PROFILED_ROT_PID_CONTROLLER =
                 new ProfiledPIDController(10, 0, 0, Constants.Auto.SWERVE_ROTATION_PID_CONSTRAINTS);
         public static final PIDController X_PID_CONTROLLER = new PIDController(0, 0, 0);

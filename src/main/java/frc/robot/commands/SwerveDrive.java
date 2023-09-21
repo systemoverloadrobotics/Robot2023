@@ -41,6 +41,7 @@ public class SwerveDrive extends CommandBase {
     // Called at 50hz while the command is scheduled.
     @Override
     public void execute() {
+        Logger.getInstance().recordOutput("Hi", 1);
         // get joystick inputs and clean/scale them
         double xSpeed = cleanAndScaleInput(xSupplier.getAsDouble(), xLimiter, Constants.Swerve.SWERVE_MAX_SPEED);
         double ySpeed = cleanAndScaleInput(ySupplier.getAsDouble(), yLimiter, Constants.Swerve.SWERVE_MAX_SPEED);

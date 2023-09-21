@@ -76,6 +76,10 @@ public class RobotContainer {
     private final Command ledCommandPurple;
     private final Command ledCommandYellow;
 
+    private final Command driveFacingN;
+    private final Command driveFacingE;
+    private final Command driveFacingS;
+    private final Command driveFacingW;
     private final Command driveFacingAlliance;
     private final Command driveFacingHumanPlayer;
 
@@ -144,12 +148,21 @@ public class RobotContainer {
         }, led);
         
 
+        driveFacingN = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
+                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 90);
+        driveFacingE = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
+                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 180);
+        driveFacingS = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
+                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 270);
+        driveFacingW = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
+                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 0);
+
         driveFacingAlliance = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
                 () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 270);
         driveFacingHumanPlayer = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
                 () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 90);
 
-        // Configure the button bindings
+                // Configure the button bindings
         configureButtonBindings();
     }
 
@@ -162,8 +175,13 @@ public class RobotContainer {
         swerve.setDefaultCommand(new SwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
                 () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(),
                 Constants.Input.SWERVE_ROTATION_INPUT.get()));
+        Constants.Input.SWERVE_FACE_N.getPOV().whileTrue(driveFacingN);
+        Constants.Input.SWERVE_FACE_E.getPOV().whileTrue(driveFacingE);
+        Constants.Input.SWERVE_FACE_S.getPOV().whileTrue(driveFacingS);
+        Constants.Input.SWERVE_FACE_W.getPOV().whileTrue(driveFacingW);
         Constants.Input.SWERVE_FACE_ALLIANCE.get().whileTrue(driveFacingAlliance);
         Constants.Input.SWERVE_FACE_HUMAN_PLAYER.get().whileTrue(driveFacingHumanPlayer);
+
 
         
         Constants.Input.MID_CONE_SCORE.get().toggleOnTrue(moveArmMidCone);

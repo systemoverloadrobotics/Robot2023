@@ -14,6 +14,7 @@ public class MoveStraightAuton extends CommandBase {
     private final double xSpeed;
     private final double ySpeed;
     public double currentElapsed;
+    private boolean isFinished;
 
     public MoveStraightAuton(Swerve swerve, double time, double xSpeed, double ySpeed) {
         this.swerve = swerve;
@@ -35,8 +36,9 @@ public class MoveStraightAuton extends CommandBase {
     @Override
     public void execute() {
         Logger.getInstance().recordOutput("TimeElapsed", currentElapsed);
+        Logger.getInstance().recordOutput("xspeedreq", xSpeed);
         if (currentElapsed > time) { 
-            end(false);
+            isFinished = true;
         }
         else {
             swerve.setDrivebaseWheelVectors(xSpeed, ySpeed, 0, false, false);
@@ -52,6 +54,6 @@ public class MoveStraightAuton extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return isFinished;
     }
 }
