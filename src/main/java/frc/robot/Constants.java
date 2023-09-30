@@ -149,8 +149,8 @@ public final class Constants {
     }
 
     public static final class Claw {
-        public static final double CLAW_VELOCITY_IN_CONE = 750; // RPM
-        public static final double CLAW_VELOCITY_IN_CUBE = 100; // RPM
+        public static final double CLAW_VELOCITY_IN_CONE = 1500; // RPM
+        public static final double CLAW_VELOCITY_IN_CUBE = 300; // RPM
         public static final double CLAW_VELOCITY_OUT_MID = 150; // RPM
         public static final double CLAW_VELOCITY_OUT_HIGH = 4000; // RPMs
         public static final double CLAW_CURRENT_LIMIT = 0.5; // Amps
