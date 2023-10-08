@@ -75,10 +75,12 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public void setState(SwerveModuleState state) {
-        state = SwerveModuleState.optimize(state, getState().angle);
+        //state = SwerveModuleState.optimize(state, getState().angle);
         powerController.set(ControlMode.VELOCITY,
                 SorMath.speedMetersPerSecondToRevsPerMinute(4, state.speedMetersPerSecond));
+        
         steeringController.set(ControlMode.POSITION, state.angle.getDegrees());
+        aLogger.recordOutput(stateName + "SteerPos", steeringController.outputPosition());
     }
 
     public SwerveModulePosition getPosition() {

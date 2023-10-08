@@ -13,10 +13,12 @@ public class AutoSelector {
     private final SendableChooser<Command> autoSelector = new SendableChooser<Command>();
 
     public AutoSelector(Swerve swerve) {
-        autoSelector.addOption("DO_NOTHING", new SequentialCommandGroup(
-            // new RotationControlledSwerveDrive(swerve, () -> 0, () -> -3, () -> 0).withTimeout(0.5), // bump
-            // new RotationControlledSwerveDrive(swerve, () -> 0, () -> 3, () -> 0).withTimeout(3)
-             // taxi
+
+        autoSelector.setDefaultOption("GO_STRAIGHT", new SequentialCommandGroup(
+            new RotationControlledSwerveDrive(swerve, () -> 0, () -> -3, () -> 90).withTimeout(0.5),
+            new RotationControlledSwerveDrive(swerve, () -> 0, () -> 3, () -> 90).withTimeout(3),
+            new RotationControlledSwerveDrive(swerve, () -> 0, () -> 0, () -> 90).withTimeout(20)
+
         ));
         autoSelector.setDefaultOption("DO_NOTHING2", null);
         // RED
