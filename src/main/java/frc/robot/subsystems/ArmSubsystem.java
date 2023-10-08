@@ -369,7 +369,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     public enum ArmHeight {
     //@formatter:off
-    LOW(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_LOW_ANGLE,Constants.Arm.ARM_PRESET_LOW_LENGTH)), 
+    LOW(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_LOW_ANGLE,Constants.Arm.ARM_PRESET_LOW_LENGTH)),
+    GROUND_INTAKE(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_LOW_ANGLE,Constants.Arm.ARM_PRESET_NO_EXTENSION)),
     MID_CUBE(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_MID_CUBE_ANGLE,Constants.Arm.ARM_PRESET_MID_CUBE_LENGTH)), 
     HIGH_CUBE(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_HIGH_CUBE_ANGLE,Constants.Arm.ARM_PRESET_HIGH_CUBE_LENGTH)),
     MID_CONE(new Pair<Double, Double>(Constants.Arm.ARM_PRESET_MID_CONE_ANGLE,Constants.Arm.ARM_PRESET_MID_CONE_LENGTH)), 

@@ -126,15 +126,16 @@ public final class Constants {
         public static final double ARM_MAX_ANGLE_COLLISION_B = 280; // degrees
 
         // Placeholder
-        public static final double ARM_PRESET_LOW_ANGLE = 60; // deg
+        public static final double ARM_PRESET_LOW_ANGLE = 62; // deg, was 60
+        public static final double ARM_PRESET_NO_EXTENSION = 0.01; // ft, for new button (??) (anish review)
         public static final double ARM_PRESET_LOW_LENGTH = 1.2; // ft
-        public static final double ARM_PRESET_MID_CONE_ANGLE = 115; // deg
-        public static final double ARM_PRESET_MID_CONE_LENGTH = 1.24; // ft
+        public static final double ARM_PRESET_MID_CONE_ANGLE = 118; // deg, was 115
+        public static final double ARM_PRESET_MID_CONE_LENGTH = 1.08; // ft, was 1.24
         public static final double ARM_PRESET_MID_CUBE_ANGLE = 106; // deg
         public static final double ARM_PRESET_MID_CUBE_LENGTH = 0.86; // ft
         public static final double ARM_PRESET_HIGH_CONE_ANGLE = 130; // deg
         public static final double ARM_PRESET_HIGH_CONE_LENGTH = 2.2; // ft
-        public static final double ARM_PRESET_HIGH_CUBE_ANGLE = 112; // deg
+        public static final double ARM_PRESET_HIGH_CUBE_ANGLE = 116; // deg, was 112
         public static final double ARM_PRESET_HIGH_CUBE_LENGTH = 2.2; // ft
 
         public static final double ARM_PRESET_TRAY_ANGLE = 118; // deg
@@ -150,9 +151,9 @@ public final class Constants {
 
     public static final class Claw {
         public static final double CLAW_VELOCITY_IN_CONE = 1500; // RPM
-        public static final double CLAW_VELOCITY_IN_CUBE = 300; // RPM
+        public static final double CLAW_VELOCITY_IN_CUBE = 350; // RPM, was 300
         public static final double CLAW_VELOCITY_OUT_MID = 150; // RPM
-        public static final double CLAW_VELOCITY_OUT_HIGH = 4000; // RPMs
+        public static final double CLAW_VELOCITY_OUT_HIGH = 300; // RPMs
         public static final double CLAW_CURRENT_LIMIT = 0.5; // Amps
     }
 
@@ -268,9 +269,9 @@ public final class Constants {
 
         public static final ConstantAxis SWERVE_SNAP_ROTATION_X = new ConstantAxis(0, 2);
         public static final ConstantAxis SWERVE_SNAP_ROTATION_Y = new ConstantAxis(0, 3);
-        public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(0, 4);
-        public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(0, 5);
-        public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
+        public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(0, 0);
+        public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(0, 1);
+        public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 4);
         public static final ConstantAxis SWERVE_ROTATION_SLOWDOWN_L  = new ConstantAxis(0, 2);
         public static final ConstantAxis SWERVE_ROTATION_SLOWDOWN_R = new ConstantAxis(0, 3);
 
@@ -302,8 +303,9 @@ public final class Constants {
         public static final ConstantButton MID_CONE_SCORE = new ConstantButton(3, 10);
         public static final ConstantButton HIGH_CUBE_SCORE = new ConstantButton(3, 5);
         public static final ConstantButton HIGH_CONE_SCORE = new ConstantButton(3, 6);
-        public static final ConstantButton LOW_SCORE = new ConstantButton(3, 4);
-        public static final ConstantButton STOW = new ConstantButton(3, 7);
+        public static final ConstantButton LOW_SCORE = new ConstantButton(3, 7); // was 4, this is supposed to be ground intake (aka old hybrid)
+        public static final ConstantButton GROUND_INTAKE = new ConstantButton(3, 4); // was 7, this is the new thing we coded without extension
+        public static final ConstantButton STOW = new ConstantButton(3, 12);
         public static final ConstantButton TRAY = new ConstantButton(3, 1);
     }
     public static final class Auto {

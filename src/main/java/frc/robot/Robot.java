@@ -123,7 +123,7 @@ public class Robot extends LoggedRobot {
     public void autonomousInit() {
         javaLogger.info("Autonomous started");
         allianceColor = DriverStation.getAlliance();
-        robotContainer.autonomousInit();
+        robotContainer.autonomousInit();  // COMMENT HERE TO DISABLE AUTON AND 139
     }
 
     public static Alliance getAllianceColor() {
@@ -136,7 +136,7 @@ public class Robot extends LoggedRobot {
     /** This function is called periodically during autonomous. */
     @Override
     public void autonomousPeriodic() {
-        robotContainer.getAutonomousCommand().schedule();
+    //    robotContainer.getAutonomousCommand().schedule();  // COMMENT HERE TO DISABLE AUTON AND 126
     }
 
     @Override

@@ -58,6 +58,7 @@ public class RobotContainer {
     //@formatter:off
     private final Command moveArmLow;
     private final Command moveArmTray;
+    private final Command groundIntake;
     private final Command moveArmMidCube;
     private final Command moveArmHighCube;
     private final Command moveArmMidCone;
@@ -100,6 +101,8 @@ public class RobotContainer {
 
         moveArmLow = new FunctionalCommand(() -> {}, 
         () -> arm.setPosition(ArmSubsystem.ArmHeight.LOW), (a) -> {arm.stop();}, () -> false, arm);
+        groundIntake = new FunctionalCommand(() -> {}, 
+        () -> arm.setPosition(ArmSubsystem.ArmHeight.GROUND_INTAKE), (a) -> {arm.stop();}, () -> false, arm);
         moveArmTray = new FunctionalCommand(() -> {},
                 () -> arm.setPosition(ArmSubsystem.ArmHeight.TRAY), (a) -> {arm.stop();}, () -> false, arm);
         moveArmMidCube = new FunctionalCommand(() -> {},
@@ -195,6 +198,7 @@ public class RobotContainer {
         Constants.Input.CLAW_IN_CUBE.get().whileTrue(intakeClawCube);
         Constants.Input.CLAW_OUT_MID.get().toggleOnTrue(outtakeClawMid);
         Constants.Input.CLAW_OUT_HIGH.get().toggleOnTrue(outtakeClawHigh);
+        Constants.Input.GROUND_INTAKE.get().toggleOnTrue(groundIntake);
         // Constants.Input.TEST_A.get().toggleOnTrue(armTestA);
         // Constants.Input.TEST_B.get().toggleOnTrue(armTestB);
 
