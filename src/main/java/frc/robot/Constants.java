@@ -258,19 +258,19 @@ public final class Constants {
 
     public static final class Input {
         // TODO: Fix idx
-        public static final ConstantButton SWERVE_FACE_N = new ConstantButton(0, 0);
-        public static final ConstantButton SWERVE_FACE_E = new ConstantButton(0, 90);
-        public static final ConstantButton SWERVE_FACE_S = new ConstantButton(0, 180);
-        public static final ConstantButton SWERVE_FACE_W = new ConstantButton(0, 270);
+        public static final ConstantButton SWERVE_FACE_N = new ConstantButton(0, 4);
+        public static final ConstantButton SWERVE_FACE_E = new ConstantButton(0, 2);
+        public static final ConstantButton SWERVE_FACE_S = new ConstantButton(0, 1);
+        public static final ConstantButton SWERVE_FACE_W = new ConstantButton(0, 3);
 
         public static final ConstantButton SWERVE_FACE_ALLIANCE = new ConstantButton(0, 6);
         public static final ConstantButton SWERVE_FACE_HUMAN_PLAYER = new ConstantButton(0, 5);
 
         public static final ConstantAxis SWERVE_SNAP_ROTATION_X = new ConstantAxis(0, 2);
         public static final ConstantAxis SWERVE_SNAP_ROTATION_Y = new ConstantAxis(0, 3);
-        public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(0, 4);
-        public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(0, 5);
-        public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 0);
+        public static final ConstantAxis SWERVE_X_INPUT = new ConstantAxis(0, 0);
+        public static final ConstantAxis SWERVE_Y_INPUT = new ConstantAxis(0, 1);
+        public static final ConstantAxis SWERVE_ROTATION_INPUT = new ConstantAxis(0, 4);
         public static final ConstantAxis SWERVE_ROTATION_SLOWDOWN_L  = new ConstantAxis(0, 2);
         public static final ConstantAxis SWERVE_ROTATION_SLOWDOWN_R = new ConstantAxis(0, 3);
 

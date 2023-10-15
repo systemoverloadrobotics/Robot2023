@@ -175,10 +175,10 @@ public class RobotContainer {
         swerve.setDefaultCommand(new SwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
                 () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(),
                 Constants.Input.SWERVE_ROTATION_INPUT.get()));
-        Constants.Input.SWERVE_FACE_N.getPOV().whileTrue(driveFacingN);
-        Constants.Input.SWERVE_FACE_E.getPOV().whileTrue(driveFacingE);
-        Constants.Input.SWERVE_FACE_S.getPOV().whileTrue(driveFacingS);
-        Constants.Input.SWERVE_FACE_W.getPOV().whileTrue(driveFacingW);
+        Constants.Input.SWERVE_FACE_N.get().whileTrue(driveFacingN);
+        Constants.Input.SWERVE_FACE_E.get().whileTrue(driveFacingE);
+        Constants.Input.SWERVE_FACE_S.get().whileTrue(driveFacingS);
+        Constants.Input.SWERVE_FACE_W.get().whileTrue(driveFacingW);
         Constants.Input.SWERVE_FACE_ALLIANCE.get().whileTrue(driveFacingAlliance);
         Constants.Input.SWERVE_FACE_HUMAN_PLAYER.get().whileTrue(driveFacingHumanPlayer);
 
