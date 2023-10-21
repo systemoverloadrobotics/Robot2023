@@ -15,9 +15,9 @@ public class AutoSelector {
     public AutoSelector(Swerve swerve) {
 
         autoSelector.setDefaultOption("GO_STRAIGHT", new SequentialCommandGroup(
-            new RotationControlledSwerveDrive(swerve, () -> 0, () -> -3, () -> 90).withTimeout(0.5),
-            new RotationControlledSwerveDrive(swerve, () -> 0, () -> 3, () -> 90).withTimeout(3),
-            new RotationControlledSwerveDrive(swerve, () -> 0, () -> 0, () -> 90).withTimeout(20)
+            new RotationControlledSwerveDrive(swerve, () -> 0, () -> -3, () -> 90, () -> false).withTimeout(0.5),
+            new RotationControlledSwerveDrive(swerve, () -> 0, () -> 3, () -> 90, () -> false).withTimeout(3),
+            new RotationControlledSwerveDrive(swerve, () -> 0, () -> 0, () -> 90, () -> false).withTimeout(20)
 
         ));
         autoSelector.setDefaultOption("DO_NOTHING2", null);

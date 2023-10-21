@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -16,18 +17,16 @@ import frc.sorutil.SorMath;
  * command, or if one has not yet been supplied, the heading of the robot when the command was first scheduled.
  */
 public class RotationControlledSwerveDrive extends SwerveDrive {
-    private final DoubleSupplier xSupplier, ySupplier, headingSupplier;
+    private final DoubleSupplier headingSupplier;
     private double lastHeading;
 
     private final ProfiledPIDController angleController =
             new ProfiledPIDController(0.5, 0, 0.025, Constants.Auto.SWERVE_ROTATION_PID_CONSTRAINTS);
 
     public RotationControlledSwerveDrive(Swerve swerve, DoubleSupplier xSupplier, DoubleSupplier ySupplier,
-            DoubleSupplier headingSupplier) {
-        super(swerve, xSupplier, ySupplier, null);
+            DoubleSupplier headingSupplier, BooleanSupplier lockSupplier) {
+        super(swerve, xSupplier, ySupplier, null, lockSupplier);
 
-        this.xSupplier = xSupplier;
-        this.ySupplier = ySupplier;
         this.headingSupplier = headingSupplier;
 
         angleController.setTolerance(Constants.Swerve.SWERVE_ROTATION_TOLERANCE);

@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -14,14 +15,16 @@ public class SwerveDrive extends CommandBase {
     protected final Swerve swerve;
     protected SlewRateLimiter xLimiter, yLimiter, rotationLimiter;
 
-    private final DoubleSupplier xSupplier, ySupplier, rotationSupplier;
+    protected final DoubleSupplier xSupplier, ySupplier, rotationSupplier;
+    protected final BooleanSupplier lockSupplier;
 
     public SwerveDrive(Swerve swerve, DoubleSupplier xSupplier, DoubleSupplier ySupplier,
-            DoubleSupplier rotationSupplier) {
+            DoubleSupplier rotationSupplier, BooleanSupplier lockSupplier) {
         this.swerve = swerve;
         this.xSupplier = xSupplier;
         this.ySupplier = ySupplier;
         this.rotationSupplier = rotationSupplier;
+        this.lockSupplier = lockSupplier;
 
         xLimiter = new SlewRateLimiter(Constants.Swerve.SWERVE_MAX_SPEED);
         yLimiter = new SlewRateLimiter(Constants.Swerve.SWERVE_MAX_SPEED);
@@ -41,6 +44,10 @@ public class SwerveDrive extends CommandBase {
     // Called at 50hz while the command is scheduled.
     @Override
     public void execute() {
+        if (lockSupplier.getAsBoolean()) {
+            swerve.lock();
+            return;
+        }
         Logger.getInstance().recordOutput("Hi", 1);
         // get joystick inputs and clean/scale them
         double xSpeed = cleanAndScaleInput(xSupplier.getAsDouble(), xLimiter, Constants.Swerve.SWERVE_MAX_SPEED);

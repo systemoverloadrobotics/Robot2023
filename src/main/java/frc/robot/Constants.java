@@ -117,7 +117,7 @@ public final class Constants {
         public static final double ARM_JOINT_TOLERANCE = 0.8; // degrees
         public static final double ARM_CASCADE_MAX_FEEDFORWARD = 0.65; // volts
 
-        public static final double ARM_PREDICTIVE_TIMESPAN = 0.25; // seconds
+        public static final double ARM_PREDICTIVE_TIMESPAN = 0.15; // seconds
         public static final double ARM_HEIGHT_FROM_GROUND = -1.5; // ft
         public static final double ARM_HEIGHT_FROM_BASE = -1; // ft
         public static final double ARM_MIN_ANGLE_COLLISION_A = 0; // degrees
@@ -129,7 +129,7 @@ public final class Constants {
         public static final double ARM_PRESET_LOW_ANGLE = 62; // deg, was 60
         public static final double ARM_PRESET_NO_EXTENSION = 0.01; // ft, for new button (??) (anish review)
         public static final double ARM_PRESET_LOW_LENGTH = 1.2; // ft
-        public static final double ARM_PRESET_MID_CONE_ANGLE = 118; // deg, was 115
+        public static final double ARM_PRESET_MID_CONE_ANGLE = 119.5; // deg, was 115
         public static final double ARM_PRESET_MID_CONE_LENGTH = 1.08; // ft, was 1.24
         public static final double ARM_PRESET_MID_CUBE_ANGLE = 106; // deg
         public static final double ARM_PRESET_MID_CUBE_LENGTH = 0.86; // ft
@@ -138,8 +138,8 @@ public final class Constants {
         public static final double ARM_PRESET_HIGH_CUBE_ANGLE = 116; // deg, was 112
         public static final double ARM_PRESET_HIGH_CUBE_LENGTH = 2.2; // ft
 
-        public static final double ARM_PRESET_TRAY_ANGLE = 118; // deg
-        public static final double ARM_PRESET_TRAY_LENGTH = 1.82; // ft
+        public static final double ARM_PRESET_TRAY_ANGLE = 117; // deg
+        public static final double ARM_PRESET_TRAY_LENGTH = 2.2; // ft
         public static final double ARM_PRESET_STOW_ANGLE = 174.95; // deg
         public static final double ARM_PRESET_STOW_LENGTH = 0; // ft
 
@@ -277,6 +277,8 @@ public final class Constants {
 
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_UP_DOWN = new ConstantAxis(2, 1);
         public static final ConstantAxis ARM_MANUAL_MOVEMENT_FORWARD_BACKWARD = new ConstantAxis(2, 0);
+
+        public static final ConstantButton DRIVETRAIN_WHEEL_LOCK = new ConstantButton(0, 180);
         // scoring
         // public static final ConstantButton POSITION_TO_CLOSEST_GRID = new ConstantButton(1, 10);
         // public static final ConstantButton POSITION_TO_HUMAN_PLAYER = new ConstantButton(1, 11);
@@ -303,8 +305,8 @@ public final class Constants {
         public static final ConstantButton MID_CONE_SCORE = new ConstantButton(3, 10);
         public static final ConstantButton HIGH_CUBE_SCORE = new ConstantButton(3, 5);
         public static final ConstantButton HIGH_CONE_SCORE = new ConstantButton(3, 6);
-        public static final ConstantButton LOW_SCORE = new ConstantButton(3, 7); // was 4, this is supposed to be ground intake (aka old hybrid)
-        public static final ConstantButton GROUND_INTAKE = new ConstantButton(3, 4); // was 7, this is the new thing we coded without extension
+        public static final ConstantButton LOW_SCORE = new ConstantButton(3, 4); // was 7 then 4, this is supposed to be ground intake (aka old hybrid)
+        public static final ConstantButton GROUND_INTAKE = new ConstantButton(3, 7); // was 4 then 7, this is the new thing we coded without extension
         public static final ConstantButton STOW = new ConstantButton(3, 12);
         public static final ConstantButton TRAY = new ConstantButton(3, 1);
     }

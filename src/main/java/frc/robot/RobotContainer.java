@@ -152,18 +152,18 @@ public class RobotContainer {
         
 
         driveFacingN = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
-                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 90);
+                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 90, () ->  Constants.Input.DRIVETRAIN_WHEEL_LOCK.getPOV().getAsBoolean());
         driveFacingE = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
-                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 180);
+                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 180, () ->  Constants.Input.DRIVETRAIN_WHEEL_LOCK.getPOV().getAsBoolean());
         driveFacingS = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
-                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 270);
+                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 270, () ->  Constants.Input.DRIVETRAIN_WHEEL_LOCK.getPOV().getAsBoolean());
         driveFacingW = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
-                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 0);
+                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 0, () ->  Constants.Input.DRIVETRAIN_WHEEL_LOCK.getPOV().getAsBoolean());
 
         driveFacingAlliance = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
-                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 270);
+                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 270, () ->  Constants.Input.DRIVETRAIN_WHEEL_LOCK.getPOV().getAsBoolean());
         driveFacingHumanPlayer = new RotationControlledSwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
-                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 90);
+                () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(), () -> 90, () ->  Constants.Input.DRIVETRAIN_WHEEL_LOCK.getPOV().getAsBoolean());
 
                 // Configure the button bindings
         configureButtonBindings();
@@ -177,7 +177,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         swerve.setDefaultCommand(new SwerveDrive(swerve, () -> -Constants.Input.SWERVE_X_INPUT.get().getAsDouble(),
                 () -> -Constants.Input.SWERVE_Y_INPUT.get().getAsDouble(),
-                Constants.Input.SWERVE_ROTATION_INPUT.get()));
+                Constants.Input.SWERVE_ROTATION_INPUT.get(), () -> Constants.Input.DRIVETRAIN_WHEEL_LOCK.getPOV().getAsBoolean()));
         Constants.Input.SWERVE_FACE_N.get().whileTrue(driveFacingN);
         Constants.Input.SWERVE_FACE_E.get().whileTrue(driveFacingE);
         Constants.Input.SWERVE_FACE_S.get().whileTrue(driveFacingS);
